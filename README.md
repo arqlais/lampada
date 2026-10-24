@@ -23,7 +23,14 @@ A chave fica guardada só no aparelho em que você colou. Faça isso no celular,
 - **Android (Chrome):** menu ⋮ › **Instalar app**.
 - **Computador (Chrome ou Edge):** ícone de instalar na barra de endereço.
 
+## Guia completo
+
+Login com Google, Gemini (inclusive o crédito do Google AI Pro), agenda e lembretes: veja o [GUIA.md](GUIA.md).
+
 ## Arquivos
 
 - `index.html`: o app inteiro.
+- `config.js`: configuração do Firebase (login).
+- `fonts/`: The Seasons Italic (itálicos).
+- `GUIA.md`: passo a passo de tudo.
 - `manifest.webmanifest` e ícones: deixam o app instalável.

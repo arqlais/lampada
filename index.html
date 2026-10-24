@@ -33,17 +33,17 @@
   --shadow:none;
   --f-sans:'Poppins',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
   --f-serif:'The Seasons',Georgia,serif;
-  --r-card:24px; --arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23604D53' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.5 6l6 6-6 6'/%3E%3C/svg%3E"); --r-ctl:999px; --pad:20px;
+  --r-card:28px; --card:rgba(251,248,238,.78); --arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23604D53' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.5 6l6 6-6 6'/%3E%3C/svg%3E"); --r-ctl:999px; --pad:20px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#26201F; --surface:#322A28; --glass:#322A28; --glass-line:rgba(251,248,238,.06);
+  --bg:#26201F; --card:rgba(251,248,238,.045); --surface:#322A28; --glass:#322A28; --glass-line:rgba(251,248,238,.06);
   --ink:#F0EBD5; --muted:var(--steel); --line:rgba(160,129,126,.12);
   --rose-ink:#D2B3AF; --rose-num:#D2B3AF; --rose:#C4A5A1; --on-rose:var(--taupe);
   --rose-soft:rgba(245,213,210,.12); --soft:rgba(245,213,210,.08); --well:rgba(160,129,126,.07);
   --cocoa:var(--blush); --on-cocoa:var(--taupe); --tile:rgba(160,129,126,.08); --ok:#A9C3B6;
   --arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFDBDA' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.5 6l6 6-6 6'/%3E%3C/svg%3E"); --shadow:none; color-scheme:dark }}
 :root[data-theme="dark"]{
-  --bg:#26201F; --surface:#322A28; --glass:#322A28; --glass-line:rgba(251,248,238,.06);
+  --bg:#26201F; --card:rgba(251,248,238,.045); --surface:#322A28; --glass:#322A28; --glass-line:rgba(251,248,238,.06);
   --ink:#F0EBD5; --muted:var(--steel); --line:rgba(160,129,126,.12);
   --rose-ink:#D2B3AF; --rose-num:#D2B3AF; --rose:#C4A5A1; --on-rose:var(--taupe);
   --rose-soft:rgba(245,213,210,.12); --soft:rgba(245,213,210,.08); --well:rgba(160,129,126,.07);
@@ -70,33 +70,34 @@ svg.i.lg{width:22px;height:22px}
 .serif{font-family:var(--f-serif);font-style:italic;font-weight:400}
 
 .shell{max-width:1180px;margin:0 auto;padding-block:20px 128px}
-.view{display:flex;flex-direction:column;gap:14px;animation:in .4s ease both}
-.narrow{max-width:720px;width:100%;margin:0 auto}
+/* todas as páginas com a mesma largura, centralizadas */
+.view{display:flex;flex-direction:column;gap:14px;animation:in .4s ease both;max-width:720px;width:100%;margin:0 auto}
 @keyframes in{from{opacity:.3;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 /* topo: marca do jeito Planê + saudação grande */
 .top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding:4px 2px 10px}
 .eyebrow{margin:0;font-size:12px;font-weight:400;color:var(--muted);display:flex;align-items:center;gap:7px}
-.eyebrow svg{color:var(--rose);width:14px;height:14px}
+.eyebrow svg.i{color:var(--rose);width:14px;height:14px}
 .title{margin:4px 0 0;font-weight:300;font-size:30px;line-height:1.1;letter-spacing:-.02em;text-wrap:balance}
 .title b{font-weight:500}
-.title em{font-family:var(--f-serif);font-style:italic;font-weight:400;letter-spacing:0;font-size:1.12em;padding-left:.08em}
+/* padrão da marca: título em duas cores, a última palavra em The Seasons itálico dusty (como "Marcos 3") */
+.title em,.label em,.sh-title em{font-family:var(--f-serif);font-style:italic;font-weight:400;letter-spacing:0;color:var(--rose-num)}
+.title em{font-size:1.12em;padding-left:.08em}
+.label em,.sh-title em{font-size:1.16em}
 .top-r{display:flex;align-items:center;gap:8px;flex:none;align-self:flex-start}
 .avatar{width:42px;height:42px;border-radius:50%;border:none;background:var(--rose-soft);color:var(--ink);font-size:15px;font-weight:500}
 .streak{display:inline-flex;align-items:center;gap:5px;height:36px;font-size:12.5px;font-weight:500;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:0 14px 0 12px;white-space:nowrap}
 .streak svg{width:16px;height:16px;color:var(--rose)}
 
-.mark{margin:0 0 14px;font-weight:600;font-size:19px;letter-spacing:-.03em;line-height:1;color:var(--ink)}
-.mark i,.nav .brand i{font-style:normal;color:var(--rose)}
+svg.sym{width:18px;height:18px;flex:none}
+.nav .brand i{font-style:normal;color:var(--rose)}
 /* cartões */
-.card{position:relative;background:transparent;border:0;border-radius:0;padding:22px 2px 24px;display:flex;flex-direction:column;gap:16px;min-width:0}
-.card:not(.rose) + .card:not(.rose),.col > .card:not(.rose) ~ .card:not(.rose){border-top:1px solid var(--line)}
+.card{position:relative;background:var(--card);border:0;border-radius:var(--r-card);padding:var(--pad);display:flex;flex-direction:column;gap:16px;min-width:0}
 /* bloco do dia: blush liso */
 .card.rose{background:rgba(245,213,210,.5);border:0;border-radius:var(--r-card);padding:var(--pad);--line:rgba(94,74,72,.12);--tile:rgba(251,248,238,.7);--surface:#FBF8EE;--rose-ink:#8E6E6B}
 :root[data-theme="dark"] .card.rose{background:#3A302E;--ink:#F0EBD5;--muted:rgba(160,129,126,.8);--line:rgba(245,213,210,.12);--tile:rgba(251,248,238,.07);--surface:rgba(251,248,238,.12);--rose-ink:#D2B3AF}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .card.rose{background:#3A302E;--ink:#F0EBD5;--muted:rgba(160,129,126,.8);--line:rgba(245,213,210,.12);--tile:rgba(251,248,238,.07);--surface:rgba(251,248,238,.12);--rose-ink:#D2B3AF}}
 .card.rose{color:var(--ink)}
-.card.latte{background:transparent}
 .card-h{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:24px}
 .label{margin:0;font-size:12.5px;font-weight:500;color:var(--rose-ink);display:flex;align-items:center;gap:8px}
 .label svg{width:15px;height:15px}
@@ -250,8 +251,6 @@ select.inp{appearance:none;-webkit-appearance:none}
 .banner > svg{color:var(--muted)}
 
 /* grade do hoje */
-.today-grid{display:grid;gap:14px;grid-template-columns:minmax(0,1fr);align-items:start}
-.col{display:flex;flex-direction:column;gap:14px;min-width:0}
 
 /* planos */
 .plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
@@ -315,14 +314,35 @@ details.fold[open] > summary .chev{transform:rotate(90deg)}
 .msg.me{align-self:flex-end;background:var(--blush);color:var(--taupe);border-bottom-right-radius:8px}
 .msg.ai{align-self:flex-start;background:var(--glass);border:1px solid var(--line);border-bottom-left-radius:8px}
 .msg .who{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:var(--rose-ink);margin-bottom:4px}
-.composer{position:sticky;bottom:calc(96px + env(safe-area-inset-bottom, 0px));z-index:5}
-.composer .ask{box-shadow:0 6px 20px -10px rgba(94,74,72,.25)}
 
+
+/* chat flutuante: botão redondo + painel */
+.fab{position:fixed;z-index:25;right:max(18px, env(safe-area-inset-right, 0px));bottom:calc(96px + env(safe-area-inset-bottom, 0px));width:58px;height:58px;border-radius:50%;border:none;
+  background:var(--rosa);color:#F0EBD5;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 30px -12px rgba(94,74,72,.55);transition:transform .2s}
+.fab:active{transform:scale(.94)}
+.fab svg{width:25px;height:25px;stroke-width:1.4}
+.fab.busy::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--blush);border-top-color:transparent;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+body.chat-open .fab{display:none}
+body.chat-open{overflow:hidden}
+.scrim{position:fixed;inset:0;z-index:39;background:rgba(38,32,31,.28)}
+.sheet{position:fixed;z-index:40;left:0;right:0;bottom:0;height:min(88vh,860px);background:var(--bg);border-radius:30px 30px 0 0;box-shadow:0 -20px 50px -20px rgba(38,32,31,.35);
+  display:flex;flex-direction:column;padding:10px 18px calc(14px + env(safe-area-inset-bottom, 0px));overflow:hidden}
+.sheet.anim{animation:up .32s cubic-bezier(.2,.8,.2,1) both}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.sheet::before{content:"";align-self:center;width:40px;height:4px;border-radius:2px;background:var(--line);margin-bottom:8px;flex:none}
+.sh-h{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:none;padding:4px 2px 12px}
+.sh-title{margin:0;font-weight:300;font-size:24px;letter-spacing:-.02em;line-height:1.1}
+.sh-x{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:flex;align-items:center;justify-content:center;flex:none;padding:0}
+.sh-tools{display:flex;flex-direction:column;gap:10px;flex:none;padding-bottom:12px}
+.sh-body{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:4px 2px 12px;overscroll-behavior:contain}
+.sh-foot{flex:none;padding-top:8px}
+.sh-note{font-size:11.5px;color:var(--muted);text-align:center;margin:8px 0 0}
 /* menu: barra branca simples; ativo em blush */
 .nav{position:fixed;z-index:20;left:max(16px, env(safe-area-inset-left, 0px));right:max(16px, env(safe-area-inset-right, 0px));
-  bottom:calc(14px + env(safe-area-inset-bottom, 0px));height:66px;max-width:460px;margin:0 auto;border-radius:999px;
+  bottom:calc(14px + env(safe-area-inset-bottom, 0px));height:66px;max-width:340px;margin:0 auto;border-radius:999px;
   background:var(--surface);border:1px solid var(--line);box-shadow:0 10px 30px -14px rgba(94,74,72,.28);
-  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;padding:0 7px}
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;padding:0 7px}
 .nav .brand{display:none}
 .tab{height:52px;margin:0 2px;border-radius:999px;border:none;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:10.5px;font-weight:400;transition:background .2s,color .2s;min-width:0}
 .tab[aria-current="page"]{background:var(--blush);color:var(--taupe);font-weight:500}
@@ -334,22 +354,23 @@ details.fold[open] > summary .chev{transform:rotate(90deg)}
 .note-local{font-size:11px;color:var(--muted);text-align:center;margin:0}
 
 @media (min-width:820px){
-  .shell{max-width:1180px;margin:32px auto;padding:44px 48px 56px 260px;background:rgba(251,248,238,.78);border:1px solid #FBF8EE;border-radius:36px;box-shadow:0 30px 60px -40px rgba(94,74,72,.35);min-height:calc(100vh - 64px)}
-  :root[data-theme="dark"] .shell{background:rgba(46,38,41,.85);border-color:rgba(251,248,238,.05)}
-  .nav{right:auto;left:max(32px, calc((100vw - 1180px) / 2));top:76px;bottom:auto;margin:0;width:212px;height:auto;max-width:none;
-    display:flex;flex-direction:column;gap:2px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
-  .nav .brand{display:flex;align-items:baseline;gap:0;color:var(--ink);font-size:26px;font-weight:500;letter-spacing:-.03em;padding:0 0 22px 24px}
-  .nav .brand svg{display:none}
-  .tab{width:100%;height:46px;margin:0;border-radius:0;flex-direction:row;justify-content:flex-start;gap:12px;padding:0 24px;font-size:14px}
-  .tab svg{width:18px;height:18px}
-  .tab[aria-current="page"]{background:rgba(245,213,210,.55);box-shadow:inset 3px 0 0 var(--rose);color:var(--ink)}
+  .shell{padding:40px 24px 64px 268px}
+  .nav{right:auto;left:calc(24px + env(safe-area-inset-left, 0px));top:24px;bottom:24px;margin:0;width:220px;height:auto;max-width:none;
+    display:flex;flex-direction:column;gap:4px;padding:26px 14px;border:0;border-radius:32px;background:var(--surface);box-shadow:0 20px 50px -30px rgba(94,74,72,.45)}
+  .nav .brand{display:flex;align-items:center;gap:10px;color:var(--ink);font-size:23px;font-weight:500;letter-spacing:-.03em;padding:0 10px 26px}
+  .nav .brand svg.sym{width:30px;height:30px}
+  .tab{width:100%;height:48px;margin:0;border-radius:18px;flex-direction:row;justify-content:flex-start;gap:12px;padding:0 16px;font-size:14px}
+  .tab svg{width:19px;height:19px}
+  .tab[aria-current="page"]{background:var(--blush);color:var(--taupe)}
   .toast{bottom:28px}
-  .composer{bottom:16px}
-  .title{font-size:34px}
+  .fab{right:32px;bottom:32px}
+  .sheet{left:auto;right:24px;bottom:24px;top:24px;height:auto;width:440px;border-radius:30px;box-shadow:0 30px 70px -30px rgba(38,32,31,.5);padding-top:18px}
+  .sheet::before{display:none}
+  .scrim{background:rgba(38,32,31,.12)}
+  .title{font-size:36px}
   .ref{font-size:50px}
   :root{--pad:28px}
 }
-@media (min-width:1120px){ .today-grid{grid-template-columns:minmax(0,1.4fr) minmax(300px,1fr)} }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -379,12 +400,13 @@ details.fold[open] > summary .chev{transform:rotate(90deg)}
 
 <div class="shell"><main id="view" aria-live="polite"></main></div>
 <nav class="nav" aria-label="Menu">
-  <div class="brand"><svg class="i"><use href="#i-lamp"/></svg><span>lâmpada<i>.</i></span></div>
+  <div class="brand"><svg class="sym" viewBox="0 0 64 64" aria-hidden="true"><path d="M17 56V30a15 15 0 0 1 30 0v26z" fill="#A0817E"/><path d="M32 19.5c3.6 4.7 5.9 8.2 5.9 12a5.9 5.9 0 0 1-11.8 0c0-3.8 2.3-7.3 5.9-12z" fill="#F5D5D2"/><path d="M22.3 46.5c4-1.8 7.2-1.5 9.7.8 2.5-2.3 5.7-2.6 9.7-.8" fill="none" stroke="#F0EBD5" stroke-width="1.6" stroke-linecap="round"/></svg><span>lâmpada<i>.</i></span></div>
   <button class="tab" data-tab="hoje"><svg class="i lg"><use href="#i-book"/></svg><span>hoje</span></button>
   <button class="tab" data-tab="aprender"><svg class="i lg"><use href="#i-steps"/></svg><span>aprender</span></button>
-  <button class="tab" data-tab="conversa"><svg class="i lg"><use href="#i-chat"/></svg><span>conversa</span></button>
   <button class="tab" data-tab="caminhada"><svg class="i lg"><use href="#i-path"/></svg><span>caminhada</span></button>
 </nav>
+<button class="fab" id="fab" data-chat="open" aria-label="Conversar com a IA"><svg class="i"><use href="#i-chat"/></svg></button>
+<div id="chat"></div>
 <div class="toast" id="toast" role="status"></div>
 
 <script src="config.js"></script>
@@ -618,6 +640,7 @@ const fmtShort = d => d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-di
 const fmtDia = d => d.toLocaleDateString('pt-BR', { day:'numeric', month:'long' });
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean = s => String(s ?? '').replace(/\*\*(.+?)\*\*/g, '$1').replace(/^#+\s*/gm, '').replace(/^\s*[-*]\s+/gm, '· ');
+const SYM = '<svg class="sym" viewBox="0 0 64 64" aria-hidden="true"><path d="M17 56V30a15 15 0 0 1 30 0v26z" fill="#A0817E"/><path d="M32 19.5c3.6 4.7 5.9 8.2 5.9 12a5.9 5.9 0 0 1-11.8 0c0-3.8 2.3-7.3 5.9-12z" fill="#F5D5D2"/><path d="M22.3 46.5c4-1.8 7.2-1.5 9.7.8 2.5-2.3 5.7-2.6 9.7-.8" fill="none" stroke="#F0EBD5" stroke-width="1.6" stroke-linecap="round"/></svg>';
 const ico = (id, cls='') => `<svg class="i ${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
 const fmtN = n => n.toLocaleString('pt-BR');
 const chOf = k => { const [c, n] = k.split('.'); return { book:BK[c], cap:+n, key:k }; };
@@ -652,7 +675,7 @@ const ROOT = () => ROOT_PATH, CAPS = () => IN_CLAUDE ? 'capitulos' : ROOT_PATH +
 const S = {
   tab:'hoje', ativo:'natal', planos:{}, lidosNatal:{}, notas:{}, caps:{}, conversas:{}, vocab:{}, aulas:{}, passos:{},
   sel:null, selPlan:null, open:null, aula:null, ctab:'planos', chatCtx:'leitura', form:null, confirmDel:false, step3:'palavras',
-  engine: IN_CLAUDE ? 'claude' : 'gemini', gkey:'', gmodel:'gemini-2.5-flash',
+  engine: IN_CLAUDE ? 'claude' : 'gemini', gkey:'', gmodel:'gemini-3-flash-preview', hora:'07:30',
   db:null, sample:null, busy:{}, draft:{}, pending:false, ctl:null
 };
 const planById = id => id === 'natal' ? NATAL : (S.planos[id] || NATAL);
@@ -692,7 +715,7 @@ function loadLocal(){
   S.lidosNatal = pf.lidos || LS.get('lidos', {}); S.ativo = pf.ativo || 'natal'; S.aulas = pf.aulas || {}; S.passos = pf.passos || {};
   const pl = LS.get('planos', {}); S.planos = {}; Object.values(pl).forEach(d => { S.planos[d.id] = expand(d); });
   S.notas = LS.get('notas', {}); S.caps = LS.get('caps', {}); S.conversas = LS.get('conversas', {}); S.vocab = LS.get('vocab', {});
-  const cfg = LS.get('ia', {}); S.gkey = cfg.gkey || ''; S.gmodel = cfg.gmodel || 'gemini-2.5-flash';
+  const cfg = LS.get('ia', {}); S.gkey = cfg.gkey || ''; S.gmodel = !cfg.gmodel || cfg.gmodel === 'gemini-2.5-flash' ? 'gemini-3-flash-preview' : cfg.gmodel; S.hora = LS.get('hora', '07:30');
   if (cfg.engine) S.engine = cfg.engine;
 }
 const failSave = () => toast('não deu para salvar agora');
@@ -744,7 +767,7 @@ function subscribe(db){
   subs.push(db.collection(P + '/diario').onSnapshot(q => { const n = {}; q.docs.forEach(d => n[d.id] = d.data()); S.notas = n; soft(); }, () => {}));
   subs.push(db.collection(CAPS()).onSnapshot(q => { const n = {}; q.docs.forEach(d => n[d.id] = d.data()); S.caps = n; soft(); }, () => {}));
   subs.push(db.doc(P + '/extras/vocab').onSnapshot(s => { S.vocab = s.exists ? Object.assign({}, s.data().itens || {}) : {}; soft(); }, () => {}));
-  subs.push(db.collection(P + '/conversas').onSnapshot(q => { if (!S.busy.chat) q.docs.forEach(d => { S.conversas[d.id] = (d.data().turns || []).slice(); }); if (S.tab === 'conversa') soft(); }, () => {}));
+  subs.push(db.collection(P + '/conversas').onSnapshot(q => { if (!S.busy.chat) q.docs.forEach(d => { S.conversas[d.id] = (d.data().turns || []).slice(); }); if (S.chatOpen) soft(); }, () => {}));
   if (!IN_CLAUDE) subs.push(db.doc(P + '/extras/ia').onSnapshot(s => { if (s.exists) { const d = s.data(); if (d.gkey) S.gkey = d.gkey; if (d.gmodel) S.gmodel = d.gmodel; if (d.engine) S.engine = d.engine; LS.set('ia', { gkey:S.gkey, gmodel:S.gmodel, engine:S.engine }); } soft(); }, () => {}));
   return () => subs.forEach(u => { try { u(); } catch {} });
 }
@@ -805,7 +828,7 @@ const aiName = e => e === 'gemini' ? 'Gemini' : 'Claude';
 class AIError extends Error { constructor(code, msg, text){ super(msg || code); this.code = code; this.text = text; } }
 
 async function geminiCall(turns, { json = false, onText, signal } = {}){
-  const model = (S.gmodel || 'gemini-2.5-flash').trim();
+  const model = (S.gmodel || 'gemini-3-flash-preview').trim();
   const base = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model);
   const sys = turns[0].content, rest = turns.slice(1);
   const body = { systemInstruction:{ parts:[{ text:sys }] },
@@ -851,11 +874,11 @@ async function aiChat(turns, { onText, signal }){
 const errCopy = c => ({
   no_ai: IN_CLAUDE ? 'Libere o Claude quando o pedido de permissão aparecer.' : 'Coloque sua chave do Gemini em caminhada › ajustes.',
   bad_key:'A chave do Gemini não funcionou. Confira em caminhada › ajustes.',
-  bad_model:'Esse modelo do Gemini não foi encontrado. Confira o nome em ajustes.',
+  bad_model:'Esse modelo do Gemini não está liberado na sua chave. Escolha outro em caminhada › ajustes.',
   network:'Sem conexão com a IA agora. Confira a internet e tente de novo.',
   not_granted:'O Claude não foi liberado nesta página. O pedido aparece de novo na próxima vez que abrir o app.',
   sampling_disabled:'O Claude não está disponível nesta conta.',
-  rate_limited:'Muitas perguntas seguidas. Espera um minutinho e tenta de novo.',
+  rate_limited:'Limite do Gemini atingido. Espere um minutinho ou, no Pro, confira se os créditos estão ativos.',
   session_expired:'Sua sessão expirou. Entra de novo e volta aqui.',
   refused:'A IA não respondeu a esse pedido. Tenta perguntar de outro jeito.',
   invalid_json:'A resposta veio bagunçada. Toca para tentar de novo.'
@@ -917,10 +940,11 @@ function chatAbout(){ if (S.chatCtx === 'leitura') return refName(cur()); const 
 async function perguntar(texto, ctx){
   texto = String(texto || '').trim(); if (!texto || S.busy.chat) return;
   if (ctx) S.chatCtx = ctx;
-  if (!aiEngine()) { go('conversa'); return toast(errCopy('no_ai')); }
+  if (S.engine === 'claude' && !S.sample) return abrirClaude(texto);
+  if (!aiEngine()) { openChat(); return toast(errCopy('no_ai')); }
   const key = chatKey(), turns = S.conversas[key] = (S.conversas[key] || []).slice();
   turns.push({ role:'user', content:texto });
-  S.busy.chat = true; S.tab !== 'conversa' ? go('conversa') : render(); scrollEnd();
+  S.busy.chat = true; S.chatOpen = true; render(); scrollEnd();
   let about = chatAbout();
   if (S.chatCtx !== 'leitura') { const a = AULAS.find(x => x.id === S.chatCtx); if (a) about += '. Resumo da aula: ' + a.p.join(' '); }
   const regras = GUIA + `\nEla quer conversar sobre ${about}. Ela também está no plano de leitura "${plan().nome}". Responda como numa conversa: curto (até 2 parágrafos), acolhedor e claro. Se ela pedir o texto bíblico inteiro, sugira abrir no YouVersion em vez de copiar.`;
@@ -937,7 +961,7 @@ async function perguntar(texto, ctx){
   S.busy.chat = false; S.ctl = null;
   await saveConversa(key); render(); scrollEnd();
 }
-function scrollEnd(){ requestAnimationFrame(() => window.scrollTo({ top:document.body.scrollHeight, behavior:'smooth' })); }
+function scrollEnd(){ requestAnimationFrame(() => { const b = document.getElementById('sh-body'); if (b) b.scrollTop = b.scrollHeight; }); }
 async function testarGemini(){
   if (!S.gkey) return toast('cole sua chave primeiro');
   if (IN_CLAUDE) return toast('o Gemini funciona no app publicado no seu endereço');
@@ -947,6 +971,47 @@ async function testarGemini(){
   S.busy.teste = false; render();
 }
 
+const MODELOS = [
+  ['gemini-3-flash-preview', 'Gemini 3 Flash', 'rápido e com uso grátis'],
+  ['gemini-3.1-pro-preview', 'Gemini 3.1 Pro', 'mais profundo, usa os créditos do seu Google AI Pro'],
+  ['gemini-2.5-flash', 'Gemini 2.5 Flash', 'versão anterior']
+];
+/* ---------- agenda e lembretes (arquivo .ics: Calendário do iPhone/iPad e Google Agenda) ---------- */
+const icsTxt = t => String(t).replace(/\\/g, '\\\\').replace(/[,;]/g, m => '\\' + m).replace(/\n/g, '\\n');
+const icsDT = (date, hora) => { const [h, m] = (hora || '07:30').split(':'); const z = n => String(n).padStart(2, '0'); return `${date.getFullYear()}${z(date.getMonth() + 1)}${z(date.getDate())}T${z(+h)}${z(+m)}00`; };
+const appURL = () => location.href.split('#')[0];
+function icsEvento({ uid, quando, titulo, texto, rrule }){
+  return ['BEGIN:VEVENT', 'UID:' + uid, 'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z', 'DTSTART:' + quando, 'DURATION:PT20M',
+    'SUMMARY:' + icsTxt(titulo), 'DESCRIPTION:' + icsTxt(texto), 'URL:' + appURL(), rrule ? 'RRULE:' + rrule : null,
+    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsTxt(titulo), 'TRIGGER:PT0M', 'END:VALARM', 'END:VEVENT'].filter(Boolean).join('\r\n');
+}
+function baixarICS(nome, eventos){
+  const txt = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Lampada//PT-BR', 'CALSCALE:GREGORIAN', 'X-WR-CALNAME:Lâmpada', ...eventos, 'END:VCALENDAR'].join('\r\n');
+  const url = URL.createObjectURL(new Blob([txt], { type:'text/calendar;charset=utf-8' }));
+  const a = document.createElement('a'); a.href = url; a.download = nome; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 8000);
+}
+function agendaPlano(){
+  const p = plan(), L = lidosOf(p), t = Math.max(0, todayIdx(p));
+  const dias = p.days.filter(d => d.i >= t && !L[d.key]); if (!dias.length) return toast('não há leituras pela frente neste plano');
+  baixarICS('lampada-' + p.id + '.ics', dias.map(d => icsEvento({ uid:`lampada-${p.id}-${d.key}@arqlais.github.io`, quando:icsDT(d.date, S.hora),
+    titulo:'Lâmpada · ' + refName(d), texto:`Leitura do plano "${p.nome}" (dia ${d.i + 1} de ${p.days.length}). Abra o app: ${appURL()}` })));
+  toast(dias.length + ' leituras prontas pra agenda');
+}
+function lembreteDiario(){
+  baixarICS('lampada-lembrete.ics', [icsEvento({ uid:'lampada-diario@arqlais.github.io', quando:icsDT(new Date(), S.hora), rrule:'FREQ=DAILY',
+    titulo:'Lâmpada · hora da leitura', texto:'Seu momento com a Palavra de hoje. Abra o app: ' + appURL() })]);
+  toast('lembrete diário pronto');
+}
+function agendaCard(){
+  return `<section class="card">
+    <div class="card-h"><span class="label">${ico('cal')}agenda e lembretes</span><span class="small">${esc(plan().nome)}</span></div>
+    <label class="field"><span>horário da leitura</span><input class="inp" id="r-hora" type="time" value="${esc(S.hora)}"></label>
+    <div class="two"><button class="btn primary" data-act="ics-plano">${ico('cal')}plano na agenda</button><button class="btn ghost" data-act="ics-diario">${ico('clock')}lembrete diário</button></div>
+    <p class="hint"><b>Plano na agenda</b> coloca cada leitura que falta no dia certo, com aviso no horário. <b>Lembrete diário</b> é um aviso todo dia, sem fim. No iPhone e no iPad, abra o arquivo baixado e toque em "Adicionar tudo". No Google Agenda, pelo computador: Configurações › Importar e exportar › Importar.</p>
+  </section>`;
+}
+
 /* ---------- pedaços de tela ---------- */
 const greeting = () => { const h = new Date().getHours(); return h < 5 ? 'boa noite' : h < 12 ? 'bom dia' : h < 18 ? 'boa tarde' : 'boa noite'; };
 const thinking = t => `<div class="thinking"><span class="dots"><i></i><i></i><i></i></span>${t}</div>`;
@@ -954,7 +1019,7 @@ const aiOff = () => `<p class="hint">${IN_CLAUDE ? 'A IA aparece aqui assim que 
 function header(){
   const st = streak();
   return `<header class="top">
-    <div><p class="eyebrow">${esc(fmtLong(new Date()))}</p><h1 class="title">${greeting()}, <em>${NOME}</em></h1></div>
+    <div><p class="eyebrow">${SYM}${esc(fmtLong(new Date()))}</p><h1 class="title">${greeting()}, <em>${NOME}</em></h1></div>
     <div class="top-r">${st ? `<span class="streak" title="dias seguidos lendo">${ico('flame')}${st}</span>` : ''}<button class="avatar" data-go-ajustes="1" aria-label="Sua conta">${esc(((S.user && S.user.displayName) || NOME).trim().charAt(0).toUpperCase())}</button></div></header>`;
 }
 const heroRef = d => parts(d.chs).map(p => `${esc(p.book.n)} <span class="n">${num(p)}</span>`).join(' <span class="dsep">·</span> ');
@@ -1050,19 +1115,13 @@ function step3(d){
   }
   return seg + body + `<button class="btn soft" data-done="palavras">${ico('check')}entendi</button>`;
 }
-function sideCol(d){
+function trilhaCard(){
   const a = proxAula(), feitas = AULAS.filter(x => S.aulas[x.id]).length, nv = a && NIVEIS.find(n => n.n === a.nv);
-  const AI = !!aiEngine();
-  return `${a ? `<section class="card">
+  if (!a) return '';
+  return `<section class="card">
       <div class="card-h"><span class="label">${ico('steps')}sua trilha</span><span class="small">${feitas} de ${AULAS.length}</span></div>
       <div><p class="small" style="margin:0">nível ${a.nv} · ${esc(nv.nome)}</p><p style="margin:2px 0 0;font-size:17px;font-weight:400;line-height:1.35">${esc(a.t)}</p></div>
-      <button class="btn cocoa" data-aula="${a.id}">${feitas ? 'continuar a trilha' : 'começar do zero'}</button></section>` : ''}
-    <section class="card latte">
-      <div class="card-h"><span class="label muted">${ico('chat')}ficou alguma dúvida?</span><span class="small">${AI ? 'com o ' + aiName(aiEngine()) : ''}</span></div>
-      <form class="ask" data-form="ask-home"><label for="ask-home" class="sr">Pergunta sobre ${esc(refName(d))}</label>
-        <input id="ask-home" type="text" autocomplete="off" placeholder="pergunte sobre ${esc(refName(d))}…">
-        <button class="send" aria-label="Perguntar">${ico('send')}</button></form>
-    </section>`;
+      <button class="btn cocoa" data-aula="${a.id}">${feitas ? 'continuar a trilha' : 'começar do zero'}</button></section>`;
 }
 function banner(){
   if (!IN_CLAUDE && FB_CONFIG && S.fb && S.fb.pronto && !S.user) return `<button class="banner" data-act="entrar"><span class="ic">${ico('heart')}</span><span><b>Entre com sua conta Google</b> pra ver seu progresso em todos os aparelhos.</span>${ico('right')}</button>`;
@@ -1076,15 +1135,13 @@ function banner(){
 /* ---------- telas ---------- */
 function viewHoje(){
   const d = cur();
-  return `<div class="view">${header()}${banner()}<div class="today-grid">
-    <div class="col">${heroCard(d)}${explainCard(d)}${stepsCard(d)}</div>
-    <div class="col">${sideCol(d)}</div></div>${localNote()}</div>`;
+  return `<div class="view">${header()}${banner()}${heroCard(d)}${explainCard(d)}${stepsCard(d)}${trilhaCard()}${localNote()}</div>`;
 }
 
 function viewAprender(){
   if (S.aula) return viewAula(AULAS.find(x => x.id === S.aula) || AULAS[0]);
   const feitas = AULAS.filter(x => S.aulas[x.id]).length, prox = proxAula();
-  return `<div class="view narrow">
+  return `<div class="view">
   <header class="top"><div><p class="eyebrow">${ico('steps')}aprender</p><h1 class="title">do básico ao <em>profundo</em></h1></div></header>
   <section class="card rose">
     <p class="prose">Aulas curtas, de poucos minutos, pra entender a Bíblia aos poucos. Siga na ordem: cada uma prepara a próxima.</p>
@@ -1104,8 +1161,8 @@ function viewAprender(){
 }
 function viewAula(a){
   const i = AULAS.indexOf(a), nv = NIVEIS.find(n => n.n === a.nv), done = !!S.aulas[a.id], nx = AULAS[i + 1], ch = a.ler ? chOf(a.ler) : null;
-  return `<div class="view narrow">
-  <button class="linkbtn" data-act="trilha" style="padding:0">${ico('right')}</button>
+  return `<div class="view">
+  <button class="linkbtn" data-act="trilha" style="padding:0"><span style="display:inline-flex;transform:scaleX(-1)">${ico('right')}</span>voltar à trilha</button>
   <header class="top"><div><p class="eyebrow">nível ${a.nv} · ${esc(nv.nome)} · aula ${i + 1} de ${AULAS.length}</p><h1 class="title">${esc(a.t)}</h1></div></header>
   <section class="card glass">
     ${a.p.map(t => `<p class="prose">${esc(t)}</p>`).join('')}
@@ -1119,31 +1176,45 @@ function viewAula(a){
   </div></div>`;
 }
 
-function viewConversa(){
-  const key = chatKey(), turns = S.conversas[key] || [], e = aiEngine(), d = cur();
+function viewChat(){
+  const key = chatKey(), turns = S.conversas[key] || [], d = cur(), ext = S.engine === 'claude' && !S.sample, e = aiEngine();
   const sugest = S.chatCtx === 'leitura'
     ? ['me explica com outras palavras', 'qual é o contexto dessa época?', 'quem são as pessoas dessa leitura?', 'como isso fala com a minha vida hoje?']
     : ['me dá um exemplo', 'explica de um jeito ainda mais simples', 'onde isso aparece na Bíblia?', 'o que eu leio depois disso?'];
   const ctxs = [{ id:'leitura', t:refName(d) }].concat(AULAS.filter(x => S.aulas[x.id] || x.id === S.chatCtx || (proxAula() && proxAula().id === x.id)).slice(-4).map(x => ({ id:x.id, t:'aula: ' + x.t })));
-  const status = en => en === 'gemini'
-    ? (IN_CLAUDE ? 'no app publicado' : S.gkey ? 'pronto' : 'precisa da chave')
-    : (S.sample ? 'pronto' : IN_CLAUDE ? 'aguardando permissão' : 'só dentro do Claude');
   let msgs = turns.map(t => t.role === 'user' ? `<div class="msg me">${esc(t.content)}</div>` : `<div class="msg ai"><span class="who">${ico('spark')}${t.by === 'app' ? 'Lâmpada' : aiName(t.by || 'claude')}</span>${esc(t.content)}</div>`).join('');
   if (S.busy.chat) msgs += `<div class="msg ai"><span class="who">${ico('spark')}${aiName(e)}</span><span id="live">${thinking('pensando')}</span></div><button class="linkbtn muted" data-act="stop">parar resposta</button>`;
-  return `<div class="view narrow">
-  <header class="top"><div><p class="eyebrow">${ico('chat')}conversa</p><h1 class="title">pergunte <em>sem medo</em></h1></div></header>
-  <div class="engine" role="group" aria-label="Com quem conversar">
-    ${['gemini','claude'].map(en => `<button class="eng" data-engine="${en}" aria-pressed="${S.engine === en}"><span class="mk">${ico('spark')}</span><span><b>${aiName(en)}</b><small><i class="${engineReady(en) ? 'on' : ''}"></i>${status(en)}</small></span></button>`).join('')}
-  </div>
-  ${S.engine === 'gemini' && !geminiReady() ? `<div class="banner" style="cursor:default"><span class="ic">${ico('key')}</span><span>${IN_CLAUDE ? 'Aqui dentro do Claude a conversa é com o Claude. O Gemini responde no app publicado no seu endereço, com a sua chave.' : 'Pra conversar com o Gemini aqui, cole sua chave gratuita em <b>caminhada › ajustes</b>.'}</span></div>` : ''}
-  <div class="ctxsel" role="group" aria-label="Sobre o que conversar">${ctxs.map(c => `<button data-ctx="${c.id}" aria-pressed="${S.chatCtx === c.id}">${esc(c.t)}</button>`).join('')}</div>
-  ${turns.length || S.busy.chat ? `<div class="chat">${msgs}</div>` : `<section class="card glass">
-      <p class="prose">Pergunte o que quiser sobre ${esc(chatAbout())}, do jeito que vier. Não existe pergunta boba. A conversa fica guardada aqui.</p>
-      <div class="chips">${sugest.map(s => `<button class="chip" data-chip="${esc(s)}">${esc(s)}</button>`).join('')}</div></section>`}
-  <form class="ask composer" data-form="ask-chat"><label for="ask-chat" class="sr">Sua pergunta</label>
-    <input id="ask-chat" type="text" autocomplete="off" placeholder="escreva sua pergunta…" ${S.busy.chat ? 'disabled' : ''}>
-    <button class="send" aria-label="Enviar" ${S.busy.chat ? 'disabled' : ''}>${ico('send')}</button></form>
-  </div>`;
+  const aviso = ext ? `<p class="hint">Sua pergunta abre no Claude (claude.ai) numa aba nova, já com o contexto da leitura.</p>`
+    : S.engine === 'gemini' && !geminiReady() ? `<button class="banner" data-go-ajustes="1"><span class="ic">${ico('key')}</span><span>${IN_CLAUDE ? 'Aqui dentro do Claude quem responde é o Claude. O Gemini responde no app publicado.' : '<b>Ligue o Gemini</b>: cole sua chave em caminhada › ajustes.'}</span>${ico('right')}</button>` : '';
+  return `<div class="scrim" data-chat="close"></div>
+  <section class="sheet ${S.chatAnim ? 'anim' : ''}" role="dialog" aria-modal="true" aria-label="Conversa">
+    <div class="sh-h"><h2 class="sh-title">pergunte sem <em>medo</em></h2><button class="sh-x" data-chat="close" aria-label="Fechar">${ico('x')}</button></div>
+    <div class="sh-tools">
+      <div class="seg" role="group" aria-label="Com quem conversar">${['gemini','claude'].map(en => `<button data-engine="${en}" aria-pressed="${S.engine === en}">${aiName(en)}${en === 'claude' && !IN_CLAUDE ? ' ' + ico('out') : ''}</button>`).join('')}</div>
+      <div class="ctxsel" role="group" aria-label="Sobre o que conversar">${ctxs.map(c => `<button data-ctx="${c.id}" aria-pressed="${S.chatCtx === c.id}">${esc(c.t)}</button>`).join('')}</div>
+      ${aviso}
+    </div>
+    <div class="sh-body" id="sh-body">${turns.length || S.busy.chat ? msgs : `<p class="prose">Pergunte o que quiser sobre ${esc(chatAbout())}, do jeito que vier. Não existe pergunta boba.</p>
+      <div class="chips">${sugest.map(x => `<button class="chip" data-chip="${esc(x)}">${esc(x)}</button>`).join('')}</div>`}</div>
+    <div class="sh-foot"><form class="ask" data-form="ask-chat"><label for="ask-chat" class="sr">Sua pergunta</label>
+      <input id="ask-chat" type="text" autocomplete="off" placeholder="${ext ? 'pergunte, e abre no Claude…' : 'escreva sua pergunta…'}" ${S.busy.chat ? 'disabled' : ''}>
+      <button class="send" aria-label="Enviar" ${S.busy.chat ? 'disabled' : ''}>${ico('send')}</button></form>
+      ${turns.length && !ext ? `<p class="sh-note">A conversa fica guardada aqui.</p>` : ''}</div>
+  </section>`;
+}
+function openChat(){ S.chatOpen = true; S.chatAnim = true; render(); if (matchMedia('(min-width:820px)').matches) setTimeout(() => { const i = document.getElementById('ask-chat'); if (i) i.focus(); }, 60); }
+function abrirClaude(texto){
+  const q = `${texto}\n\n(Contexto: estou lendo ${chatAbout()} no meu plano de leitura da Bíblia "${plan().nome}". Estou começando agora: responda em português do Brasil, curto, simples e acolhedor.)`;
+  window.open('https://claude.ai/new?q=' + encodeURIComponent(q), '_blank', 'noopener'); toast('abrindo no Claude');
+}
+/* padrão da marca: a última palavra dos títulos fica em itálico dusty */
+function duo(root){
+  root.querySelectorAll('.title, .card-h .label, .sh-title').forEach(el => {
+    if (el.querySelector('em')) return;
+    const tn = [...el.childNodes].filter(n => n.nodeType === 3 && n.textContent.trim()).pop(); if (!tn) return;
+    const m = tn.textContent.match(/^([\s\S]*?)(\S+)(\s*)$/); if (!m) return;
+    const em = document.createElement('em'); em.textContent = m[2]; tn.textContent = m[1]; tn.after(em); if (m[3]) em.after(document.createTextNode(m[3]));
+  });
 }
 
 /* caminhada: planos, diário, palavras, ajustes */
@@ -1151,7 +1222,7 @@ function viewCaminhada(){
   if (S.form) return viewNovo();
   const tabs = [['planos','planos'],['diario','diário'],['palavras','palavras'],['ajustes','ajustes']];
   const body = { planos:cPlanos, diario:cDiario, palavras:cPalavras, ajustes:cAjustes }[S.ctab]();
-  return `<div class="view narrow">
+  return `<div class="view">
   <header class="top"><div><p class="eyebrow">${ico('path')}caminhada</p><h1 class="title">sua <em>caminhada</em></h1></div></header>
   <div class="seg" role="group" aria-label="Seções">${tabs.map(([k, t]) => `<button data-ctab="${k}" aria-pressed="${S.ctab === k}">${t}</button>`).join('')}</div>
   ${body}${localNote()}</div>`;
@@ -1185,6 +1256,7 @@ function cPlanos(){
     </div>
     ${aiEngine() ? (S.busy.semana ? thinking('preparando as explicações da semana') : `<button class="btn ghost" data-act="semana">${ico('spark')}deixar as explicações da semana prontas</button>`) : ''}
   </section>
+  ${agendaCard()}
   <section class="card">
     <div class="card-h"><span class="label muted">seus planos</span><span class="small">toque pra trocar</span></div>
     <div class="plans">${allPlans().map(x => { const q = progresso(x);
@@ -1225,7 +1297,7 @@ function cPalavras(){
 }
 function contaCard(){
   if (IN_CLAUDE) return `<section class="card"><div class="card-h"><span class="label">${ico('heart')}sua conta</span><span class="small">dentro do Claude</span></div><p class="hint" style="margin-top:-8px">Aqui dentro do Claude o progresso já fica salvo na sua conta do Claude. No app publicado, você entra com a conta Google.</p></section>`;
-  if (!FB_CONFIG) return `<section class="card"><div class="card-h"><span class="label">${ico('heart')}sua conta</span><span class="small">não configurada</span></div><p class="hint" style="margin-top:-8px">Por enquanto o progresso fica só neste aparelho. Quando o Firebase estiver ligado, aparece aqui o botão de entrar com o Google.</p></section>`;
+  if (!FB_CONFIG) return `<section class="card"><div class="card-h"><span class="label">${ico('heart')}sua conta</span><span class="small">não configurada</span></div><p class="hint" style="margin-top:-8px">Por enquanto o progresso fica só neste aparelho. Quando o Firebase estiver ligado, aparece aqui o botão de entrar com o Google (<a href="https://github.com/arqlais/lampada/blob/main/GUIA.md#1-entrar-com-a-conta-google-firebase" target="_blank" rel="noopener">como ligar</a>).</p></section>`;
   if (S.fb && S.fb.erro) return `<section class="card"><div class="card-h"><span class="label">${ico('heart')}sua conta</span></div><p class="hint" style="margin-top:-8px">Não deu pra carregar o login agora. Confira a internet e abra o app de novo.</p></section>`;
   if (!S.user) return `<section class="card"><div class="card-h"><span class="label">${ico('heart')}sua conta</span><span class="small">não conectada</span></div>
     <p class="hint" style="margin-top:-8px">Entre com a sua conta Google pra salvar tudo na nuvem e abrir no celular, no iPad e no computador. O que você já fez neste aparelho vai junto no primeiro login.</p>
@@ -1238,21 +1310,22 @@ function contaCard(){
 function cAjustes(){
   return contaCard() + `<section class="card">
     <div class="card-h"><span class="label">${ico('key')}Gemini</span><span class="small">${geminiReady() ? 'conectado' : IN_CLAUDE ? 'no app publicado' : S.gkey ? 'chave salva' : 'sem chave'}</span></div>
-    <p class="hint" style="margin-top:-8px">${S.user ? 'A chave fica guardada na sua conta e vale em todos os aparelhos.' : 'A chave fica guardada só neste aparelho.'} Pra gerar uma, entre em <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> com sua conta Google, toque em "Create API key" e cole aqui. O nível gratuito tem limite de perguntas por minuto e por dia.</p>
+    <p class="hint" style="margin-top:-8px">${S.user ? 'A chave fica guardada na sua conta e vale em todos os aparelhos.' : 'A chave fica guardada só neste aparelho.'} Gere em <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> e cole aqui.</p>
     <label class="field"><span>sua chave</span><input class="inp" id="g-key" type="password" autocomplete="off" placeholder="cole a chave aqui" value="${esc(S.gkey)}"></label>
-    <label class="field"><span>modelo</span><input class="inp" id="g-model" type="text" autocomplete="off" value="${esc(S.gmodel)}"></label>
+    <label class="field"><span>modelo</span><select class="inp" id="g-model">${(MODELOS.some(m => m[0] === S.gmodel) ? MODELOS : MODELOS.concat([[S.gmodel, S.gmodel, 'outro']])).map(m => `<option value="${esc(m[0])}" ${m[0] === S.gmodel ? 'selected' : ''}>${esc(m[1])} · ${esc(m[2])}</option>`).join('')}</select></label>
     <div class="two"><button class="btn primary" data-act="g-save">${ico('check')}salvar</button><button class="btn ghost" data-act="g-test" ${S.busy.teste ? 'disabled' : ''}>${S.busy.teste ? 'testando…' : 'testar conexão'}</button></div>
+    <p class="hint">O <b>3 Flash</b> funciona de graça, com limite por dia. O <b>3.1 Pro</b> não tem uso grátis na API: ele usa o crédito mensal que vem no seu Google AI Pro, depois que você ativa o crédito (<a href="https://github.com/arqlais/lampada/blob/main/GUIA.md#23-usar-o-crédito-do-seu-google-ai-pro" target="_blank" rel="noopener">passo a passo no guia</a>).</p>
     ${IN_CLAUDE ? `<p class="hint">Aqui dentro do Claude a página não consegue falar com o Google, então quem responde é o Claude. A chave vale quando o app estiver publicado no seu endereço.</p>` : ''}
   </section>
   <section class="card">
-    <div class="card-h"><span class="label muted">quem responde primeiro</span></div>
+    <div class="card-h"><span class="label muted">no chat, quem responde</span></div>
     <div class="seg">${['gemini','claude'].map(en => `<button data-engine="${en}" aria-pressed="${S.engine === en}">${aiName(en)}</button>`).join('')}</div>
-    <p class="hint">Se o escolhido não estiver disponível, o app usa o outro.</p>
+    <p class="hint">${IN_CLAUDE ? 'Se o escolhido não estiver disponível, o app usa o outro.' : 'Com o Claude, a pergunta abre no claude.ai numa aba nova, já com o contexto da leitura. As explicações do dia continuam com o Gemini.'}</p>
   </section>`;
 }
 function viewNovo(){
   const f = S.form, opts = (list, label) => `<optgroup label="${label}">${list.map(b => `<option value="${b.c}">${esc(b.n)}</option>`).join('')}</optgroup>`;
-  return `<div class="view narrow">
+  return `<div class="view">
   <button class="linkbtn" data-act="cancel-novo" style="padding:0">${ico('x')}cancelar</button>
   <header class="top"><div><p class="eyebrow">${ico('cal')}planos</p><h1 class="title">novo <em>plano</em></h1></div></header>
   <section class="card glass">
@@ -1288,7 +1361,7 @@ const novoForm = () => ({ nome:'', livros:[], inicio:iso(new Date()), modo:'data
 const localNote = () => S.db ? '' : `<p class="note-local">O progresso fica salvo neste aparelho${!IN_CLAUDE && FB_CONFIG ? '. Entre com o Google pra levar pra todos.' : '.'}</p>`;
 
 /* ---------- render e eventos ---------- */
-const VIEWS = { hoje:viewHoje, aprender:viewAprender, conversa:viewConversa, caminhada:viewCaminhada };
+const VIEWS = { hoje:viewHoje, aprender:viewAprender, caminhada:viewCaminhada };
 /* deixa tudo pronto na tela sem precisar pedir: explicação ao abrir a leitura, palavras e versões ao abrir o passo 3 */
 const tried = new Set();
 function auto(){
@@ -1299,12 +1372,17 @@ function auto(){
   if (S.open === 'palavras') { if (S.step3 === 'palavras' && !c.dificeis) run('dif', dificeis); if (S.step3 === 'versoes' && !c.palavras) run('cmp', comparar); }
 }
 function render(){
-  document.getElementById('view').innerHTML = VIEWS[S.tab]();
+  const v = document.getElementById('view'), c = document.getElementById('chat');
+  v.innerHTML = VIEWS[S.tab]();
+  c.innerHTML = S.chatOpen ? viewChat() : ''; S.chatAnim = false;
+  document.body.classList.toggle('chat-open', !!S.chatOpen);
+  document.getElementById('fab').classList.toggle('busy', !!S.busy.chat);
+  duo(v); duo(c); if (S.chatOpen) scrollEnd();
   auto();
   document.querySelectorAll('.tab').forEach(t => { if (t.dataset.tab === S.tab) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
 }
 function go(tab){ S.tab = tab; S.confirmDel = false; try { history.replaceState(null, '', '#' + tab); } catch {} render(); window.scrollTo({ top:0 }); }
-function readHash(){ const h = (location.hash || '').slice(1); if (VIEWS[h]) S.tab = h; }
+function readHash(){ const h = (location.hash || '').slice(1); if (VIEWS[h]) S.tab = h; if (h === 'conversa') S.chatOpen = true; }
 function setAtivo(id){ S.ativo = id; S.sel = null; S.open = null; S.confirmDel = false; savePerfil(); }
 let tt;
 function toast(msg){ const t = document.getElementById('toast'); t.innerHTML = ico('check') + esc(msg); t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 2800); }
@@ -1340,11 +1418,12 @@ const aulaPrompt = a => `Acabei de fazer a aula "${a.t}". Me explica isso um pou
 
 document.addEventListener('click', async e => {
   const rd = e.target.closest('[data-read]'); if (rd) { marcaPasso('ler'); setTimeout(render, 400); return; }
-  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes]');
+  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes],[data-chat]');
   if (!el) return;
   const ds = el.dataset;
   if (ds.tab) { if (ds.tab === 'aprender') S.aula = null; if (ds.tab === 'caminhada') S.form = null; return go(ds.tab); }
-  if (ds.goAjustes) { S.ctab = 'ajustes'; S.form = null; return go('caminhada'); }
+  if (ds.chat) { if (ds.chat === 'open') return openChat(); S.chatOpen = false; return render(); }
+  if (ds.goAjustes) { S.ctab = 'ajustes'; S.form = null; S.chatOpen = false; return go('caminhada'); }
   if (ds.step) { S.open = S.open === ds.step ? '' : ds.step; return render(); }
   if (ds.done) { marcaPasso(ds.done); return render(); }
   if (ds.s3) { S.step3 = ds.s3; return render(); }
@@ -1385,18 +1464,21 @@ document.addEventListener('click', async e => {
     case 'add-book': { const c = document.getElementById('f-livro').value; if (c && !S.form.livros.includes(c)) S.form.livros.push(c); render(); break; }
     case 'clear-books': S.form.livros = []; render(); break;
     case 'criar': criarPlano(); break;
+    case 'ics-plano': agendaPlano(); break;
+    case 'ics-diario': lembreteDiario(); break;
     case 'del': S.confirmDel = true; render(); break;
     case 'del-ok': { await delPlano(plan().id); S.confirmDel = false; toast('plano apagado'); render(); break; }
     case 'save-note': { const v = document.getElementById('nota').value;
       if (await saveNota(d.key, v, refName(d))) { delete S.draft[d.key]; if (v.trim()) marcaPasso('refletir'); toast(v.trim() ? 'guardado no diário' : 'reflexão apagada'); render(); } break; }
     case 'ask-note': { const v = document.getElementById('nota').value.trim(); perguntar(v ? 'Escrevi isso sobre a leitura, me ajuda a pensar mais: ' + v : 'Me ajuda a refletir sobre essa leitura?', 'leitura'); break; }
-    case 'g-save': S.gkey = document.getElementById('g-key').value.trim(); S.gmodel = document.getElementById('g-model').value.trim() || 'gemini-2.5-flash'; if (S.gkey) S.engine = 'gemini'; saveIA(); toast(S.gkey ? (S.user ? 'chave salva na sua conta' : 'chave salva neste aparelho') : 'chave apagada'); render(); break;
-    case 'g-test': S.gkey = document.getElementById('g-key').value.trim(); S.gmodel = document.getElementById('g-model').value.trim() || 'gemini-2.5-flash'; saveIA(); testarGemini(); break;
+    case 'g-save': S.gkey = document.getElementById('g-key').value.trim(); S.gmodel = document.getElementById('g-model').value.trim() || 'gemini-3-flash-preview'; if (S.gkey) S.engine = 'gemini'; saveIA(); toast(S.gkey ? (S.user ? 'chave salva na sua conta' : 'chave salva neste aparelho') : 'chave apagada'); render(); break;
+    case 'g-test': S.gkey = document.getElementById('g-key').value.trim(); S.gmodel = document.getElementById('g-model').value.trim() || 'gemini-3-flash-preview'; saveIA(); testarGemini(); break;
   }
 });
 document.addEventListener('input', e => {
   const id = e.target.id;
   if (id === 'nota') S.draft[cur().key] = e.target.value;
+  if (id === 'r-hora' && e.target.value) { S.hora = e.target.value; LS.set('hora', S.hora); }
   if (S.form && id && id.startsWith('f-')) { const map = { 'f-nome':'nome', 'f-inicio':'inicio', 'f-fim':'fim', 'f-pordia':'porDia' };
     if (map[id]) S.form[map[id]] = e.target.value; const pv = document.getElementById('f-prev'); if (pv) pv.innerHTML = previewTxt(); }
 });
@@ -1406,10 +1488,10 @@ document.addEventListener('submit', e => {
   const v = input.value; if (!v.trim()) return; input.value = ''; input.blur();
   const f = e.target.dataset.form;
   if (f === 'word') return palavraLivre(cur(), v);
-  if (f === 'ask-home') return perguntar(v, 'leitura');
   perguntar(v);
 });
 window.addEventListener('hashchange', () => { readHash(); render(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.chatOpen) { S.chatOpen = false; render(); } });
 boot();
 })();
 </script>
