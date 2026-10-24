@@ -94,9 +94,9 @@ svg.i.lg{width:22px;height:22px}
 
 svg.sym{width:18px;height:18px;flex:none}
 /* marca: o símbolo no formato do ícone do app */
-svg.symt{width:44px;height:44px;flex:none;filter:drop-shadow(0 6px 14px rgba(var(--ink-rgb),.16))}
+svg.symt{width:36px;height:36px;flex:none;filter:drop-shadow(0 6px 14px rgba(var(--ink-rgb),.16))}
 .appbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 0 4px}
-.brandm{display:flex;align-items:center;gap:11px;border:0;background:none;padding:0;color:var(--ink);font-size:21px;font-weight:500;letter-spacing:-.03em}
+.brandm{display:flex;align-items:center;gap:9px;border:0;background:none;padding:0;color:var(--ink);font-size:17px;font-weight:500;letter-spacing:-.03em}
 .brandm i{font-style:normal;color:var(--rose)}
 .nav .brand i{font-style:normal;color:var(--rose)}
 /* cartões */
@@ -341,7 +341,8 @@ label.btn{cursor:pointer}
 .crop img{position:absolute;left:50%;top:50%;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
 input[type=range]{width:100%;accent-color:var(--rosa)}
 .seg button svg.i{width:15px;height:15px;vertical-align:-3px;margin-right:2px}
-.pals{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.pals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:640px){.pals{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .pal{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:22px;padding:13px 14px;display:flex;flex-direction:column;gap:9px;color:var(--ink);min-width:0}
 .pal.on{border-color:var(--rose);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.18)}
 .pal-sw{display:flex;padding-left:6px}
@@ -349,7 +350,8 @@ input[type=range]{width:100%;accent-color:var(--rosa)}
 .pal b{font-weight:500;font-size:13.5px;line-height:1.2}
 .pal small{font-size:11px;color:var(--muted);line-height:1.35}
 .nav-me{display:none}
-.syms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.syms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:640px){.syms{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .symb{border:1px solid var(--line);background:var(--surface);border-radius:22px;padding:12px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--ink);min-width:0}
 .symb svg.symt{width:52px;height:52px}
 .symb small{font-size:10.5px;color:var(--muted);line-height:1.25;text-align:center}
@@ -376,6 +378,13 @@ body.chat-open{overflow:hidden}
 .sh-body{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:4px 2px 12px;overscroll-behavior:contain}
 .sh-foot{flex:none;padding-top:8px}
 .sh-note{font-size:11.5px;color:var(--muted);text-align:center;margin:8px 0 0}
+@media (min-width:640px) and (max-width:1099px){
+  .sheet{left:50%;right:auto;width:min(640px,calc(100vw - 48px));transform:translateX(-50%);bottom:24px;border-radius:30px;height:min(80vh,820px)}
+  .sheet.anim{animation:upc .32s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes upc{from{transform:translate(-50%,40px);opacity:0}to{transform:translateX(-50%);opacity:1}}
+  .sheet::before{display:none}
+  .fab{right:max(28px, calc((100vw - 720px) / 2 - 76px))}
+}
 /* menu: barra branca simples; ativo em blush */
 .nav{position:fixed;z-index:20;left:max(16px, env(safe-area-inset-left, 0px));right:max(16px, env(safe-area-inset-right, 0px));
   bottom:calc(14px + env(safe-area-inset-bottom, 0px));height:66px;max-width:340px;margin:0 auto;border-radius:999px;
@@ -389,12 +398,12 @@ body.chat-open{overflow:hidden}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .note-local{font-size:11px;color:var(--muted);text-align:center;margin:0}
 
-@media (min-width:820px){
+@media (min-width:1100px){
   .shell{padding:40px 24px 64px 268px}
   .nav{right:auto;left:calc(24px + env(safe-area-inset-left, 0px));top:24px;bottom:24px;margin:0;width:220px;height:auto;max-width:none;
     display:flex;flex-direction:column;gap:4px;padding:26px 14px;border:0;border-radius:32px;background:var(--surface);box-shadow:0 20px 50px -30px rgba(var(--ink-rgb),.45)}
-  .nav .brand{display:flex;align-items:center;gap:12px;color:var(--ink);font-size:26px;font-weight:500;letter-spacing:-.03em;padding:0 6px 28px}
-  .nav .brand svg.symt{width:54px;height:54px}
+  .nav .brand{display:flex;align-items:center;gap:10px;color:var(--ink);font-size:18px;font-weight:500;letter-spacing:-.03em;padding:0 6px 28px}
+  .nav .brand svg.symt{width:38px;height:38px}
   .appbar{display:none}
   .tab{width:100%;height:48px;margin:0;border-radius:18px;flex-direction:row;justify-content:flex-start;gap:12px;padding:0 16px;font-size:14px}
   .tab svg{width:19px;height:19px}
@@ -1050,13 +1059,7 @@ const PALETAS = [
     d:{ bg:'#1D221E', surface:'#283029', hero:'#303A31', ink:'#EDEFE4', accent:'#A9BE9F', accentInk:'#C3D4BA' } },
   { id:'ceu', nome:'Céu', sub:'azul calmo e névoa',
     l:{ bg:'#E8ECF3', surface:'#F8F9FC', ink:'#3E4656', accent:'#6F82A6', accentInk:'#56688A', soft:'#D6DEEF', steel:'#A0A8B8', line:'#DBE0EB', halo:'#FFFFFF' },
-    d:{ bg:'#1B1F28', surface:'#262B36', hero:'#2E3546', ink:'#E8ECF3', accent:'#A3B3D3', accentInk:'#BFCBE4' } },
-  { id:'lavanda', nome:'Lavanda', sub:'lilás e branco',
-    l:{ bg:'#EFEAF4', surface:'#FBF9FD', ink:'#4C4458', accent:'#8E7DAA', accentInk:'#74668F', soft:'#E4DAF1', steel:'#ABA4B6', line:'#E3DCEB', halo:'#FFFFFF' },
-    d:{ bg:'#211D27', surface:'#2C2734', hero:'#362F42', ink:'#EFEAF4', accent:'#B9AAD3', accentInk:'#CEC3E3' } },
-  { id:'plane', nome:'Planê', sub:'creme, ardósia e rosé',
-    l:{ bg:'#F5F1EE', surface:'#FFFFFF', ink:'#3E4B57', accent:'#3E4B57', accentInk:'#A88A80', num:'#A88A80', soft:'#F4E8E5', steel:'#8B939A', line:'#EBE1DC', halo:'#FFFFFF' },
-    d:{ bg:'#1C2126', surface:'#252B31', hero:'#2C343C', ink:'#EEF0F2', accent:'#D6B3AB', accentInk:'#D6B3AB' } }
+    d:{ bg:'#1B1F28', surface:'#262B36', hero:'#2E3546', ink:'#E8ECF3', accent:'#A3B3D3', accentInk:'#BFCBE4' } }
 ];
 const SIMBOLOS = [
   { id:'1', nome:'rosinha e dusty', bg:'#F5D5D2', halo:'#FBF8EE', arch:'#A0817E' },
@@ -1345,7 +1348,7 @@ function viewChat(){
       ${turns.length && !ext ? `<p class="sh-note">A conversa fica guardada aqui.</p>` : ''}</div>
   </section>`;
 }
-function openChat(){ S.chatOpen = true; S.chatAnim = true; render(); if (matchMedia('(min-width:820px)').matches) setTimeout(() => { const i = document.getElementById('ask-chat'); if (i) i.focus(); }, 60); }
+function openChat(){ S.chatOpen = true; S.chatAnim = true; render(); if (matchMedia('(min-width:1100px)').matches) setTimeout(() => { const i = document.getElementById('ask-chat'); if (i) i.focus(); }, 60); }
 function abrirClaude(texto){
   const q = `${texto}\n\n(Contexto: estou lendo ${chatAbout()} no meu plano de leitura da Bíblia "${plan().nome}". Estou começando agora: responda em português do Brasil, curto, simples e acolhedor.)`;
   window.open('https://claude.ai/new?q=' + encodeURIComponent(q), '_blank', 'noopener'); toast('abrindo no Claude');
