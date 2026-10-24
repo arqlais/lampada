@@ -953,8 +953,8 @@ const aiEngine = () => engineReady(S.engine) ? S.engine : engineReady('gemini') 
 const aiName = e => e === 'gemini' ? 'Gemini' : 'Claude';
 class AIError extends Error { constructor(code, msg, text){ super(msg || code); this.code = code; this.text = text; } }
 
-async function geminiCall(turns, { json = false, onText, signal } = {}){
-  const model = (S.gmodel || 'gemini-3-flash-preview').trim();
+async function geminiCall(turns, { json = false, onText, signal, model:forced } = {}){
+  const model = (forced || S.gmodel || 'gemini-3-flash-preview').trim();
   const base = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model);
   const sys = turns[0].content, rest = turns.slice(1);
   const body = { systemInstruction:{ parts:[{ text:sys }] },
@@ -966,7 +966,7 @@ async function geminiCall(turns, { json = false, onText, signal } = {}){
       method:'POST', signal, headers:{ 'Content-Type':'application/json', 'x-goog-api-key':S.gkey }, body:JSON.stringify(body) });
   } catch (e) { if (signal && signal.aborted) throw new AIError('cancelled'); throw new AIError('network'); }
   if (!res.ok) { let m = ''; try { m = (await res.json()).error.message; } catch {}
-    throw new AIError(res.status === 400 && /API key/i.test(m) ? 'bad_key' : res.status === 403 ? 'bad_key' : res.status === 429 ? 'rate_limited' : res.status === 404 ? 'bad_model' : 'upstream', m); }
+    throw new AIError(res.status === 400 && /API key/i.test(m) ? 'bad_key' : res.status === 403 ? 'bad_key' : res.status === 429 ? 'rate_limited' : res.status === 404 || /model/i.test(m) && res.status === 400 ? 'bad_model' : 'upstream', m); }
   const pick = o => ((o.candidates && o.candidates[0] && o.candidates[0].content && o.candidates[0].content.parts) || []).map(p => p.text || '').join('');
   if (!onText) { const o = await res.json(); const t = pick(o); if (!t) throw new AIError('empty'); return t; }
   const rd = res.body.getReader(), dec = new TextDecoder(); let buf = '', text = '';
@@ -1091,15 +1091,25 @@ function scrollEnd(){ requestAnimationFrame(() => { const b = document.getElemen
 async function testarGemini(){
   if (!S.gkey) return toast('cole sua chave primeiro');
   if (IN_CLAUDE) return toast('o Gemini funciona no app publicado no seu endereço');
-  S.busy.teste = true; render();
-  try { await geminiCall([{ role:'user', content:'Responda só: ok' }, { role:'user', content:'teste' }]); toast('Gemini conectado'); S.engine = 'gemini'; saveIA(); }
-  catch (e) { toast(errCopy(e.code)); }
+  S.busy.teste = true; S.gtest = null; render();
+  const ordem = [S.gmodel, ...MODELOS.map(m => m[0]).filter(m => m !== S.gmodel)];
+  let ultimo = null;
+  for (const m of ordem) {
+    try { await geminiCall([{ role:'user', content:'Responda só: ok' }, { role:'user', content:'teste' }], { model:m });
+      const trocou = m !== S.gmodel; S.gmodel = m; S.engine = 'gemini'; saveIA();
+      S.gtest = { ok:true, msg:'Gemini conectado' + (trocou ? ' (usando ' + (MODELOS.find(x => x[0] === m) || [m, m])[1] + ', que funcionou com a sua chave)' : '') };
+      ultimo = null; break; }
+    catch (e) { ultimo = e; if (e.code !== 'bad_model' && e.code !== 'upstream') break; }
+  }
+  if (ultimo) S.gtest = { ok:false, msg:errCopy(ultimo.code) + (ultimo.message && ultimo.message !== ultimo.code ? ' Mensagem do Google: "' + String(ultimo.message).slice(0, 180) + '"' : '') };
+  toast(S.gtest.ok ? 'Gemini conectado' : 'não conectou: veja o motivo embaixo do botão');
   S.busy.teste = false; render();
 }
 
 const horaL = () => S.ui.hora || S.hora || '07:30';
 const MODELOS = [
   ['gemini-3-flash-preview', 'Gemini 3 Flash', 'rápido e com uso grátis'],
+  ['gemini-flash-latest', 'Gemini Flash (atual)', 'o Flash mais novo, grátis'],
   ['gemini-2.5-flash', 'Gemini 2.5 Flash', 'versão anterior, também grátis']
 ];
 /* ---------- paletas (perfil) ---------- */
@@ -1603,7 +1613,7 @@ function cAjustes(){
     <label class="field"><span>sua chave</span><input class="inp" id="g-key" type="password" autocomplete="off" placeholder="cole a chave aqui" value="${esc(S.gkey)}"></label>
     <label class="field"><span>modelo</span><select class="inp" id="g-model">${(MODELOS.some(m => m[0] === S.gmodel) ? MODELOS : MODELOS.concat([[S.gmodel, S.gmodel, 'outro']])).map(m => `<option value="${esc(m[0])}" ${m[0] === S.gmodel ? 'selected' : ''}>${esc(m[1])} · ${esc(m[2])}</option>`).join('')}</select></label>
     <button class="btn ghost" data-act="g-test" ${S.busy.teste ? 'disabled' : ''}>${S.busy.teste ? 'testando…' : 'testar conexão'}</button>
-    <p class="small" style="margin:-4px 0 0">A chave e o modelo salvam sozinhos.</p>
+    ${S.gtest ? `<p class="small" style="margin:-4px 0 0;color:${S.gtest.ok ? 'var(--ok)' : 'var(--rose-ink)'}">${esc(S.gtest.msg)}</p>` : `<p class="small" style="margin:-4px 0 0">A chave e o modelo salvam sozinhos.</p>`}
     <p class="hint">Tudo grátis: use uma chave de um projeto <b>sem faturamento</b> no AI Studio. Assim o Google nunca cobra; no máximo, chega no limite do dia e volta a funcionar no dia seguinte (<a href="https://github.com/arqlais/lampada/blob/main/GUIA.md#2-gemini-o-chat-e-as-explicações" target="_blank" rel="noopener">como criar</a>).</p>
     ${IN_CLAUDE ? `<p class="hint">Aqui dentro do Claude a página não consegue falar com o Google, então quem responde é o Claude. A chave vale quando o app estiver publicado no seu endereço.</p>` : ''}
   </section>
