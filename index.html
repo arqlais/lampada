@@ -412,6 +412,15 @@ body.chat-open{overflow:hidden}
 .sh-tools{display:flex;flex-direction:column;gap:10px;flex:none;padding-bottom:12px}
 .sh-body{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:4px 2px 12px;overscroll-behavior:contain}
 .sh-foot{flex:none;padding-top:8px}
+.sh-mid{flex:1;min-width:0}
+.sh-mid .sh-title{font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sh-mid .small{margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sh-acts{display:flex;gap:8px;flex:none}
+.sh-x{position:relative}
+.sh-x .cnt{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:9px;background:var(--rosa);color:var(--on-accent);font-size:10px;font-style:normal;font-weight:500;display:flex;align-items:center;justify-content:center;padding:0 5px}
+.cvs .li.on .num{background:var(--blush);border-color:transparent}
+.ask textarea{flex:1;min-width:0;border:none;outline:none;background:transparent;font:inherit;font-weight:300;font-size:14px;resize:none;padding:15px 0;line-height:1.45;max-height:140px;color:var(--ink)}
+.ask textarea::placeholder{color:var(--muted)}
 .sh-note{font-size:11.5px;color:var(--muted);text-align:center;margin:8px 0 0}
 @media (min-width:640px) and (max-width:1099px){
   .sheet{left:50%;right:auto;width:min(640px,calc(100vw - 48px));transform:translateX(-50%);bottom:24px;border-radius:30px;height:min(80vh,820px)}
@@ -768,7 +777,7 @@ let ROOT_PATH = 'perfis/' + PERFIL;
 const ROOT = () => ROOT_PATH, CAPS = () => IN_CLAUDE ? 'capitulos' : ROOT_PATH + '/capitulos';
 const S = {
   tab:'hoje', ativo:'natal', planos:{}, lidosNatal:{}, notas:{}, caps:{}, conversas:{}, vocab:{}, aulas:{}, passos:{},
-  sel:null, selPlan:null, open:null, aula:null, ctab:'planos', chatCtx:'leitura', form:null, confirmDel:false, step3:'palavras',
+  sel:null, selPlan:null, open:null, aula:null, ctab:'planos', chatCtx:'leitura', chatId:null, chatView:'conversa', form:null, confirmDel:false, step3:'palavras',
   engine: IN_CLAUDE ? 'claude' : 'gemini', gkey:'', gmodel:'gemini-3-flash-preview', hora:'07:30',
   db:null, sample:null, busy:{}, draft:{}, pending:false, ctl:null,
   fx:{ view:true }, wmode:'entrar', wf:{}, werr:'', ui:{ nome:'', foto:'', fotoOrig:'', ajuste:null, paleta:'dusty', tema:'auto', simbolo:'1' }, edit:null, sync:{ st:'ok' }
@@ -808,11 +817,27 @@ const LS = {
   get(k, f){ try { const v = localStorage.getItem('lampada.' + k); return v ? JSON.parse(v) : f; } catch { return f; } },
   set(k, v){ try { localStorage.setItem('lampada.' + k, JSON.stringify(v)); } catch {} }
 };
+/* uma conversa = { id, titulo, ctx ('leitura:<capítulo>' ou 'aula:<id>'), about, criado, atualizado, turns } */
+function conv(id, v){
+  if (Array.isArray(v)) v = { turns:v };
+  v = Object.assign({}, v || {}); const turns = (v.turns || []).slice();
+  const ctx = v.ctx || (/^aula-/.test(id) ? 'aula:' + id.slice(5) : 'leitura:' + id);
+  const first = turns.find(t => t.role === 'user');
+  return { id, ctx, about:v.about || aboutDe(ctx), titulo:v.titulo || (first ? resumo(first.content) : 'nova conversa'),
+    criado:v.criado || v.atualizado || new Date(0).toISOString(), atualizado:v.atualizado || v.criado || new Date(0).toISOString(), turns };
+}
+const resumo = t => { t = String(t).replace(/\s+/g, ' ').trim(); return t.length > 52 ? t.slice(0, 50).replace(/\s\S*$/, '') + '…' : t; };
+function aboutDe(ctx){
+  if (/^aula:/.test(ctx)) { const a = AULAS.find(x => x.id === ctx.slice(5)); return a ? 'a aula "' + a.t + '"' : 'uma aula'; }
+  const key = ctx.replace(/^leitura:/, ''); for (const p of allPlans()) { const d = p.days.find(x => x.key === key); if (d) return refName(d); }
+  return 'a leitura';
+}
+function normConversas(obj){ const out = {}; Object.entries(obj || {}).forEach(([k, v]) => { out[k] = conv(k, v); }); return out; }
 function loadLocal(){
   const pf = LS.get('perfil', null) || {};
   S.lidosNatal = pf.lidos || LS.get('lidos', {}); S.ativo = pf.ativo || 'natal'; S.aulas = pf.aulas || {}; S.passos = pf.passos || {};
   const pl = LS.get('planos', {}); S.planos = {}; Object.values(pl).forEach(d => { S.planos[d.id] = expand(d); });
-  S.notas = LS.get('notas', {}); S.caps = LS.get('caps', {}); S.conversas = LS.get('conversas', {}); S.vocab = LS.get('vocab', {});
+  S.notas = LS.get('notas', {}); S.caps = LS.get('caps', {}); S.conversas = normConversas(LS.get('conversas', {})); S.vocab = LS.get('vocab', {});
   const cfg = LS.get('ia', {}); S.gkey = cfg.gkey || ''; S.gmodel = !cfg.gmodel || /pro/.test(cfg.gmodel) ? 'gemini-3-flash-preview' : cfg.gmodel; S.hora = LS.get('hora', '07:30');
   if (cfg.engine) S.engine = cfg.engine;
   const ui = LS.get('ui', null);
@@ -878,9 +903,10 @@ async function saveCap(key, patch){
   S.caps[key] = Object.assign({}, BASE[key], S.caps[key], patch); LS.set('caps', S.caps);
   return nuvem(() => S.db.doc(CAPS() + '/' + key).set(limpo(S.caps[key])));
 }
+async function delConversa(id){ LS.set('cvApagadas', LS.get('cvApagadas', []).concat(id).slice(-300)); delete S.conversas[id]; if (S.chatId === id) S.chatId = null; LS.set('conversas', S.conversas); LS.set('chatId', S.chatId); return nuvem(() => S.db.doc(ROOT() + '/conversas/' + id).delete()); }
 async function saveConversa(key){
-  const turns = (S.conversas[key] || []).slice(-40); S.conversas[key] = turns; LS.set('conversas', S.conversas);
-  return nuvem(() => S.db.doc(ROOT() + '/conversas/' + key).set(limpo({ turns })));
+  const c = S.conversas[key]; if (!c) return; c.turns = c.turns.slice(-80); LS.set('conversas', S.conversas);
+  return nuvem(() => S.db.doc(ROOT() + '/conversas/' + key).set(limpo(c)));
 }
 async function saveVocab(){ LS.set('vocab', S.vocab); return nuvem(() => S.db.doc(ROOT() + '/extras/vocab').set(limpo({ itens:S.vocab }))); }
 const saveIA = () => { const v = { gkey:S.gkey, gmodel:S.gmodel, engine:S.engine }; LS.set('ia', v); if (!IN_CLAUDE) nuvem(() => S.db.doc(ROOT() + '/extras/ia').set(limpo(v))); };
@@ -902,7 +928,9 @@ function subscribe(db){
   subs.push(db.collection(P + '/diario').onSnapshot(q => { const n = {}; q.docs.forEach(d => n[d.id] = d.data()); S.notas = n; soft(); }, () => {}));
   subs.push(db.collection(CAPS()).onSnapshot(q => { const n = {}; q.docs.forEach(d => n[d.id] = d.data()); S.caps = n; soft(); }, () => {}));
   subs.push(db.doc(P + '/extras/vocab').onSnapshot(s => { S.vocab = s.exists ? Object.assign({}, s.data().itens || {}) : {}; soft(); }, () => {}));
-  subs.push(db.collection(P + '/conversas').onSnapshot(q => { if (!S.busy.chat) q.docs.forEach(d => { S.conversas[d.id] = (d.data().turns || []).slice(); }); if (S.chatOpen) soft(); }, () => {}));
+  subs.push(db.collection(P + '/conversas').onSnapshot(q => { if (!S.busy.chat) { const n = {}, apagadas = LS.get('cvApagadas', []); q.docs.forEach(d => { n[d.id] = conv(d.id, d.data()); });
+      Object.values(S.conversas).forEach(c => { if (!n[c.id] && c.turns.length && !apagadas.includes(c.id)) { n[c.id] = c; nuvem(() => db.doc(P + '/conversas/' + c.id).set(limpo(c))); } });
+      S.conversas = n; LS.set('conversas', n); } if (S.chatOpen) soft(); }, () => {}));
   subs.push(db.doc(P + '/extras/ui').onSnapshot(s => { if (s.exists) { S.ui = Object.assign({}, S.ui, s.data()); LS.set('ui', S.ui); applyUI(); } soft(); }, () => {}));
   if (!IN_CLAUDE) subs.push(db.doc(P + '/extras/ia').onSnapshot(s => { if (s.exists) { const d = s.data(); if (d.gkey) S.gkey = d.gkey; if (d.gmodel) S.gmodel = d.gmodel; if (d.engine) S.engine = d.engine; LS.set('ia', { gkey:S.gkey, gmodel:S.gmodel, engine:S.engine }); } soft(); }, () => {}));
   return () => subs.forEach(u => { try { u(); } catch {} });
@@ -935,6 +963,7 @@ async function subirLocal(fs){   /* primeiro login: leva o que já estava neste 
   Object.entries(S.notas).forEach(([k, v]) => b.set(fs.doc(P + '/diario/' + k), v));
   if (Object.keys(S.vocab).length) b.set(fs.doc(P + '/extras/vocab'), { itens:S.vocab });
   b.set(fs.doc(P + '/extras/ui'), S.ui);
+  Object.values(S.conversas).filter(c => c.turns && c.turns.length).slice(0, 200).forEach(c => b.set(fs.doc(P + '/conversas/' + c.id), limpo(c)));
   if (S.gkey) b.set(fs.doc(P + '/extras/ia'), { gkey:S.gkey, gmodel:S.gmodel, engine:S.engine });
   await b.commit();
 }
@@ -1071,32 +1100,51 @@ async function prepararSemana(){
   S.busy.semana = false; render();
 }
 
-/* conversa: um fio por leitura ou por aula */
-function chatKey(){ return S.chatCtx === 'leitura' ? cur().key : 'aula-' + S.chatCtx; }
-function chatAbout(){ if (S.chatCtx === 'leitura') return refName(cur()); const a = AULAS.find(x => x.id === S.chatCtx); return a ? 'a aula "' + a.t + '"' : refName(cur()); }
+/* conversas: cada uma separada, salvas, e a IA sempre recebe o contexto da pessoa */
+const conversa = () => S.conversas[S.chatId] || null;
+function chatAbout(){ const c = conversa(); return c ? c.about : refName(cur()); }
+function novaConversa(ctx){
+  ctx = ctx || 'leitura:' + cur().key;
+  const id = 'c' + Date.now().toString(36), agora = new Date().toISOString();
+  S.conversas[id] = { id, ctx, about:aboutDe(ctx), titulo:'nova conversa', criado:agora, atualizado:agora, turns:[] };
+  S.chatId = id; S.chatView = 'conversa'; LS.set('chatId', id); return S.conversas[id];
+}
+function contextoIA(c){
+  const p = plan(), d = cur(), cap = capOf(d.key), pr = progresso(p), st = streak();
+  const L = [`Nome: ${nome() || 'não informado'}.`,
+    `Plano de leitura ativo: "${p.nome}". Leitura do dia: ${refName(d)} (dia ${d.i + 1} de ${p.days.length}). Já leu ${pr.n} de ${pr.total} leituras${st ? `, ${st} ${st === 1 ? 'dia seguido' : 'dias seguidos'}` : ''}${pr.atras.length ? `, com ${pr.atras.length} pra colocar em dia` : ''}.`];
+  if (cap.resumo) L.push(`Resumo da leitura do dia: ${cap.resumo}${cap.contexto ? ' Contexto: ' + cap.contexto : ''}`);
+  const aulas = AULAS.filter(x => S.aulas[x.id]); if (aulas.length) L.push(`Aulas da trilha que já fez (${aulas.length} de ${AULAS.length}): ${aulas.slice(-4).map(x => x.t).join('; ')}.`);
+  const notas = Object.values(S.notas).filter(x => x && x.texto).sort((a, b) => String(b.quando).localeCompare(String(a.quando))).slice(0, 3);
+  if (notas.length) L.push('Reflexões recentes no diário: ' + notas.map(n => `(${n.nome || n.ref}) "${resumo(n.texto).replace(/…$/, '')}"`).join(' · '));
+  const pal = Object.values(S.vocab).slice(-8).map(w => w.palavra); if (pal.length) L.push('Palavras que guardou pra rever: ' + pal.join(', ') + '.');
+  const outras = Object.values(S.conversas).filter(x => x.id !== (c && c.id) && x.turns.length).sort((a, b) => String(b.atualizado).localeCompare(String(a.atualizado))).slice(0, 5);
+  if (outras.length) L.push('Assuntos de outras conversas recentes: ' + outras.map(x => `"${x.titulo}" (sobre ${x.about})`).join('; ') + '.');
+  if (c && /^aula:/.test(c.ctx)) { const a = AULAS.find(x => x.id === c.ctx.slice(5)); if (a) L.push('Resumo da aula desta conversa: ' + a.p.join(' ')); }
+  return L.join('\n');
+}
 async function perguntar(texto, ctx){
   texto = String(texto || '').trim(); if (!texto || S.busy.chat) return;
-  if (ctx) S.chatCtx = ctx;
+  let c = conversa();
+  if (!c || (ctx && c.ctx !== (ctx === 'leitura' ? 'leitura:' + cur().key : ctx.includes(':') ? ctx : 'aula:' + ctx) && c.turns.length)) c = novaConversa(ctx ? (ctx === 'leitura' ? 'leitura:' + cur().key : ctx.includes(':') ? ctx : 'aula:' + ctx) : null);
   if (S.engine === 'claude' && !S.sample) return abrirClaude(texto);
   if (!aiEngine()) { openChat(); return toast(errCopy('no_ai')); }
-  const key = chatKey(), turns = S.conversas[key] = (S.conversas[key] || []).slice();
-  turns.push({ role:'user', content:texto });
-  S.busy.chat = true; S.chatOpen = true; render(); scrollEnd();
-  let about = chatAbout();
-  if (S.chatCtx !== 'leitura') { const a = AULAS.find(x => x.id === S.chatCtx); if (a) about += '. Resumo da aula: ' + a.p.join(' '); }
-  const regras = guia() + `\nA pessoa quer conversar sobre ${about}. Ela também está no plano de leitura "${plan().nome}". Responda como numa conversa: curto (até 2 parágrafos), acolhedor e claro. Se ela pedir o texto bíblico inteiro, sugira abrir no YouVersion em vez de copiar.`;
+  if (!c.turns.length) c.titulo = resumo(texto);
+  c.turns.push({ role:'user', content:texto }); c.atualizado = new Date().toISOString();
+  S.busy.chat = true; S.chatOpen = true; S.chatView = 'conversa'; render(); scrollEnd();
+  const regras = guia() + `\n\nO que você já sabe sobre a pessoa (use quando ajudar, com naturalidade, sem listar tudo):\n${contextoIA(c)}\n\nEsta conversa é sobre ${c.about}. Você está continuando uma conversa: lembre do que já foi dito acima e não se apresente de novo. Responda como numa conversa: curto (até 2 parágrafos), acolhedor e claro. Se pedirem o texto bíblico inteiro, sugira abrir no YouVersion em vez de copiar.`;
   const ctl = S.ctl = new AbortController();
   try {
-    const r = await aiChat([{ role:'user', content:regras }, ...turns.slice(-16)], { signal:ctl.signal,
+    const r = await aiChat([{ role:'user', content:regras }, ...c.turns.slice(-40).map(t => ({ role:t.role, content:t.content }))], { signal:ctl.signal,
       onText: t => { const b = document.getElementById('live'); if (b) { b.textContent = clean(t); scrollEnd(); } } });
-    turns.push({ role:'assistant', content:clean(r.text), by:r.engine });
+    c.turns.push({ role:'assistant', content:clean(r.text), by:r.engine });
   } catch (e) {
-    if (e && e.text) turns.push({ role:'assistant', content:clean(e.text), by:aiEngine() });
-    else if (e && e.code !== 'cancelled') turns.push({ role:'assistant', content:errCopy(e && e.code), by:'app' });
-    else turns.pop();
+    if (e && e.text) c.turns.push({ role:'assistant', content:clean(e.text), by:aiEngine() });
+    else if (e && e.code !== 'cancelled') c.turns.push({ role:'assistant', content:errCopy(e && e.code), by:'app' });
+    else c.turns.pop();
   }
-  S.busy.chat = false; S.ctl = null;
-  await saveConversa(key); render(); scrollEnd();
+  c.atualizado = new Date().toISOString(); S.busy.chat = false; S.ctl = null;
+  await saveConversa(c.id); render(); scrollEnd();
 }
 function scrollEnd(){ requestAnimationFrame(() => { const b = document.getElementById('sh-body'); if (b) b.scrollTop = b.scrollHeight; }); }
 async function testarGemini(){
@@ -1451,32 +1499,49 @@ function viewAula(a){
 }
 
 function viewChat(){
-  const key = chatKey(), turns = S.conversas[key] || [], d = cur(), ext = S.engine === 'claude' && !S.sample, e = aiEngine();
-  const sugest = S.chatCtx === 'leitura'
-    ? ['me explica com outras palavras', 'qual é o contexto dessa época?', 'quem são as pessoas dessa leitura?', 'como isso fala com a minha vida hoje?']
-    : ['me dá um exemplo', 'explica de um jeito ainda mais simples', 'onde isso aparece na Bíblia?', 'o que eu leio depois disso?'];
-  const ctxs = [{ id:'leitura', t:refName(d) }].concat(AULAS.filter(x => S.aulas[x.id] || x.id === S.chatCtx || (proxAula() && proxAula().id === x.id)).slice(-4).map(x => ({ id:x.id, t:'aula: ' + x.t })));
+  const ext = S.engine === 'claude' && !S.sample, e = aiEngine(), lista = S.chatView === 'lista', c = conversa();
+  const todas = Object.values(S.conversas).filter(x => x.turns.length).sort((a, b) => String(b.atualizado).localeCompare(String(a.atualizado)));
+  const quando = iso => { const d = new Date(iso), dd = diffDays(d, new Date()); if (d.getFullYear() < 2001) return 'antiga'; return dd <= 0 ? 'hoje' : dd === 1 ? 'ontem' : d.toLocaleDateString('pt-BR', { day:'numeric', month:'short' }); };
+  const aviso = ext ? `<p class="hint">Sua pergunta abre no Claude (claude.ai) numa aba nova, já com o contexto.</p>`
+    : S.engine === 'gemini' && !geminiReady() ? `<button class="banner" data-go-ajustes="1"><span class="ic">${ico('key')}</span><span>${IN_CLAUDE ? 'Aqui dentro do Claude quem responde é o Claude. O Gemini responde no app publicado.' : '<b>Ligue o Gemini</b>: cole sua chave em perfil › inteligência artificial.'}</span>${ico('right')}</button>` : '';
+  const topo = `<div class="sh-h">
+      ${lista ? `<h2 class="sh-title">suas <em>conversas</em></h2>` : `<button class="sh-x" data-cv="lista" aria-label="Todas as conversas" title="todas as conversas">${ico('chat')}${todas.length ? `<i class="cnt">${todas.length}</i>` : ''}</button>
+        <div class="sh-mid"><h2 class="sh-title">${c && c.turns.length ? esc(c.titulo) : 'pergunte sem <em>medo</em>'}</h2><p class="small">sobre ${esc(chatAbout())}</p></div>`}
+      <div class="sh-acts"><button class="sh-x" data-cv="nova" aria-label="Nova conversa" title="nova conversa">${ico('plus')}</button><button class="sh-x" data-chat="close" aria-label="Fechar">${ico('x')}</button></div></div>`;
+  if (lista) return `<div class="scrim" data-chat="close"></div>
+  <section class="sheet ${S.chatAnim ? 'anim' : ''}" role="dialog" aria-modal="true" aria-label="Conversas">${topo}
+    <div class="sh-body">
+      <button class="btn primary" data-cv="nova">${ico('plus')}nova conversa sobre ${esc(refName(cur()))}</button>
+      ${todas.length ? `<div class="list cvs">${todas.map(x => `<button class="li cv ${x.id === S.chatId ? 'on' : ''}" data-cv-open="${x.id}"><span class="num">${ico('chat')}</span><span class="lt">${esc(x.titulo)}<small>${esc(x.about)} · ${quando(x.atualizado)} · ${Math.ceil(x.turns.length / 2)} ${x.turns.length > 2 ? 'perguntas' : 'pergunta'}</small></span>${ico('right')}</button>`).join('')}</div>`
+        : `<div class="empty">${ico('chat')}<span>Suas conversas ficam guardadas aqui. Cada uma separada, pra continuar quando quiser.</span></div>`}
+    </div></section>`;
+  const turns = c ? c.turns : [], ehAula = c && /^aula:/.test(c.ctx);
+  const sugest = ehAula ? ['me dá um exemplo', 'explica de um jeito ainda mais simples', 'onde isso aparece na Bíblia?', 'o que eu leio depois disso?']
+    : ['me explica com outras palavras', 'qual é o contexto dessa época?', 'quem são as pessoas dessa leitura?', 'como isso fala com a minha vida hoje?'];
+  const ctxs = [{ id:'leitura:' + cur().key, t:refName(cur()) }].concat(AULAS.filter(x => S.aulas[x.id] || (proxAula() && proxAula().id === x.id)).slice(-3).map(x => ({ id:'aula:' + x.id, t:'aula: ' + x.t })));
   let msgs = turns.map(t => t.role === 'user' ? `<div class="msg me">${esc(t.content)}</div>` : `<div class="msg ai"><span class="who">${ico('spark')}${t.by === 'app' ? 'Lâmpada' : aiName(t.by || 'claude')}</span>${esc(t.content)}</div>`).join('');
   if (S.busy.chat) msgs += `<div class="msg ai"><span class="who">${ico('spark')}${aiName(e)}</span><span id="live">${thinking('pensando')}</span></div><button class="linkbtn muted" data-act="stop">parar resposta</button>`;
-  const aviso = ext ? `<p class="hint">Sua pergunta abre no Claude (claude.ai) numa aba nova, já com o contexto da leitura.</p>`
-    : S.engine === 'gemini' && !geminiReady() ? `<button class="banner" data-go-ajustes="1"><span class="ic">${ico('key')}</span><span>${IN_CLAUDE ? 'Aqui dentro do Claude quem responde é o Claude. O Gemini responde no app publicado.' : '<b>Ligue o Gemini</b>: cole sua chave em perfil › inteligência artificial.'}</span>${ico('right')}</button>` : '';
   return `<div class="scrim" data-chat="close"></div>
-  <section class="sheet ${S.chatAnim ? 'anim' : ''}" role="dialog" aria-modal="true" aria-label="Conversa">
-    <div class="sh-h"><h2 class="sh-title">pergunte sem <em>medo</em></h2><button class="sh-x" data-chat="close" aria-label="Fechar">${ico('x')}</button></div>
+  <section class="sheet ${S.chatAnim ? 'anim' : ''}" role="dialog" aria-modal="true" aria-label="Conversa">${topo}
     <div class="sh-tools">
       <div class="seg" role="group" aria-label="Com quem conversar">${['gemini','claude'].map(en => `<button data-engine="${en}" aria-pressed="${S.engine === en}">${aiName(en)}${en === 'claude' && !IN_CLAUDE ? ' ' + ico('out') : ''}</button>`).join('')}</div>
-      <div class="ctxsel" role="group" aria-label="Sobre o que conversar">${ctxs.map(c => `<button data-ctx="${c.id}" aria-pressed="${S.chatCtx === c.id}">${esc(c.t)}</button>`).join('')}</div>
+      ${!turns.length ? `<div class="ctxsel" role="group" aria-label="Sobre o que conversar">${ctxs.map(x => `<button data-cv-ctx="${x.id}" aria-pressed="${(c ? c.ctx : 'leitura:' + cur().key) === x.id}">${esc(x.t)}</button>`).join('')}</div>` : ''}
       ${aviso}
     </div>
-    <div class="sh-body" id="sh-body">${turns.length || S.busy.chat ? msgs : `<p class="prose">Pergunte o que quiser sobre ${esc(chatAbout())}, do jeito que vier. Não existe pergunta boba.</p>
-      <div class="chips">${sugest.map(x => `<button class="chip" data-chip="${esc(x)}">${esc(x)}</button>`).join('')}</div>`}</div>
+    <div class="sh-body" id="sh-body">${turns.length || S.busy.chat ? msgs : `<p class="prose">Pergunte o que quiser sobre ${esc(chatAbout())}, do jeito que vier. A IA já sabe do seu plano, do que você leu e das suas reflexões.</p>
+      <div class="chips">${sugest.map(x => `<button class="chip" data-chip="${esc(x)}">${esc(x)}</button>`).join('')}</div>`}
+      ${c && turns.length && !S.busy.chat ? (S.confirmCv === c.id ? `<button class="danger" data-cv-del="${c.id}" style="align-self:center">toque de novo pra apagar esta conversa</button>` : `<button class="linkbtn muted" data-cv-askdel="${c.id}" style="align-self:center">apagar esta conversa</button>`) : ''}</div>
     <div class="sh-foot"><form class="ask" data-form="ask-chat"><label for="ask-chat" class="sr">Sua pergunta</label>
-      <input id="ask-chat" type="text" autocomplete="off" placeholder="${ext ? 'pergunte, e abre no Claude…' : 'escreva sua pergunta…'}" ${S.busy.chat ? 'disabled' : ''}>
+      <textarea id="ask-chat" rows="1" autocomplete="off" placeholder="${ext ? 'pergunte, e abre no Claude…' : turns.length ? 'continue a conversa…' : 'escreva sua pergunta…'}" ${S.busy.chat ? 'disabled' : ''}></textarea>
       <button class="send" aria-label="Enviar" ${S.busy.chat ? 'disabled' : ''}>${ico('send')}</button></form>
-      ${turns.length && !ext ? `<p class="sh-note">A conversa fica guardada aqui.</p>` : ''}</div>
+      ${turns.length && !ext ? `<p class="sh-note">Salva sozinha. Continue quando quiser em ${ico('chat')} conversas.</p>` : ''}</div>
   </section>`;
 }
-function openChat(){ S.chatOpen = true; S.chatAnim = true; render(); if (matchMedia('(min-width:1100px)').matches) setTimeout(() => { const i = document.getElementById('ask-chat'); if (i) i.focus(); }, 60); }
+function openChat(){
+  const c = conversa() || S.conversas[LS.get('chatId', '')];
+  if (c && c.turns.length && Date.now() - new Date(c.atualizado) < 12 * 36e5) { S.chatId = c.id; S.chatView = 'conversa'; }
+  else if (!c || c.turns.length) novaConversa();
+  S.chatOpen = true; S.chatAnim = true; render(); if (matchMedia('(min-width:1100px)').matches) setTimeout(() => { const i = document.getElementById('ask-chat'); if (i) i.focus(); }, 60); }
 function abrirClaude(texto){
   const q = `${texto}\n\n(Contexto: estou lendo ${chatAbout()} no meu plano de leitura da Bíblia "${plan().nome}". Estou começando agora: responda em português do Brasil, curto, simples e acolhedor.)`;
   window.open('https://claude.ai/new?q=' + encodeURIComponent(q), '_blank', 'noopener'); toast('abrindo no Claude');
@@ -1744,19 +1809,23 @@ const aulaPrompt = a => `Acabei de fazer a aula "${a.t}". Me explica isso um pou
 
 document.addEventListener('click', async e => {
   const rd = e.target.closest('[data-read]'); if (rd) { marcaPasso('ler'); setTimeout(render, 400); return; }
-  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes],[data-chat],[data-paleta],[data-tema],[data-simbolo]');
+  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes],[data-chat],[data-cv],[data-cv-open],[data-cv-ctx],[data-cv-del],[data-cv-askdel],[data-paleta],[data-tema],[data-simbolo]');
   if (!el) return;
   const ds = el.dataset;
   if (ds.tab) { if (ds.tab !== 'perfil') S.edit = null; if (ds.tab === 'aprender') S.aula = null; if (ds.tab === 'caminhada') S.form = null; return go(ds.tab); }
   if (ds.paleta) { S.ui.paleta = ds.paleta; return visual(); }
   if (ds.simbolo) { S.ui.simbolo = ds.simbolo; return visual(); }
   if (ds.tema) { S.ui.tema = ds.tema; return visual(); }
+  if (ds.cv) { S.confirmCv = null; if (ds.cv === 'lista') S.chatView = 'lista'; else novaConversa(); return render(); }
+  if (ds.cvOpen) { S.chatId = ds.cvOpen; S.chatView = 'conversa'; S.confirmCv = null; LS.set('chatId', ds.cvOpen); return render(); }
+  if (ds.cvCtx) { const c = conversa(); if (c && !c.turns.length) { c.ctx = ds.cvCtx; c.about = aboutDe(ds.cvCtx); } else novaConversa(ds.cvCtx); return render(); }
+  if (ds.cvAskdel) { S.confirmCv = ds.cvAskdel; return render(); }
+  if (ds.cvDel) { await delConversa(ds.cvDel); S.confirmCv = null; S.chatView = 'lista'; toast('conversa apagada'); return render(); }
   if (ds.chat) { if (ds.chat === 'open') return openChat(); S.chatOpen = false; return render(); }
   if (ds.goAjustes) { S.form = null; S.chatOpen = false; go('perfil'); setTimeout(() => { const el = document.getElementById('ia'); if (el) el.scrollIntoView({ block:'start' }); }, 120); return; }
   if (ds.step) { S.open = S.open === ds.step ? '' : ds.step; S.fx.step = true; return render(); }
   if (ds.done) { marcaPasso(ds.done); return render(); }
   if (ds.s3) { S.step3 = ds.s3; return render(); }
-  if (ds.ctx) { S.chatCtx = ds.ctx; return render(); }
   if (ds.aula) { S.aula = ds.aula; return go('aprender'); }
   if (ds.ctab) { S.ctab = ds.ctab; return render(); }
   if (ds.engine) { S.engine = ds.engine; saveIA(); return render(); }
@@ -1831,7 +1900,7 @@ document.addEventListener('change', e => {
 document.addEventListener('submit', e => {
   e.preventDefault();
   if (e.target.dataset.form === 'email') return loginEmail();
-  const input = e.target.querySelector('input'); if (!input) return;
+  const input = e.target.querySelector('input,textarea'); if (!input) return;
   const v = input.value; if (!v.trim()) return; input.value = ''; input.blur();
   const f = e.target.dataset.form;
   if (f === 'email') return;
@@ -1839,7 +1908,11 @@ document.addEventListener('submit', e => {
   perguntar(v);
 });
 window.addEventListener('hashchange', () => { readHash(); render(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.chatOpen) { S.chatOpen = false; render(); } });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && S.chatOpen) { S.chatOpen = false; render(); }
+  if (e.key === 'Enter' && !e.shiftKey && e.target.id === 'ask-chat') { e.preventDefault(); e.target.form.requestSubmit(); }
+});
+document.addEventListener('input', e => { if (e.target.id === 'ask-chat') { e.target.style.height = 'auto'; e.target.style.height = Math.min(e.target.scrollHeight, 140) + 'px'; } });
 boot();
 })();
 </script>
