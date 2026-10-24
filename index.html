@@ -372,6 +372,7 @@ input[type=range]{width:100%;accent-color:var(--rosa)}
 .pal b{font-weight:500;font-size:13.5px;line-height:1.2}
 .pal small{font-size:11px;color:var(--muted);line-height:1.35}
 [data-sync].bad{color:var(--rose-ink)}
+.grp{scroll-margin-top:20px;margin:18px 6px -2px;font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 .nav-me{display:none}
 .syms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media (min-width:640px){.syms{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -997,9 +998,9 @@ async function aiChat(turns, { onText, signal }){
   catch (x) { throw new AIError(x && x.code || 'upstream', '', x && x.text); }
 }
 const errCopy = c => ({
-  no_ai: IN_CLAUDE ? 'Libere o Claude quando o pedido de permissão aparecer.' : 'Coloque sua chave do Gemini em caminhada › ajustes.',
-  bad_key:'A chave do Gemini não funcionou. Confira em caminhada › ajustes.',
-  bad_model:'Esse modelo do Gemini não está liberado na sua chave. Escolha outro em caminhada › ajustes.',
+  no_ai: IN_CLAUDE ? 'Libere o Claude quando o pedido de permissão aparecer.' : 'Coloque sua chave do Gemini em perfil › inteligência artificial.',
+  bad_key:'A chave do Gemini não funcionou. Confira em perfil › inteligência artificial.',
+  bad_model:'Esse modelo do Gemini não está liberado na sua chave. Escolha outro em perfil › inteligência artificial.',
   network:'Sem conexão com a IA agora. Confira a internet e tente de novo.',
   not_granted:'O Claude não foi liberado nesta página. O pedido aparece de novo na próxima vez que abrir o app.',
   sampling_disabled:'O Claude não está disponível nesta conta.',
@@ -1217,7 +1218,7 @@ function agendaCard(){
 /* ---------- pedaços de tela ---------- */
 const greeting = () => { const h = new Date().getHours(); return h < 5 ? 'boa noite' : h < 12 ? 'bom dia' : h < 18 ? 'boa tarde' : 'boa noite'; };
 const thinking = t => `<div class="thinking"><span class="dots"><i></i><i></i><i></i></span>${t}</div>`;
-const aiOff = () => `<p class="hint">${IN_CLAUDE ? 'A IA aparece aqui assim que o Claude for liberado.' : 'Pra gerar isso, coloque sua chave do Gemini em <button class="linkbtn" data-go-ajustes="1" style="display:inline;padding:0">caminhada › ajustes</button>.'}</p>`;
+const aiOff = () => `<p class="hint">${IN_CLAUDE ? 'A IA aparece aqui assim que o Claude for liberado.' : 'Pra gerar isso, coloque sua chave do Gemini em <button class="linkbtn" data-go-ajustes="1" style="display:inline;padding:0">perfil › inteligência artificial</button>.'}</p>`;
 function header(){
   const n = nome();
   return `<header class="top"><div><p class="eyebrow">${esc(fmtLong(new Date()))}</p><h1 class="title">${greeting()}${n ? `, <em>${esc(n)}</em>` : ''}</h1></div></header>`;
@@ -1438,7 +1439,7 @@ function viewChat(){
   let msgs = turns.map(t => t.role === 'user' ? `<div class="msg me">${esc(t.content)}</div>` : `<div class="msg ai"><span class="who">${ico('spark')}${t.by === 'app' ? 'Lâmpada' : aiName(t.by || 'claude')}</span>${esc(t.content)}</div>`).join('');
   if (S.busy.chat) msgs += `<div class="msg ai"><span class="who">${ico('spark')}${aiName(e)}</span><span id="live">${thinking('pensando')}</span></div><button class="linkbtn muted" data-act="stop">parar resposta</button>`;
   const aviso = ext ? `<p class="hint">Sua pergunta abre no Claude (claude.ai) numa aba nova, já com o contexto da leitura.</p>`
-    : S.engine === 'gemini' && !geminiReady() ? `<button class="banner" data-go-ajustes="1"><span class="ic">${ico('key')}</span><span>${IN_CLAUDE ? 'Aqui dentro do Claude quem responde é o Claude. O Gemini responde no app publicado.' : '<b>Ligue o Gemini</b>: cole sua chave em caminhada › ajustes.'}</span>${ico('right')}</button>` : '';
+    : S.engine === 'gemini' && !geminiReady() ? `<button class="banner" data-go-ajustes="1"><span class="ic">${ico('key')}</span><span>${IN_CLAUDE ? 'Aqui dentro do Claude quem responde é o Claude. O Gemini responde no app publicado.' : '<b>Ligue o Gemini</b>: cole sua chave em perfil › inteligência artificial.'}</span>${ico('right')}</button>` : '';
   return `<div class="scrim" data-chat="close"></div>
   <section class="sheet ${S.chatAnim ? 'anim' : ''}" role="dialog" aria-modal="true" aria-label="Conversa">
     <div class="sh-h"><h2 class="sh-title">pergunte sem <em>medo</em></h2><button class="sh-x" data-chat="close" aria-label="Fechar">${ico('x')}</button></div>
@@ -1483,11 +1484,13 @@ function viewPerfil(){
         ${fotoURL() ? `<button class="btn ghost sm" data-act="foto-remover">${ico('trash')}tirar foto</button>` : ''}</div>
       <input id="foto-in" type="file" accept="image/*" hidden>`;
   return `<div class="view">
-  <header class="top"><div><p class="eyebrow">${ico('heart')}perfil</p><h1 class="title">seu <em>perfil</em></h1></div></header>
+  <header class="top"><div><p class="eyebrow">${ico('heart')}perfil e ajustes</p><h1 class="title">seu <em>perfil</em></h1></div></header>
   <section class="card rose">${top}</section>
+  <p class="grp">você</p>
   <section class="card"><div class="card-h"><span class="label">como quer ser chamado</span></div>
     <label class="field"><span class="sr">seu nome</span><input class="inp" id="u-nome" type="text" autocomplete="given-name" placeholder="seu nome" value="${esc(S.ui.nome || nome())}"></label>
     <p class="hint">Aparece na saudação e a IA usa pra conversar com você. Tudo no app salva sozinho.</p></section>
+  <p class="grp">aparência</p>
   <section class="card"><div class="card-h"><span class="label">claro ou escuro</span></div>
     <div class="seg">${[['claro', 'sun', 'claro'], ['escuro', 'moon', 'escuro'], ['auto', 'clock', 'auto']].map(([k, i, t]) => `<button data-tema="${k}" aria-pressed="${S.ui.tema === k}">${ico(i)} ${t}</button>`).join('')}</div>
     <p class="hint">No automático, segue o modo do aparelho.</p></section>
@@ -1496,6 +1499,9 @@ function viewPerfil(){
   <section class="card"><div class="card-h"><span class="label">seu símbolo</span><span class="small">ícone do app</span></div>
     <div class="syms">${SIMBOLOS.map(x => `<button class="symb ${x.id === (S.ui.simbolo || '1') ? 'on' : ''}" data-simbolo="${x.id}" aria-pressed="${x.id === (S.ui.simbolo || '1')}" aria-label="Símbolo ${esc(x.nome)}" style="--sym-bg:${x.bg};--sym-halo:${x.halo};--sym-arch:${x.arch}">${SYMT()}<small>${esc(x.nome)}</small></button>`).join('')}</div>
     <p class="hint">Escolha antes de adicionar o app à tela de início: o ícone sai com o símbolo escolhido.</p></section>
+  <p class="grp" id="ia">inteligência artificial</p>
+  ${cAjustes()}
+  <p class="grp">conta</p>
   ${contaCard()}
   </div>`;
 }
@@ -1503,8 +1509,9 @@ function viewPerfil(){
 /* caminhada: planos, diário, palavras, ajustes */
 function viewCaminhada(){
   if (S.form) return viewNovo();
-  const tabs = [['planos','planos'],['diario','diário'],['palavras','palavras'],['ajustes','ajustes']];
-  const body = { planos:cPlanos, diario:cDiario, palavras:cPalavras, ajustes:cAjustes }[S.ctab]();
+  if (!['planos','diario','palavras'].includes(S.ctab)) S.ctab = 'planos';
+  const tabs = [['planos','planos'],['diario','diário'],['palavras','palavras']];
+  const body = { planos:cPlanos, diario:cDiario, palavras:cPalavras }[S.ctab]();
   return `<div class="view">
   <header class="top"><div><p class="eyebrow">${ico('path')}caminhada</p><h1 class="title">sua <em>caminhada</em></h1></div></header>
   <div class="seg" role="group" aria-label="Seções">${tabs.map(([k, t]) => `<button data-ctab="${k}" aria-pressed="${S.ctab === k}">${t}</button>`).join('')}</div>
@@ -1664,7 +1671,7 @@ function render(){
   document.body.classList.toggle('chat-open', !!S.chatOpen);
   document.getElementById('fab').classList.toggle('busy', !!S.busy.chat);
   const br = document.getElementById('brand'); if (br && !br.firstChild) br.innerHTML = `${SYMT()}<span>lâmpada<i>.</i></span>`;
-  const nm = document.getElementById('navme'); if (nm) nm.innerHTML = `<button class="me-chip" data-tab="perfil">${avatar()}<span class="t">${esc(nome() || 'seu perfil')}</span></button>${temaBtn()}`;
+  const nm = document.getElementById('navme'); if (nm) nm.innerHTML = `<button class="me-chip" data-tab="perfil">${avatar()}<span class="t">${esc(nome() || 'perfil e ajustes')}</span></button>${temaBtn()}`;
   duo(v); duo(c); if (S.chatOpen) scrollEnd(); if (S.edit) placeCrop();
   auto();
   document.querySelectorAll('.tab').forEach(t => { if (t.dataset.tab === S.tab) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
@@ -1714,7 +1721,7 @@ document.addEventListener('click', async e => {
   if (ds.simbolo) { S.ui.simbolo = ds.simbolo; saveUI(); return render(); }
   if (ds.tema) { S.ui.tema = ds.tema; saveUI(); return render(); }
   if (ds.chat) { if (ds.chat === 'open') return openChat(); S.chatOpen = false; return render(); }
-  if (ds.goAjustes) { S.ctab = 'ajustes'; S.form = null; S.chatOpen = false; return go('caminhada'); }
+  if (ds.goAjustes) { S.form = null; S.chatOpen = false; go('perfil'); setTimeout(() => { const el = document.getElementById('ia'); if (el) el.scrollIntoView({ block:'start' }); }, 120); return; }
   if (ds.step) { S.open = S.open === ds.step ? '' : ds.step; return render(); }
   if (ds.done) { marcaPasso(ds.done); return render(); }
   if (ds.s3) { S.step3 = ds.s3; return render(); }

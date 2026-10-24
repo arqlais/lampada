@@ -55,7 +55,7 @@ window.LAMPADA_FIREBASE = {
 ```
 
 3. **Commit changes** no `main`. Em 1 a 3 minutos o site atualiza.
-4. No app: **caminhada › ajustes › entrar com o Google**. O que você já fez naquele aparelho vai junto no primeiro login.
+4. No app: **seu perfil › inteligência artificial › entrar com o Google**. O que você já fez naquele aparelho vai junto no primeiro login.
 
 Esses dados do `config.js` podem ficar públicos: quem protege a sua conta são as regras do passo 1.4.
 
@@ -68,7 +68,7 @@ Esses dados do `config.js` podem ficar públicos: quem protege a sua conta são 
 ### 2.1 Pegar a chave
 1. Entre em **aistudio.google.com/apikey** com a sua conta Google.
 2. **Create API key** › copie.
-3. No app: **caminhada › ajustes** › cole em **sua chave** › **salvar** › **testar conexão**.
+3. No app: **seu perfil › inteligência artificial** › cole em **sua chave** › **salvar** › **testar conexão**.
 
 ### 2.2 Escolher o modelo (em ajustes)
 - **Gemini 3 Flash:** rápido, com **uso grátis** (tem limite por dia). Bom para o dia a dia.
