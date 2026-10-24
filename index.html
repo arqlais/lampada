@@ -802,7 +802,7 @@ function loadLocal(){
   S.lidosNatal = pf.lidos || LS.get('lidos', {}); S.ativo = pf.ativo || 'natal'; S.aulas = pf.aulas || {}; S.passos = pf.passos || {};
   const pl = LS.get('planos', {}); S.planos = {}; Object.values(pl).forEach(d => { S.planos[d.id] = expand(d); });
   S.notas = LS.get('notas', {}); S.caps = LS.get('caps', {}); S.conversas = LS.get('conversas', {}); S.vocab = LS.get('vocab', {});
-  const cfg = LS.get('ia', {}); S.gkey = cfg.gkey || ''; S.gmodel = !cfg.gmodel || cfg.gmodel === 'gemini-2.5-flash' ? 'gemini-3-flash-preview' : cfg.gmodel; S.hora = LS.get('hora', '07:30');
+  const cfg = LS.get('ia', {}); S.gkey = cfg.gkey || ''; S.gmodel = !cfg.gmodel || /pro/.test(cfg.gmodel) ? 'gemini-3-flash-preview' : cfg.gmodel; S.hora = LS.get('hora', '07:30');
   if (cfg.engine) S.engine = cfg.engine;
   const ui = LS.get('ui', null);
   if (ui) S.ui = Object.assign({}, S.ui, ui);
@@ -1004,7 +1004,7 @@ const errCopy = c => ({
   network:'Sem conexão com a IA agora. Confira a internet e tente de novo.',
   not_granted:'O Claude não foi liberado nesta página. O pedido aparece de novo na próxima vez que abrir o app.',
   sampling_disabled:'O Claude não está disponível nesta conta.',
-  rate_limited:'Limite do Gemini atingido. Espere um minutinho ou, no Pro, confira se os créditos estão ativos.',
+  rate_limited:'Limite grátis do Gemini atingido por agora. Espere um pouco; o limite volta sozinho.',
   session_expired:'Sua sessão expirou. Entra de novo e volta aqui.',
   refused:'A IA não respondeu a esse pedido. Tenta perguntar de outro jeito.',
   invalid_json:'A resposta veio bagunçada. Toca para tentar de novo.'
@@ -1100,8 +1100,7 @@ async function testarGemini(){
 const horaL = () => S.ui.hora || S.hora || '07:30';
 const MODELOS = [
   ['gemini-3-flash-preview', 'Gemini 3 Flash', 'rápido e com uso grátis'],
-  ['gemini-3.1-pro-preview', 'Gemini 3.1 Pro', 'mais profundo, usa os créditos do seu Google AI Pro'],
-  ['gemini-2.5-flash', 'Gemini 2.5 Flash', 'versão anterior']
+  ['gemini-2.5-flash', 'Gemini 2.5 Flash', 'versão anterior, também grátis']
 ];
 /* ---------- paletas (perfil) ---------- */
 const PALETAS = [
@@ -1605,7 +1604,7 @@ function cAjustes(){
     <label class="field"><span>modelo</span><select class="inp" id="g-model">${(MODELOS.some(m => m[0] === S.gmodel) ? MODELOS : MODELOS.concat([[S.gmodel, S.gmodel, 'outro']])).map(m => `<option value="${esc(m[0])}" ${m[0] === S.gmodel ? 'selected' : ''}>${esc(m[1])} · ${esc(m[2])}</option>`).join('')}</select></label>
     <button class="btn ghost" data-act="g-test" ${S.busy.teste ? 'disabled' : ''}>${S.busy.teste ? 'testando…' : 'testar conexão'}</button>
     <p class="small" style="margin:-4px 0 0">A chave e o modelo salvam sozinhos.</p>
-    <p class="hint">O <b>3 Flash</b> funciona de graça, com limite por dia. O <b>3.1 Pro</b> não tem uso grátis na API: ele usa o crédito mensal que vem no seu Google AI Pro, depois que você ativa o crédito (<a href="https://github.com/arqlais/lampada/blob/main/GUIA.md#23-usar-o-crédito-do-seu-google-ai-pro" target="_blank" rel="noopener">passo a passo no guia</a>).</p>
+    <p class="hint">Tudo grátis: use uma chave de um projeto <b>sem faturamento</b> no AI Studio. Assim o Google nunca cobra; no máximo, chega no limite do dia e volta a funcionar no dia seguinte (<a href="https://github.com/arqlais/lampada/blob/main/GUIA.md#2-gemini-o-chat-e-as-explicações" target="_blank" rel="noopener">como criar</a>).</p>
     ${IN_CLAUDE ? `<p class="hint">Aqui dentro do Claude a página não consegue falar com o Google, então quem responde é o Claude. A chave vale quando o app estiver publicado no seu endereço.</p>` : ''}
   </section>
   <section class="card">

@@ -25,7 +25,7 @@ A chave fica guardada só no aparelho em que você colou. Faça isso no celular,
 
 ## Guia completo
 
-Login com Google, Gemini (inclusive o crédito do Google AI Pro), agenda e lembretes: veja o [GUIA.md](GUIA.md).
+Login (Google ou e-mail), Gemini grátis, agenda e lembretes: veja o [GUIA.md](GUIA.md).
 
 ## Arquivos
 
