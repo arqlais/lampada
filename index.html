@@ -324,6 +324,10 @@ details.fold[open] > summary .chev{transform:rotate(90deg)}
 .msg .who{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:var(--rose-ink);margin-bottom:4px}
 
 
+/* aviso de versão nova */
+.upd{position:fixed;z-index:35;top:calc(74px + env(safe-area-inset-top, 0px));left:0;right:0;margin:0 auto;width:max-content;max-width:calc(100vw - 32px);display:flex;align-items:center;gap:10px;
+  background:var(--rosa);color:var(--on-accent);border:0;border-radius:999px;padding:8px 8px 8px 16px;font-size:13px;box-shadow:0 14px 30px -12px rgba(var(--ink-rgb),.5);animation:in .4s ease both;white-space:nowrap}
+.upd b{font-weight:500;background:var(--on-accent);color:var(--rosa);border-radius:999px;padding:6px 14px}
 /* rodapé: assinatura discreta */
 .foot{max-width:720px;margin:36px auto 0;text-align:center;font-size:11.5px;color:var(--muted);opacity:.8}
 .foot i{font-style:normal;color:var(--rose)}
@@ -350,6 +354,7 @@ input[type=range]{width:100%;accent-color:var(--rosa)}
 .pal-sw i{width:26px;height:26px;border-radius:50%;border:2px solid var(--surface);margin-left:-8px}
 .pal b{font-weight:500;font-size:13.5px;line-height:1.2}
 .pal small{font-size:11px;color:var(--muted);line-height:1.35}
+[data-sync].bad{color:var(--rose-ink)}
 .nav-me{display:none}
 .syms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media (min-width:640px){.syms{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -415,6 +420,7 @@ body.chat-open{overflow:hidden}
   .me-chip span.t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .toast{bottom:28px}
   .fab{right:32px;bottom:32px}
+  .upd{top:24px}
   .sheet{left:auto;right:24px;bottom:24px;top:24px;height:auto;width:440px;border-radius:30px;box-shadow:0 30px 70px -30px rgba(var(--deep-rgb),.5);padding-top:18px}
   .sheet::before{display:none}
   .scrim{background:rgba(var(--deep-rgb),.12)}
@@ -736,7 +742,7 @@ const S = {
   sel:null, selPlan:null, open:null, aula:null, ctab:'planos', chatCtx:'leitura', form:null, confirmDel:false, step3:'palavras',
   engine: IN_CLAUDE ? 'claude' : 'gemini', gkey:'', gmodel:'gemini-3-flash-preview', hora:'07:30',
   db:null, sample:null, busy:{}, draft:{}, pending:false, ctl:null,
-  ui:{ nome:'', foto:'', fotoOrig:'', ajuste:null, paleta:'dusty', tema:'auto', simbolo:'1' }, edit:null
+  ui:{ nome:'', foto:'', fotoOrig:'', ajuste:null, paleta:'dusty', tema:'auto', simbolo:'1' }, edit:null, sync:{ st:'ok' }
 };
 const nome = () => (S.ui.nome || (S.user && S.user.displayName ? S.user.displayName.split(' ')[0] : '')).trim();
 const fotoURL = () => S.ui.foto || (!S.ui.semFoto && S.user && S.user.photoURL) || '';
@@ -785,43 +791,74 @@ function loadLocal(){
   else if (LS.get('perfil', null) || LS.get('lidos', null)) S.ui.nome = 'Laís';
   applyUI();
 }
-const failSave = () => toast('não deu para salvar agora');
+/* ---------- versão nova: compara o código desta página com o publicado (sem número de versão pra lembrar) ---------- */
+const assinatura = d => { let h = 5381; const t = [...d.querySelectorAll('script:not([src]),style:not(#pal)')].map(x => x.textContent).join('|'); for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return h; };
+let checando = false;
+async function checaVersao(){
+  if (checando || S.update || IN_CLAUDE || location.protocol === 'file:') return; checando = true;
+  try { const r = await fetch(location.pathname + '?checar=' + Date.now(), { cache:'no-store' });
+    if (r.ok) { const doc = new DOMParser().parseFromString(await r.text(), 'text/html');
+      if (doc.querySelector('script:not([src])') && assinatura(doc) !== assinatura(document)) { S.update = true; render(); } } } catch {}
+  checando = false;
+}
+setTimeout(checaVersao, 4000); setInterval(checaVersao, 20 * 60 * 1000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checaVersao(); });
+
+/* ---------- salvamento automático: sempre no aparelho na hora; na conta logo em seguida, com nova tentativa ---------- */
+const limpo = x => JSON.parse(JSON.stringify(x));   /* o banco não aceita "undefined" */
+const errSave = e => { const c = (e && e.code) || '';
+  return c === 'permission-denied' ? 'o banco recusou (confira as regras do Firestore)' : c === 'unauthenticated' ? 'sua sessão expirou, entre de novo'
+    : c === 'invalid-argument' ? 'um dado veio com formato inválido' : c === 'resource-exhausted' ? 'limite grátis do dia atingido' : 'sem conexão agora, tenta de novo sozinho'; };
+let lastErrT = 0;
+function failSave(e){ S.sync = { st:'erro', msg:errSave(e) }; try { console.warn('lâmpada: não salvou', e); } catch {}
+  if (Date.now() - lastErrT > 15000) { lastErrT = Date.now(); toast('não salvou na conta: ' + S.sync.msg); } paintSync(); }
+async function nuvem(fn, tries = 4){
+  if (!S.db) return true;
+  S.sync = { st:'salvando' }; paintSync();
+  for (let i = 0; i < tries; i++) {
+    try { await fn(); S.sync = { st:'ok' }; paintSync(); return true; }
+    catch (e) { const fatal = e && ['permission-denied', 'invalid-argument', 'unauthenticated'].includes(e.code);
+      if (fatal || i === tries - 1) { failSave(e); return false; } await new Promise(r => setTimeout(r, 1500 * (i + 1))); }
+  }
+}
+const syncTxt = () => !S.db ? 'salvo neste aparelho' : S.sync.st === 'salvando' ? 'salvando…' : S.sync.st === 'erro' ? `não salvou na conta: ${esc(S.sync.msg)}` : 'tudo salvo na sua conta';
+function paintSync(){ document.querySelectorAll('[data-sync]').forEach(el => { el.textContent = syncTxt(); el.classList.toggle('bad', S.sync.st === 'erro'); }); }
 let uiT;
-function saveUI(){ LS.set('ui', S.ui); applyUI(); clearTimeout(uiT); uiT = setTimeout(() => { if (S.db) S.db.doc(ROOT() + '/extras/ui').set(S.ui).catch(failSave); }, 400); }
+function saveUI(){ LS.set('ui', S.ui); applyUI(); clearTimeout(uiT); uiT = setTimeout(() => nuvem(() => S.db.doc(ROOT() + '/extras/ui').set(limpo(S.ui))), 400); }
 let perfilT;
 function savePerfil(){
   const body = { nome:nome(), lidos:S.lidosNatal, ativo:S.ativo, aulas:S.aulas, passos:S.passos };
-  if (!S.db) return LS.set('perfil', body);
-  clearTimeout(perfilT); perfilT = setTimeout(() => { S.db.doc(ROOT()).set(body).catch(failSave); }, 250);
+  LS.set('perfil', body);
+  clearTimeout(perfilT); perfilT = setTimeout(() => nuvem(() => S.db.doc(ROOT()).set(limpo(body))), 250);
 }
 function planoBody(p){ return { id:p.id, nome:p.nome, sub:p.sub || '', inicio:p.inicio, dias:p.dias, lidos:p.lidos || {}, criado:p.criado || new Date().toISOString(), tipo:p.tipo || 'plano' }; }
-async function savePlano(p){
-  if (S.db) { try { await S.db.doc(ROOT() + '/planos/' + p.id).set(planoBody(p)); } catch { failSave(); } }
-  else { const all = LS.get('planos', {}); all[p.id] = planoBody(p); LS.set('planos', all); }
-}
+function guardaPlanos(){ const all = {}; Object.values(S.planos).forEach(x => { all[x.id] = planoBody(x); }); LS.set('planos', all); }
+async function savePlano(p){ guardaPlanos(); return nuvem(() => S.db.doc(ROOT() + '/planos/' + p.id).set(limpo(planoBody(p)))); }
 async function delPlano(id){
   delete S.planos[id];
   if (S.ativo === id) { S.ativo = 'natal'; S.sel = null; savePerfil(); }
-  if (S.db) { try { await S.db.doc(ROOT() + '/planos/' + id).delete(); } catch {} }
-  else { const all = LS.get('planos', {}); delete all[id]; LS.set('planos', all); }
+  guardaPlanos(); return nuvem(() => S.db.doc(ROOT() + '/planos/' + id).delete());
 }
 async function saveNota(key, texto, nome){
   if (texto.trim()) S.notas[key] = { ref:key, texto, quando:new Date().toISOString(), nome }; else delete S.notas[key];
-  if (S.db) { const ref = S.db.doc(ROOT() + '/diario/' + key);
-    try { texto.trim() ? await ref.set(S.notas[key]) : await ref.delete(); } catch { failSave(); return false; } }
-  else LS.set('notas', S.notas);
-  return true;
+  LS.set('notas', S.notas);
+  const ref = () => S.db.doc(ROOT() + '/diario/' + key);
+  return nuvem(() => texto.trim() ? ref().set(limpo(S.notas[key])) : ref().delete());
 }
 async function saveCap(key, patch){
-  S.caps[key] = Object.assign({}, BASE[key], S.caps[key], patch);
-  if (S.db) { try { await S.db.doc(CAPS() + '/' + key).set(S.caps[key]); } catch {} } else LS.set('caps', S.caps);
+  S.caps[key] = Object.assign({}, BASE[key], S.caps[key], patch); LS.set('caps', S.caps);
+  return nuvem(() => S.db.doc(CAPS() + '/' + key).set(limpo(S.caps[key])));
 }
 async function saveConversa(key){
-  const turns = (S.conversas[key] || []).slice(-40); S.conversas[key] = turns;
-  if (S.db) { try { await S.db.doc(ROOT() + '/conversas/' + key).set({ turns }); } catch {} } else LS.set('conversas', S.conversas);
+  const turns = (S.conversas[key] || []).slice(-40); S.conversas[key] = turns; LS.set('conversas', S.conversas);
+  return nuvem(() => S.db.doc(ROOT() + '/conversas/' + key).set(limpo({ turns })));
 }
-async function saveVocab(){ if (S.db) { try { await S.db.doc(ROOT() + '/extras/vocab').set({ itens:S.vocab }); } catch { failSave(); } } else LS.set('vocab', S.vocab); }
-const saveIA = () => { const v = { gkey:S.gkey, gmodel:S.gmodel, engine:S.engine }; LS.set('ia', v); if (S.db && !IN_CLAUDE) S.db.doc(ROOT() + '/extras/ia').set(v).catch(() => {}); };
+async function saveVocab(){ LS.set('vocab', S.vocab); return nuvem(() => S.db.doc(ROOT() + '/extras/vocab').set(limpo({ itens:S.vocab }))); }
+const saveIA = () => { const v = { gkey:S.gkey, gmodel:S.gmodel, engine:S.engine }; LS.set('ia', v); if (!IN_CLAUDE) nuvem(() => S.db.doc(ROOT() + '/extras/ia').set(limpo(v))); };
+let notaT;
+function autoNota(){ const d = cur(), el = document.getElementById('nota'); if (!el) return; const v = el.value, k = d.key, n = refName(d);
+  const st = document.getElementById('nota-st'); if (st) st.textContent = 'salvando…';
+  clearTimeout(notaT); notaT = setTimeout(async () => { await saveNota(k, v, n); const s2 = document.getElementById('nota-st'); if (s2) s2.textContent = v.trim() ? 'salvo automaticamente' : ''; }, 900); }
 
 function typing(){ const a = document.activeElement; return a && (a.tagName === 'TEXTAREA' || a.tagName === 'SELECT' || a.tagName === 'INPUT'); }
 function soft(){ if (typing()) { S.pending = true; return; } render(); }
@@ -831,7 +868,7 @@ function subscribe(db){
   const P = ROOT();
   const subs = [];
   subs.push(db.doc(P).onSnapshot(s => { if (s.exists) { const d = s.data(); S.lidosNatal = Object.assign({}, d.lidos || {}); S.aulas = Object.assign({}, d.aulas || {});
-    S.passos = JSON.parse(JSON.stringify(d.passos || {})); if (d.ativo) S.ativo = d.ativo; } soft(); }, () => {}));
+    S.passos = JSON.parse(JSON.stringify(d.passos || {})); if (d.ativo) S.ativo = d.ativo; } soft(); }, e => failSave(e)));
   subs.push(db.collection(P + '/planos').onSnapshot(q => { const n = {}; q.docs.forEach(d => { const v = d.data(); n[d.id] = expand(Object.assign({}, v, { id:d.id, lidos:Object.assign({}, v.lidos || {}) })); }); S.planos = n; soft(); }, () => {}));
   subs.push(db.collection(P + '/diario').onSnapshot(q => { const n = {}; q.docs.forEach(d => n[d.id] = d.data()); S.notas = n; soft(); }, () => {}));
   subs.push(db.collection(CAPS()).onSnapshot(q => { const n = {}; q.docs.forEach(d => n[d.id] = d.data()); S.caps = n; soft(); }, () => {}));
@@ -1042,6 +1079,7 @@ async function testarGemini(){
   S.busy.teste = false; render();
 }
 
+const horaL = () => S.ui.hora || S.hora || '07:30';
 const MODELOS = [
   ['gemini-3-flash-preview', 'Gemini 3 Flash', 'rápido e com uso grátis'],
   ['gemini-3.1-pro-preview', 'Gemini 3.1 Pro', 'mais profundo, usa os créditos do seu Google AI Pro'],
@@ -1141,19 +1179,19 @@ function baixarICS(nome, eventos){
 function agendaPlano(){
   const p = plan(), L = lidosOf(p), t = Math.max(0, todayIdx(p));
   const dias = p.days.filter(d => d.i >= t && !L[d.key]); if (!dias.length) return toast('não há leituras pela frente neste plano');
-  baixarICS('lampada-' + p.id + '.ics', dias.map(d => icsEvento({ uid:`lampada-${p.id}-${d.key}@arqlais.github.io`, quando:icsDT(d.date, S.hora),
+  baixarICS('lampada-' + p.id + '.ics', dias.map(d => icsEvento({ uid:`lampada-${p.id}-${d.key}@arqlais.github.io`, quando:icsDT(d.date, horaL()),
     titulo:'Lâmpada · ' + refName(d), texto:`Leitura do plano "${p.nome}" (dia ${d.i + 1} de ${p.days.length}). Abra o app: ${appURL()}` })));
   toast(dias.length + ' leituras prontas pra agenda');
 }
 function lembreteDiario(){
-  baixarICS('lampada-lembrete.ics', [icsEvento({ uid:'lampada-diario@arqlais.github.io', quando:icsDT(new Date(), S.hora), rrule:'FREQ=DAILY',
+  baixarICS('lampada-lembrete.ics', [icsEvento({ uid:'lampada-diario@arqlais.github.io', quando:icsDT(new Date(), horaL()), rrule:'FREQ=DAILY',
     titulo:'Lâmpada · hora da leitura', texto:'Seu momento com a Palavra de hoje. Abra o app: ' + appURL() })]);
   toast('lembrete diário pronto');
 }
 function agendaCard(){
   return `<section class="card">
     <div class="card-h"><span class="label">${ico('cal')}agenda e lembretes</span><span class="small">${esc(plan().nome)}</span></div>
-    <label class="field"><span>horário da leitura</span><input class="inp" id="r-hora" type="time" value="${esc(S.hora)}"></label>
+    <label class="field"><span>horário da leitura</span><input class="inp" id="r-hora" type="time" value="${esc(horaL())}"></label>
     <div class="two"><button class="btn primary" data-act="ics-plano">${ico('cal')}plano na agenda</button><button class="btn ghost" data-act="ics-diario">${ico('clock')}lembrete diário</button></div>
     <p class="hint"><b>Plano na agenda</b> coloca cada leitura que falta no dia certo, com aviso no horário. <b>Lembrete diário</b> é um aviso todo dia, sem fim. No iPhone e no iPad, abra o arquivo baixado e toque em "Adicionar tudo". No Google Agenda, pelo computador: Configurações › Importar e exportar › Importar.</p>
   </section>`;
@@ -1229,7 +1267,8 @@ function stepsCard(d){
         return `${c.levar ? `<p class="hint">Pense na pergunta do dia: <span class="serif" style="font-size:16px;color:var(--ink)">${esc(c.levar)}</span></p>` : ''}
         <label for="nota" class="sr">sua reflexão</label>
         <textarea id="nota" class="note-area" placeholder="escreva com calma: uma frase que marcou, uma dúvida, uma oração…">${esc(val)}</textarea>
-        <div class="two"><button class="btn soft" data-act="save-note">${ico('pen')}guardar no diário</button><button class="btn ghost" data-act="ask-note">${ico('chat')}conversar sobre isso</button></div>`; } }
+        <p class="small" id="nota-st" style="margin:-6px 0 0">${S.notas[d.key] ? 'salvo automaticamente' : 'salva sozinho enquanto você escreve'}</p>
+        <div class="two"><button class="btn soft" data-act="save-note">${ico('check')}terminei de refletir</button><button class="btn ghost" data-act="ask-note">${ico('chat')}conversar sobre isso</button></div>`; } }
   ];
   const doneN = steps.filter(s => ps[s.k]).length;
   if (S.open == null) S.open = read ? '' : (steps.find(s => !ps[s.k]) || {}).k || '';
@@ -1387,7 +1426,7 @@ function viewPerfil(){
   <section class="card rose">${top}</section>
   <section class="card"><div class="card-h"><span class="label">como quer ser chamado</span></div>
     <label class="field"><span class="sr">seu nome</span><input class="inp" id="u-nome" type="text" autocomplete="given-name" placeholder="seu nome" value="${esc(S.ui.nome || nome())}"></label>
-    <p class="hint">Aparece na saudação e a IA usa pra conversar com você.</p></section>
+    <p class="hint">Aparece na saudação e a IA usa pra conversar com você. Tudo no app salva sozinho.</p></section>
   <section class="card"><div class="card-h"><span class="label">claro ou escuro</span></div>
     <div class="seg">${[['claro', 'sun', 'claro'], ['escuro', 'moon', 'escuro'], ['auto', 'clock', 'auto']].map(([k, i, t]) => `<button data-tema="${k}" aria-pressed="${S.ui.tema === k}">${ico(i)} ${t}</button>`).join('')}</div>
     <p class="hint">No automático, segue o modo do aparelho.</p></section>
@@ -1485,7 +1524,7 @@ function contaCard(){
   if (!S.user) return `<section class="card"><div class="card-h"><span class="label">${ico('heart')}sua conta</span><span class="small">não conectada</span></div>
     <p class="hint" style="margin-top:-8px">Entre com a sua conta Google pra salvar tudo na nuvem e abrir no celular, no iPad e no computador. O que você já fez neste aparelho vai junto no primeiro login.</p>
     <button class="btn primary" data-act="entrar" ${S.fb && S.fb.pronto ? '' : 'disabled'}>${ico('heart')}entrar com o Google</button></section>`;
-  return `<section class="card"><div class="card-h"><span class="label">${ico('heart')}sua conta</span><span class="small" style="color:var(--ok)">sincronizando</span></div>
+  return `<section class="card"><div class="card-h"><span class="label">${ico('heart')}sua conta</span><span class="small" data-sync>${syncTxt()}</span></div>
     <div><p style="margin:0;font-size:15px;font-weight:400">${esc(S.user.displayName || 'Conta Google')}</p><p class="small" style="margin:0">${esc(S.user.email || '')}</p></div>
     <p class="hint">Tudo o que você faz fica salvo nesta conta e aparece em qualquer aparelho em que você entrar.</p>
     <button class="btn ghost" data-act="sair">${ico('exit')}sair da conta</button></section>`;
@@ -1496,7 +1535,8 @@ function cAjustes(){
     <p class="hint" style="margin-top:-8px">${S.user ? 'A chave fica guardada na sua conta e vale em todos os aparelhos.' : 'A chave fica guardada só neste aparelho.'} Gere em <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> e cole aqui.</p>
     <label class="field"><span>sua chave</span><input class="inp" id="g-key" type="password" autocomplete="off" placeholder="cole a chave aqui" value="${esc(S.gkey)}"></label>
     <label class="field"><span>modelo</span><select class="inp" id="g-model">${(MODELOS.some(m => m[0] === S.gmodel) ? MODELOS : MODELOS.concat([[S.gmodel, S.gmodel, 'outro']])).map(m => `<option value="${esc(m[0])}" ${m[0] === S.gmodel ? 'selected' : ''}>${esc(m[1])} · ${esc(m[2])}</option>`).join('')}</select></label>
-    <div class="two"><button class="btn primary" data-act="g-save">${ico('check')}salvar</button><button class="btn ghost" data-act="g-test" ${S.busy.teste ? 'disabled' : ''}>${S.busy.teste ? 'testando…' : 'testar conexão'}</button></div>
+    <button class="btn ghost" data-act="g-test" ${S.busy.teste ? 'disabled' : ''}>${S.busy.teste ? 'testando…' : 'testar conexão'}</button>
+    <p class="small" style="margin:-4px 0 0">A chave e o modelo salvam sozinhos.</p>
     <p class="hint">O <b>3 Flash</b> funciona de graça, com limite por dia. O <b>3.1 Pro</b> não tem uso grátis na API: ele usa o crédito mensal que vem no seu Google AI Pro, depois que você ativa o crédito (<a href="https://github.com/arqlais/lampada/blob/main/GUIA.md#23-usar-o-crédito-do-seu-google-ai-pro" target="_blank" rel="noopener">passo a passo no guia</a>).</p>
     ${IN_CLAUDE ? `<p class="hint">Aqui dentro do Claude a página não consegue falar com o Google, então quem responde é o Claude. A chave vale quando o app estiver publicado no seu endereço.</p>` : ''}
   </section>
@@ -1556,7 +1596,7 @@ function auto(){
 }
 function render(){
   const v = document.getElementById('view'), c = document.getElementById('chat');
-  v.innerHTML = VIEWS[S.tab]().replace('<div class="view">', '<div class="view">' + appbar()) + `<footer class="foot">lâmpada<i>.</i> · feito por <em>Laís</em></footer>`;
+  v.innerHTML = (S.update ? `<button class="upd" data-act="atualizar">nova versão do lâmpada <b>atualizar</b></button>` : '') + VIEWS[S.tab]().replace('<div class="view">', '<div class="view">' + appbar()) + `<footer class="foot">lâmpada<i>.</i> · feito por <em>Laís</em></footer>`;
   c.innerHTML = S.chatOpen ? viewChat() : ''; S.chatAnim = false;
   document.body.classList.toggle('chat-open', !!S.chatOpen);
   document.getElementById('fab').classList.toggle('busy', !!S.busy.chat);
@@ -1653,6 +1693,7 @@ document.addEventListener('click', async e => {
     case 'clear-books': S.form.livros = []; render(); break;
     case 'criar': criarPlano(); break;
     case 'ics-plano': agendaPlano(); break;
+    case 'atualizar': location.replace(location.pathname + '?v=' + Date.now() + location.hash); break;
     case 'tema-toggle': S.ui.tema = escuro() ? 'claro' : 'escuro'; saveUI(); render(); break;
     case 'foto-ajustar': ajustarFoto(); break;
     case 'foto-salvar': salvarFoto(); break;
@@ -1661,7 +1702,7 @@ document.addEventListener('click', async e => {
     case 'ics-diario': lembreteDiario(); break;
     case 'del': S.confirmDel = true; render(); break;
     case 'del-ok': { await delPlano(plan().id); S.confirmDel = false; toast('plano apagado'); render(); break; }
-    case 'save-note': { const v = document.getElementById('nota').value;
+    case 'save-note': { clearTimeout(notaT); const v = document.getElementById('nota').value;
       if (await saveNota(d.key, v, refName(d))) { delete S.draft[d.key]; if (v.trim()) marcaPasso('refletir'); toast(v.trim() ? 'guardado no diário' : 'reflexão apagada'); render(); } break; }
     case 'ask-note': { const v = document.getElementById('nota').value.trim(); perguntar(v ? 'Escrevi isso sobre a leitura, me ajuda a pensar mais: ' + v : 'Me ajuda a refletir sobre essa leitura?', 'leitura'); break; }
     case 'g-save': S.gkey = document.getElementById('g-key').value.trim(); S.gmodel = document.getElementById('g-model').value.trim() || 'gemini-3-flash-preview'; if (S.gkey) S.engine = 'gemini'; saveIA(); toast(S.gkey ? (S.user ? 'chave salva na sua conta' : 'chave salva neste aparelho') : 'chave apagada'); render(); break;
@@ -1670,14 +1711,15 @@ document.addEventListener('click', async e => {
 });
 document.addEventListener('input', e => {
   const id = e.target.id;
-  if (id === 'nota') S.draft[cur().key] = e.target.value;
+  if (id === 'nota') { S.draft[cur().key] = e.target.value; autoNota(); }
   if (id === 'u-nome') { S.ui.nome = e.target.value.trim(); saveUI(); }
   if (id === 'crop-z' && S.edit) { S.edit.z = +e.target.value; placeCrop(); }
-  if (id === 'r-hora' && e.target.value) { S.hora = e.target.value; LS.set('hora', S.hora); }
+  if (id === 'r-hora' && e.target.value) { S.hora = S.ui.hora = e.target.value; LS.set('hora', S.hora); saveUI(); }
   if (S.form && id && id.startsWith('f-')) { const map = { 'f-nome':'nome', 'f-inicio':'inicio', 'f-fim':'fim', 'f-pordia':'porDia' };
     if (map[id]) S.form[map[id]] = e.target.value; const pv = document.getElementById('f-prev'); if (pv) pv.innerHTML = previewTxt(); }
 });
 document.addEventListener('change', e => {
+  if (e.target.id === 'g-key' || e.target.id === 'g-model') { S.gkey = document.getElementById('g-key').value.trim(); S.gmodel = document.getElementById('g-model').value || 'gemini-3-flash-preview'; if (S.gkey) S.engine = 'gemini'; saveIA(); toast(S.gkey ? 'Gemini salvo' : 'chave apagada'); }
   if (e.target.id === 'foto-in' && e.target.files && e.target.files[0]) escolherFoto(e.target.files[0]);
   if (e.target.id === 'u-nome') render();
 });
