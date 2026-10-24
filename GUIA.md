@@ -105,7 +105,7 @@ Para abrir o arquivo:
 
 ## 4. Perfil, cores e várias pessoas
 
-- Toque na **sua foto** (canto de cima) para abrir **seu perfil**: nome, foto (trocar, **ajustar** arrastando e com zoom, ou tirar), **claro / escuro / automático** e a **paleta** (Dusty & baunilha, Rosa antigo, Sálvia ou Lavanda). O botão de lua/sol no topo troca claro e escuro na hora.
+- Toque na **sua foto** (canto de cima) para abrir **seu perfil**: nome, foto (trocar, **ajustar** arrastando e com zoom, ou tirar), **claro / escuro / automático** e a **paleta** (Dusty & baunilha, que é a padrão, Azul, Lilás, Verde sálvia, Rosa antigo ou Laranja). O botão de lua/sol no topo troca claro e escuro na hora.
 - **Outras pessoas (ex.: seu namorado):** mande o endereço **arqlais.github.io/lampada**. Cada um entra com a **própria conta Google** (depois que o login do passo 1 estiver ligado) e tem progresso, diário, palavras, chave do Gemini, foto e paleta só seus. As regras do passo 1.4 garantem que ninguém vê os dados do outro.
 - Sem login, o perfil fica salvo só naquele aparelho.
 - **Sair da conta:** em **seu perfil**, no fim da página.

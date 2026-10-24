@@ -342,9 +342,10 @@ label.btn{cursor:pointer}
 input[type=range]{width:100%;accent-color:var(--rosa)}
 .seg button svg.i{width:15px;height:15px;vertical-align:-3px;margin-right:2px}
 .pals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-@media (min-width:640px){.pals{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (min-width:640px){.pals{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .pal{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:22px;padding:13px 14px;display:flex;flex-direction:column;gap:9px;color:var(--ink);min-width:0}
 .pal.on{border-color:var(--rose);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.18)}
+.pal .tag{font-size:10.5px;color:var(--rose-ink);font-weight:500;margin-left:6px}
 .pal-sw{display:flex;padding-left:6px}
 .pal-sw i{width:26px;height:26px;border-radius:50%;border:2px solid var(--surface);margin-left:-8px}
 .pal b{font-weight:500;font-size:13.5px;line-height:1.2}
@@ -738,7 +739,7 @@ const S = {
   ui:{ nome:'', foto:'', fotoOrig:'', ajuste:null, paleta:'dusty', tema:'auto', simbolo:'1' }, edit:null
 };
 const nome = () => (S.ui.nome || (S.user && S.user.displayName ? S.user.displayName.split(' ')[0] : '')).trim();
-const fotoURL = () => S.ui.foto || (S.user && S.user.photoURL) || '';
+const fotoURL = () => S.ui.foto || (!S.ui.semFoto && S.user && S.user.photoURL) || '';
 const avatar = (cls = '') => fotoURL() ? `<img class="ava-img ${cls}" src="${esc(fotoURL())}" alt="" referrerpolicy="no-referrer">` : `<span class="ava-ini ${cls}">${nome() ? esc(nome().charAt(0).toUpperCase()) : ico('heart')}</span>`;
 const planById = id => id === 'natal' ? NATAL : (S.planos[id] || NATAL);
 const plan = () => planById(S.ativo);
@@ -1051,15 +1052,21 @@ const PALETAS = [
   { id:'dusty', nome:'Dusty & baunilha', sub:'creme, dusty e rosinha',
     l:{ bg:'#F0EBD5', surface:'#FBF8EE', ink:'#5E4A48', accent:'#A0817E', accentInk:'#8E6E6B', soft:'#F5D5D2', steel:'#B5A79B', line:'#E4DDC6', halo:'#FFFDF6' },
     d:{ bg:'#26201F', surface:'#322A28', hero:'#3A302E', ink:'#F0EBD5', accent:'#C4A5A1', accentInk:'#D2B3AF' } },
+  { id:'ceu', nome:'Azul', sub:'azul calmo e névoa',
+    l:{ bg:'#E8ECF3', surface:'#F8F9FC', ink:'#3E4656', accent:'#6F82A6', accentInk:'#56688A', soft:'#D6DEEF', steel:'#A0A8B8', line:'#DBE0EB', halo:'#FFFFFF' },
+    d:{ bg:'#1B1F28', surface:'#262B36', hero:'#2E3546', ink:'#E8ECF3', accent:'#A3B3D3', accentInk:'#BFCBE4' } },
+  { id:'lavanda', nome:'Lilás', sub:'lilás suave e branco',
+    l:{ bg:'#EFEAF4', surface:'#FBF9FD', ink:'#4C4458', accent:'#8E7DAA', accentInk:'#74668F', soft:'#E4DAF1', steel:'#ABA4B6', line:'#E3DCEB', halo:'#FFFFFF' },
+    d:{ bg:'#211D27', surface:'#2C2734', hero:'#362F42', ink:'#EFEAF4', accent:'#B9AAD3', accentInk:'#CEC3E3' } },
+  { id:'salvia', nome:'Verde sálvia', sub:'verde suave e creme',
+    l:{ bg:'#EDEFE4', surface:'#FAFBF5', ink:'#3F4A40', accent:'#788F6E', accentInk:'#5E7556', soft:'#DCE6D2', steel:'#A3ADA0', line:'#DDE2D3', halo:'#FFFFFA' },
+    d:{ bg:'#1D221E', surface:'#283029', hero:'#303A31', ink:'#EDEFE4', accent:'#A9BE9F', accentInk:'#C3D4BA' } },
   { id:'rosa', nome:'Rosa antigo', sub:'blush, old rose e taupe',
     l:{ bg:'#F8EDED', surface:'#FFFAFA', ink:'#604D53', accent:'#C66F7F', accentInk:'#B05E6D', num:'#DB7F8E', soft:'#FFDBDA', steel:'#9DA3A4', line:'#EEDFE0', halo:'#FFFFFF' },
     d:{ bg:'#241C1F', surface:'#30262A', hero:'#3D2C32', ink:'#F7E9EA', accent:'#E896A3', accentInk:'#F0B3BC' } },
-  { id:'salvia', nome:'Sálvia', sub:'verde suave e creme',
-    l:{ bg:'#EDEFE4', surface:'#FAFBF5', ink:'#3F4A40', accent:'#788F6E', accentInk:'#5E7556', soft:'#DCE6D2', steel:'#A3ADA0', line:'#DDE2D3', halo:'#FFFFFA' },
-    d:{ bg:'#1D221E', surface:'#283029', hero:'#303A31', ink:'#EDEFE4', accent:'#A9BE9F', accentInk:'#C3D4BA' } },
-  { id:'lavanda', nome:'Lavanda', sub:'lilás suave e branco',
-    l:{ bg:'#EFEAF4', surface:'#FBF9FD', ink:'#4C4458', accent:'#8E7DAA', accentInk:'#74668F', soft:'#E4DAF1', steel:'#ABA4B6', line:'#E3DCEB', halo:'#FFFFFF' },
-    d:{ bg:'#211D27', surface:'#2C2734', hero:'#362F42', ink:'#EFEAF4', accent:'#B9AAD3', accentInk:'#CEC3E3' } }
+  { id:'laranja', nome:'Laranja', sub:'terracota e pêssego',
+    l:{ bg:'#F6EBE0', surface:'#FDF8F3', ink:'#5A4337', accent:'#C47A4D', accentInk:'#A35F38', soft:'#F8D8C3', steel:'#B9A595', line:'#ECDCCD', halo:'#FFFCF7' },
+    d:{ bg:'#26201B', surface:'#322A24', hero:'#3D3028', ink:'#F6EBE0', accent:'#E0A07A', accentInk:'#EDB894' } }
 ];
 const SIMBOLOS = [
   { id:'1', nome:'rosinha e dusty', bg:'#F5D5D2', halo:'#FBF8EE', arch:'#A0817E' },
@@ -1109,7 +1116,7 @@ async function salvarFoto(){
   const img = await loadImg(e.src), N = 320, k = N / e.V, base = e.V / Math.min(e.w, e.h), dw = e.w * base * e.z * k, dh = e.h * base * e.z * k;
   const c = document.createElement('canvas'); c.width = c.height = N;
   c.getContext('2d').drawImage(img, N / 2 + e.x * k - dw / 2, N / 2 + e.y * k - dh / 2, dw, dh);
-  S.ui.foto = c.toDataURL('image/jpeg', .86); S.ui.fotoOrig = e.src; S.ui.ajuste = { z:e.z, x:e.x, y:e.y }; S.edit = null; saveUI(); render(); toast('foto salva');
+  S.ui.semFoto = false; S.ui.foto = c.toDataURL('image/jpeg', .86); S.ui.fotoOrig = e.src; S.ui.ajuste = { z:e.z, x:e.x, y:e.y }; S.edit = null; saveUI(); render(); toast('foto salva');
 }
 let drag = null;
 document.addEventListener('pointerdown', ev => { const b = ev.target.closest('#crop'); if (!b || !S.edit) return; drag = { x:ev.clientX, y:ev.clientY, ox:S.edit.x, oy:S.edit.y }; b.setPointerCapture(ev.pointerId); });
@@ -1373,7 +1380,7 @@ function viewPerfil(){
     : `<div class="me-row"><div class="ava-big">${avatar()}</div><div style="min-width:0"><p class="me-name">${esc(nome() || 'sem nome ainda')}</p><p class="small" style="margin:2px 0 0">${S.user ? esc(S.user.email || '') : 'perfil deste aparelho'}</p></div></div>
       <div class="me-btns"><label class="btn ghost sm" for="foto-in">${ico('camera')}${fotoURL() ? 'trocar foto' : 'colocar foto'}</label>
         ${S.ui.fotoOrig ? `<button class="btn ghost sm" data-act="foto-ajustar">${ico('move')}ajustar</button>` : ''}
-        ${S.ui.foto ? `<button class="btn ghost sm" data-act="foto-remover">${ico('trash')}tirar</button>` : ''}</div>
+        ${fotoURL() ? `<button class="btn ghost sm" data-act="foto-remover">${ico('trash')}tirar foto</button>` : ''}</div>
       <input id="foto-in" type="file" accept="image/*" hidden>`;
   return `<div class="view">
   <header class="top"><div><p class="eyebrow">${ico('heart')}perfil</p><h1 class="title">seu <em>perfil</em></h1></div></header>
@@ -1385,7 +1392,7 @@ function viewPerfil(){
     <div class="seg">${[['claro', 'sun', 'claro'], ['escuro', 'moon', 'escuro'], ['auto', 'clock', 'auto']].map(([k, i, t]) => `<button data-tema="${k}" aria-pressed="${S.ui.tema === k}">${ico(i)} ${t}</button>`).join('')}</div>
     <p class="hint">No automático, segue o modo do aparelho.</p></section>
   <section class="card"><div class="card-h"><span class="label">sua paleta</span><span class="small">${esc(P.nome)}</span></div>
-    <div class="pals">${PALETAS.map(x => `<button class="pal ${x.id === P.id ? 'on' : ''}" data-paleta="${x.id}" aria-pressed="${x.id === P.id}"><span class="pal-sw">${[x.l.bg, x.l.soft, x.l.accent, x.l.ink].map(c => `<i style="background:${c}"></i>`).join('')}</span><b>${esc(x.nome)}</b><small>${esc(x.sub)}</small></button>`).join('')}</div></section>
+    <div class="pals">${PALETAS.map(x => `<button class="pal ${x.id === P.id ? 'on' : ''}" data-paleta="${x.id}" aria-pressed="${x.id === P.id}"><span class="pal-sw">${[x.l.bg, x.l.soft, x.l.accent, x.l.ink].map(c => `<i style="background:${c}"></i>`).join('')}</span><span style="display:flex;flex-direction:column;gap:3px;min-width:0"><b>${esc(x.nome)}${x.id === 'dusty' ? '<span class="tag">padrão</span>' : ''}</b><small>${esc(x.sub)}</small></span></button>`).join('')}</div></section>
   <section class="card"><div class="card-h"><span class="label">seu símbolo</span><span class="small">ícone do app</span></div>
     <div class="syms">${SIMBOLOS.map(x => `<button class="symb ${x.id === (S.ui.simbolo || '1') ? 'on' : ''}" data-simbolo="${x.id}" aria-pressed="${x.id === (S.ui.simbolo || '1')}" aria-label="Símbolo ${esc(x.nome)}" style="--sym-bg:${x.bg};--sym-halo:${x.halo};--sym-arch:${x.arch}">${SYMT()}<small>${esc(x.nome)}</small></button>`).join('')}</div>
     <p class="hint">Escolha antes de adicionar o app à tela de início: o ícone sai com o símbolo escolhido.</p></section>
@@ -1650,7 +1657,7 @@ document.addEventListener('click', async e => {
     case 'foto-ajustar': ajustarFoto(); break;
     case 'foto-salvar': salvarFoto(); break;
     case 'foto-cancelar': S.edit = null; render(); break;
-    case 'foto-remover': S.ui.foto = ''; S.ui.fotoOrig = ''; S.ui.ajuste = null; saveUI(); render(); toast('foto removida'); break;
+    case 'foto-remover': S.ui.foto = ''; S.ui.fotoOrig = ''; S.ui.ajuste = null; S.ui.semFoto = true; saveUI(); render(); toast('foto removida'); break;
     case 'ics-diario': lembreteDiario(); break;
     case 'del': S.confirmDel = true; render(); break;
     case 'del-ok': { await delPlano(plan().id); S.confirmDel = false; toast('plano apagado'); render(); break; }
