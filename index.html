@@ -319,6 +319,13 @@ details.fold[open] > summary .chev{transform:rotate(90deg)}
 .msg .who{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:var(--rose-ink);margin-bottom:4px}
 
 
+/* rodapé: assinatura */
+.foot{max-width:720px;margin:40px auto 0;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;color:var(--muted)}
+.foot svg.sym{width:40px;height:40px}
+.foot-w{margin:2px 0 0;font-size:17px;font-weight:500;letter-spacing:-.03em;color:var(--ink)}
+.foot-w i{font-style:normal;color:var(--rose)}
+.foot-by{margin:0;font-size:12px}
+.foot-by em{font-family:var(--f-serif);font-style:italic;font-size:1.3em;color:var(--rose-num)}
 /* perfil */
 .me-row{display:flex;align-items:center;gap:18px}
 .ava-big{width:88px;height:88px;border-radius:50%;overflow:hidden;flex:none;box-shadow:0 0 0 4px var(--surface)}
@@ -1514,7 +1521,7 @@ function auto(){
 }
 function render(){
   const v = document.getElementById('view'), c = document.getElementById('chat');
-  v.innerHTML = VIEWS[S.tab]();
+  v.innerHTML = VIEWS[S.tab]() + `<footer class="foot">${SYM}<p class="foot-w">lâmpada<i>.</i></p><p class="foot-by">feito por <em>Laís</em></p></footer>`;
   c.innerHTML = S.chatOpen ? viewChat() : ''; S.chatAnim = false;
   document.body.classList.toggle('chat-open', !!S.chatOpen);
   document.getElementById('fab').classList.toggle('busy', !!S.busy.chat);
