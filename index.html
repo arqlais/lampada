@@ -93,6 +93,11 @@ svg.i.lg{width:22px;height:22px}
 .streak svg{width:16px;height:16px;color:var(--rose)}
 
 svg.sym{width:18px;height:18px;flex:none}
+/* marca: o símbolo no formato do ícone do app */
+svg.symt{width:44px;height:44px;flex:none;filter:drop-shadow(0 6px 14px rgba(var(--ink-rgb),.16))}
+.appbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 0 4px}
+.brandm{display:flex;align-items:center;gap:11px;border:0;background:none;padding:0;color:var(--ink);font-size:21px;font-weight:500;letter-spacing:-.03em}
+.brandm i{font-style:normal;color:var(--rose)}
 .nav .brand i{font-style:normal;color:var(--rose)}
 /* cartões */
 .card{position:relative;background:var(--card);border:0;border-radius:var(--r-card);padding:var(--pad);display:flex;flex-direction:column;gap:16px;min-width:0}
@@ -319,13 +324,10 @@ details.fold[open] > summary .chev{transform:rotate(90deg)}
 .msg .who{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:var(--rose-ink);margin-bottom:4px}
 
 
-/* rodapé: assinatura */
-.foot{max-width:720px;margin:40px auto 0;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;color:var(--muted)}
-.foot svg.sym{width:40px;height:40px}
-.foot-w{margin:2px 0 0;font-size:17px;font-weight:500;letter-spacing:-.03em;color:var(--ink)}
-.foot-w i{font-style:normal;color:var(--rose)}
-.foot-by{margin:0;font-size:12px}
-.foot-by em{font-family:var(--f-serif);font-style:italic;font-size:1.3em;color:var(--rose-num)}
+/* rodapé: assinatura discreta */
+.foot{max-width:720px;margin:36px auto 0;text-align:center;font-size:11.5px;color:var(--muted);opacity:.8}
+.foot i{font-style:normal;color:var(--rose)}
+.foot em{font-family:var(--f-serif);font-style:italic;font-size:1.25em}
 /* perfil */
 .me-row{display:flex;align-items:center;gap:18px}
 .ava-big{width:88px;height:88px;border-radius:50%;overflow:hidden;flex:none;box-shadow:0 0 0 4px var(--surface)}
@@ -347,6 +349,11 @@ input[type=range]{width:100%;accent-color:var(--rosa)}
 .pal b{font-weight:500;font-size:13.5px;line-height:1.2}
 .pal small{font-size:11px;color:var(--muted);line-height:1.35}
 .nav-me{display:none}
+.syms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.symb{border:1px solid var(--line);background:var(--surface);border-radius:22px;padding:12px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--ink);min-width:0}
+.symb svg.symt{width:52px;height:52px}
+.symb small{font-size:10.5px;color:var(--muted);line-height:1.25;text-align:center}
+.symb.on{border-color:var(--rose);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.18)}
 /* chat flutuante: botão redondo + painel */
 .fab{position:fixed;z-index:25;right:max(18px, env(safe-area-inset-right, 0px));bottom:calc(96px + env(safe-area-inset-bottom, 0px));width:58px;height:58px;border-radius:50%;border:none;
   background:var(--rosa);color:var(--on-accent);display:flex;align-items:center;justify-content:center;box-shadow:0 14px 30px -12px rgba(var(--ink-rgb),.55);transition:transform .2s}
@@ -386,8 +393,9 @@ body.chat-open{overflow:hidden}
   .shell{padding:40px 24px 64px 268px}
   .nav{right:auto;left:calc(24px + env(safe-area-inset-left, 0px));top:24px;bottom:24px;margin:0;width:220px;height:auto;max-width:none;
     display:flex;flex-direction:column;gap:4px;padding:26px 14px;border:0;border-radius:32px;background:var(--surface);box-shadow:0 20px 50px -30px rgba(var(--ink-rgb),.45)}
-  .nav .brand{display:flex;align-items:center;gap:10px;color:var(--ink);font-size:23px;font-weight:500;letter-spacing:-.03em;padding:0 10px 26px}
-  .nav .brand svg.sym{width:30px;height:30px}
+  .nav .brand{display:flex;align-items:center;gap:12px;color:var(--ink);font-size:26px;font-weight:500;letter-spacing:-.03em;padding:0 6px 28px}
+  .nav .brand svg.symt{width:54px;height:54px}
+  .appbar{display:none}
   .tab{width:100%;height:48px;margin:0;border-radius:18px;flex-direction:row;justify-content:flex-start;gap:12px;padding:0 16px;font-size:14px}
   .tab svg{width:19px;height:19px}
   .nav-me{display:flex;align-items:center;gap:8px;margin-top:auto;padding:14px 2px 0;border-top:1px solid var(--line)}
@@ -439,7 +447,7 @@ body.chat-open{overflow:hidden}
 
 <div class="shell"><main id="view" aria-live="polite"></main></div>
 <nav class="nav" aria-label="Menu">
-  <div class="brand"><svg class="sym" viewBox="0 0 64 64" aria-hidden="true"><path d="M17 56V30a15 15 0 0 1 30 0v26z" fill="#A0817E"/><path d="M32 19.5c3.6 4.7 5.9 8.2 5.9 12a5.9 5.9 0 0 1-11.8 0c0-3.8 2.3-7.3 5.9-12z" fill="#F5D5D2"/><path d="M22.3 46.5c4-1.8 7.2-1.5 9.7.8 2.5-2.3 5.7-2.6 9.7-.8" fill="none" stroke="#F0EBD5" stroke-width="1.6" stroke-linecap="round"/></svg><span>lâmpada<i>.</i></span></div>
+  <div class="brand" id="brand"></div>
   <button class="tab" data-tab="hoje"><svg class="i lg"><use href="#i-book"/></svg><span>hoje</span></button>
   <button class="tab" data-tab="aprender"><svg class="i lg"><use href="#i-steps"/></svg><span>aprender</span></button>
   <button class="tab" data-tab="caminhada"><svg class="i lg"><use href="#i-path"/></svg><span>caminhada</span></button>
@@ -681,6 +689,7 @@ const fmtDia = d => d.toLocaleDateString('pt-BR', { day:'numeric', month:'long' 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean = s => String(s ?? '').replace(/\*\*(.+?)\*\*/g, '$1').replace(/^#+\s*/gm, '').replace(/^\s*[-*]\s+/gm, '· ');
 const SYM = '<svg class="sym" viewBox="0 0 64 64" aria-hidden="true"><path d="M17 56V30a15 15 0 0 1 30 0v26z" style="fill:var(--rosa)"/><path d="M32 19.5c3.6 4.7 5.9 8.2 5.9 12a5.9 5.9 0 0 1-11.8 0c0-3.8 2.3-7.3 5.9-12z" style="fill:var(--lume)"/><path d="M32 27.8c1.6 2.1 2.6 3.7 2.6 5.3a2.6 2.6 0 0 1-5.2 0c0-1.6 1-3.2 2.6-5.3z" fill="#FFF8E4"/><path d="M22.3 46.5c4-1.8 7.2-1.5 9.7.8 2.5-2.3 5.7-2.6 9.7-.8" fill="none" style="stroke:var(--on-accent)" stroke-width="1.6" stroke-linecap="round"/></svg>';
+const SYMT = (cls = '') => `<svg class="symt ${cls}" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" style="fill:var(--sym-bg)"/><circle cx="32" cy="29" r="21" style="fill:var(--sym-halo)" opacity=".55"/><path d="M17 52.5V30a15 15 0 0 1 30 0v22.5z" style="fill:var(--sym-arch)"/><circle cx="32" cy="31.5" r="11.5" fill="#F6DE9A" opacity=".28"/><path d="M32 19.5c3.6 4.7 5.9 8.2 5.9 12a5.9 5.9 0 0 1-11.8 0c0-3.8 2.3-7.3 5.9-12z" style="fill:var(--lume)"/><path d="M32 27.8c1.6 2.1 2.6 3.7 2.6 5.3a2.6 2.6 0 0 1-5.2 0c0-1.6 1-3.2 2.6-5.3z" fill="#FFF8E4"/><path d="M22.3 46.5c4-1.8 7.2-1.5 9.7.8 2.5-2.3 5.7-2.6 9.7-.8" fill="none" stroke="#FBF8EE" stroke-width="1.6" stroke-linecap="round"/></svg>`;
 const ico = (id, cls='') => `<svg class="i ${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
 const fmtN = n => n.toLocaleString('pt-BR');
 const chOf = k => { const [c, n] = k.split('.'); return { book:BK[c], cap:+n, key:k }; };
@@ -717,7 +726,7 @@ const S = {
   sel:null, selPlan:null, open:null, aula:null, ctab:'planos', chatCtx:'leitura', form:null, confirmDel:false, step3:'palavras',
   engine: IN_CLAUDE ? 'claude' : 'gemini', gkey:'', gmodel:'gemini-3-flash-preview', hora:'07:30',
   db:null, sample:null, busy:{}, draft:{}, pending:false, ctl:null,
-  ui:{ nome:'', foto:'', fotoOrig:'', ajuste:null, paleta:'dusty', tema:'auto' }, edit:null
+  ui:{ nome:'', foto:'', fotoOrig:'', ajuste:null, paleta:'dusty', tema:'auto', simbolo:'1' }, edit:null
 };
 const nome = () => (S.ui.nome || (S.user && S.user.displayName ? S.user.displayName.split(' ')[0] : '')).trim();
 const fotoURL = () => S.ui.foto || (S.user && S.user.photoURL) || '';
@@ -1049,6 +1058,12 @@ const PALETAS = [
     l:{ bg:'#F5F1EE', surface:'#FFFFFF', ink:'#3E4B57', accent:'#3E4B57', accentInk:'#A88A80', num:'#A88A80', soft:'#F4E8E5', steel:'#8B939A', line:'#EBE1DC', halo:'#FFFFFF' },
     d:{ bg:'#1C2126', surface:'#252B31', hero:'#2C343C', ink:'#EEF0F2', accent:'#D6B3AB', accentInk:'#D6B3AB' } }
 ];
+const SIMBOLOS = [
+  { id:'1', nome:'rosinha e dusty', bg:'#F5D5D2', halo:'#FBF8EE', arch:'#A0817E' },
+  { id:'5', nome:'rosa antigo', bg:'#FFDBDA', halo:'#FFF6F6', arch:'#DB7F8E' },
+  { id:'10', nome:'branco e dusty', bg:'#FFFFFF', halo:'#F5D5D2', arch:'#A0817E' },
+  { id:'11', nome:'rosinha e taupe', bg:'#F5D5D2', halo:'#FBF8EE', arch:'#5E4A48' }
+];
 const rgb = h => [1, 3, 5].map(i => parseInt(h.substr(i, 2), 16)).join(',');
 function applyUI(){
   const P = PALETAS.find(x => x.id === S.ui.paleta) || PALETAS[0], l = P.l, d = P.d, root = document.documentElement;
@@ -1057,6 +1072,10 @@ function applyUI(){
   st.textContent = `:root{--bg:${l.bg};--surface:${l.surface};--taupe:${l.ink};--rosa:${l.accent};--rose-ink:${l.accentInk};--rose-num:${l.num || l.accent};--blush:${l.soft};--steel:${l.steel};--slate:${l.line};--halo:${l.halo};--on-accent:${l.surface};`
     + `--ink-rgb:${rgb(l.ink)};--accent-rgb:${rgb(l.accent)};--soft-rgb:${rgb(l.soft)};--surface-rgb:${rgb(l.surface)};--deep-rgb:${rgb(d.bg)}}`
     + `@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){${dark}}}:root[data-theme="dark"]{${dark}}`;
+  const Y = SIMBOLOS.find(x => x.id === S.ui.simbolo) || SIMBOLOS[0];
+  root.style.setProperty('--sym-bg', Y.bg); root.style.setProperty('--sym-halo', Y.halo); root.style.setProperty('--sym-arch', Y.arch);
+  const at = document.querySelector('link[rel="apple-touch-icon"]'); if (at) at.href = Y.id === '1' ? 'apple-touch-icon.png' : `icons/simbolo-${Y.id}-180.png`;
+  const fv = document.querySelector('link[rel="icon"]'); if (fv) fv.href = Y.id === '1' ? 'icon.svg' : `icons/simbolo-${Y.id}.svg`;
   if (S.ui.tema === 'claro') root.dataset.theme = 'light'; else if (S.ui.tema === 'escuro') root.dataset.theme = 'dark'; else delete root.dataset.theme;
   const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = escuro() ? d.bg : l.bg;
 }
@@ -1135,10 +1154,13 @@ const greeting = () => { const h = new Date().getHours(); return h < 5 ? 'boa no
 const thinking = t => `<div class="thinking"><span class="dots"><i></i><i></i><i></i></span>${t}</div>`;
 const aiOff = () => `<p class="hint">${IN_CLAUDE ? 'A IA aparece aqui assim que o Claude for liberado.' : 'Pra gerar isso, coloque sua chave do Gemini em <button class="linkbtn" data-go-ajustes="1" style="display:inline;padding:0">caminhada › ajustes</button>.'}</p>`;
 function header(){
-  const st = streak(), n = nome();
-  return `<header class="top">
-    <div><p class="eyebrow">${SYM}${esc(fmtLong(new Date()))}</p><h1 class="title">${greeting()}${n ? `, <em>${esc(n)}</em>` : ''}</h1></div>
-    <div class="top-r">${st ? `<span class="streak" title="dias seguidos lendo">${ico('flame')}${st}</span>` : ''}${temaBtn()}<button class="avatar" data-tab="perfil" aria-label="Seu perfil">${avatar()}</button></div></header>`;
+  const n = nome();
+  return `<header class="top"><div><p class="eyebrow">${esc(fmtLong(new Date()))}</p><h1 class="title">${greeting()}${n ? `, <em>${esc(n)}</em>` : ''}</h1></div></header>`;
+}
+function appbar(){
+  const st = streak();
+  return `<div class="appbar"><button class="brandm" data-tab="hoje" aria-label="lâmpada, início">${SYMT()}<span>lâmpada<i>.</i></span></button>
+    <div class="top-r">${st ? `<span class="streak" title="dias seguidos lendo">${ico('flame')}${st}</span>` : ''}${temaBtn()}<button class="avatar" data-tab="perfil" aria-label="Seu perfil">${avatar()}</button></div></div>`;
 }
 const escuro = () => S.ui.tema === 'escuro' || (S.ui.tema !== 'claro' && matchMedia('(prefers-color-scheme: dark)').matches);
 const temaBtn = () => `<button class="round" data-act="tema-toggle" aria-label="${escuro() ? 'Modo claro' : 'Modo escuro'}" title="${escuro() ? 'modo claro' : 'modo escuro'}">${ico(escuro() ? 'sun' : 'moon')}</button>`;
@@ -1351,7 +1373,7 @@ function viewPerfil(){
         ${S.ui.foto ? `<button class="btn ghost sm" data-act="foto-remover">${ico('trash')}tirar</button>` : ''}</div>
       <input id="foto-in" type="file" accept="image/*" hidden>`;
   return `<div class="view">
-  <header class="top"><div><p class="eyebrow">${ico('heart')}perfil</p><h1 class="title">seu <em>perfil</em></h1></div><div class="top-r">${temaBtn()}</div></header>
+  <header class="top"><div><p class="eyebrow">${ico('heart')}perfil</p><h1 class="title">seu <em>perfil</em></h1></div></header>
   <section class="card rose">${top}</section>
   <section class="card"><div class="card-h"><span class="label">como quer ser chamado</span></div>
     <label class="field"><span class="sr">seu nome</span><input class="inp" id="u-nome" type="text" autocomplete="given-name" placeholder="seu nome" value="${esc(S.ui.nome || nome())}"></label>
@@ -1361,6 +1383,9 @@ function viewPerfil(){
     <p class="hint">No automático, segue o modo do aparelho.</p></section>
   <section class="card"><div class="card-h"><span class="label">sua paleta</span><span class="small">${esc(P.nome)}</span></div>
     <div class="pals">${PALETAS.map(x => `<button class="pal ${x.id === P.id ? 'on' : ''}" data-paleta="${x.id}" aria-pressed="${x.id === P.id}"><span class="pal-sw">${[x.l.bg, x.l.soft, x.l.accent, x.l.ink].map(c => `<i style="background:${c}"></i>`).join('')}</span><b>${esc(x.nome)}</b><small>${esc(x.sub)}</small></button>`).join('')}</div></section>
+  <section class="card"><div class="card-h"><span class="label">seu símbolo</span><span class="small">ícone do app</span></div>
+    <div class="syms">${SIMBOLOS.map(x => `<button class="symb ${x.id === (S.ui.simbolo || '1') ? 'on' : ''}" data-simbolo="${x.id}" aria-pressed="${x.id === (S.ui.simbolo || '1')}" aria-label="Símbolo ${esc(x.nome)}" style="--sym-bg:${x.bg};--sym-halo:${x.halo};--sym-arch:${x.arch}">${SYMT()}<small>${esc(x.nome)}</small></button>`).join('')}</div>
+    <p class="hint">Escolha antes de adicionar o app à tela de início: o ícone sai com o símbolo escolhido.</p></section>
   ${contaCard()}
   </div>`;
 }
@@ -1521,10 +1546,11 @@ function auto(){
 }
 function render(){
   const v = document.getElementById('view'), c = document.getElementById('chat');
-  v.innerHTML = VIEWS[S.tab]() + `<footer class="foot">${SYM}<p class="foot-w">lâmpada<i>.</i></p><p class="foot-by">feito por <em>Laís</em></p></footer>`;
+  v.innerHTML = VIEWS[S.tab]().replace('<div class="view">', '<div class="view">' + appbar()) + `<footer class="foot">lâmpada<i>.</i> · feito por <em>Laís</em></footer>`;
   c.innerHTML = S.chatOpen ? viewChat() : ''; S.chatAnim = false;
   document.body.classList.toggle('chat-open', !!S.chatOpen);
   document.getElementById('fab').classList.toggle('busy', !!S.busy.chat);
+  const br = document.getElementById('brand'); if (br && !br.firstChild) br.innerHTML = `${SYMT()}<span>lâmpada<i>.</i></span>`;
   const nm = document.getElementById('navme'); if (nm) nm.innerHTML = `<button class="me-chip" data-tab="perfil">${avatar()}<span class="t">${esc(nome() || 'seu perfil')}</span></button>${temaBtn()}`;
   duo(v); duo(c); if (S.chatOpen) scrollEnd(); if (S.edit) placeCrop();
   auto();
@@ -1567,11 +1593,12 @@ const aulaPrompt = a => `Acabei de fazer a aula "${a.t}". Me explica isso um pou
 
 document.addEventListener('click', async e => {
   const rd = e.target.closest('[data-read]'); if (rd) { marcaPasso('ler'); setTimeout(render, 400); return; }
-  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes],[data-chat],[data-paleta],[data-tema]');
+  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes],[data-chat],[data-paleta],[data-tema],[data-simbolo]');
   if (!el) return;
   const ds = el.dataset;
   if (ds.tab) { if (ds.tab !== 'perfil') S.edit = null; if (ds.tab === 'aprender') S.aula = null; if (ds.tab === 'caminhada') S.form = null; return go(ds.tab); }
   if (ds.paleta) { S.ui.paleta = ds.paleta; saveUI(); return render(); }
+  if (ds.simbolo) { S.ui.simbolo = ds.simbolo; saveUI(); return render(); }
   if (ds.tema) { S.ui.tema = ds.tema; saveUI(); return render(); }
   if (ds.chat) { if (ds.chat === 'open') return openChat(); S.chatOpen = false; return render(); }
   if (ds.goAjustes) { S.ctab = 'ajustes'; S.form = null; S.chatOpen = false; return go('caminhada'); }
