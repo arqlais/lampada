@@ -70,7 +70,7 @@ svg.i.lg{width:22px;height:22px}
 
 .shell{max-width:1180px;margin:0 auto;padding-block:20px 128px}
 /* todas as páginas com a mesma largura, centralizadas */
-.view{display:flex;flex-direction:column;gap:14px;animation:in .4s ease both;max-width:720px;width:100%;margin:0 auto}
+.view{display:flex;flex-direction:column;gap:14px;max-width:720px;width:100%;margin:0 auto}
 @keyframes in{from{opacity:.3;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 /* topo: marca do jeito Planê + saudação grande */
@@ -153,10 +153,10 @@ svg.symt{width:36px;height:36px;flex:none;filter:drop-shadow(0 6px 14px rgba(var
 .step-t span{font-size:12px;color:var(--muted)}
 .chev{color:var(--muted);transition:transform .2s}
 .step.open .chev{transform:rotate(90deg)}
-.step-b{padding:0 0 18px 52px;display:flex;flex-direction:column;gap:14px;animation:in .25s ease both}
+.step-b{padding:0 0 18px 52px;display:flex;flex-direction:column;gap:14px}
 .finish{display:flex;flex-direction:column;gap:10px;padding-top:4px}
 .done-ring{display:flex;align-items:center;gap:14px;background:var(--soft);border-radius:999px;padding:8px 18px 8px 8px}
-.done-ring .ring{width:46px;height:46px;border-radius:50%;background:var(--rose);color:var(--on-rose);display:flex;align-items:center;justify-content:center;flex:none;animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
+.done-ring .ring{width:46px;height:46px;border-radius:50%;background:var(--rose);color:var(--on-rose);display:flex;align-items:center;justify-content:center;flex:none}
 .done-ring .ring svg{width:22px;height:22px;stroke-width:1.6}
 .done-ring b{font-weight:500;font-size:14px;display:block}
 .done-ring span{font-size:12.5px;color:var(--muted)}
@@ -327,7 +327,7 @@ details.fold[open] > summary .chev{transform:rotate(90deg)}
 /* tela de entrada */
 body.w-on .nav,body.w-on .fab{display:none}
 body.w-on .shell{padding-left:max(16px, env(safe-area-inset-left, 0px))}
-.welcome{max-width:460px;margin:0 auto;min-height:calc(100vh - 120px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:24px 8px;animation:in .5s ease both}
+.welcome{max-width:460px;margin:0 auto;min-height:calc(100vh - 120px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:24px 8px}
 .w-mark svg.symt{width:96px;height:96px;filter:drop-shadow(0 18px 30px rgba(var(--ink-rgb),.22))}
 .w-word{margin:4px 0 0;font-size:22px;font-weight:500;letter-spacing:-.03em}
 .w-word i{font-style:normal;color:var(--rose)}
@@ -341,9 +341,20 @@ body.w-on .shell{padding-left:max(16px, env(safe-area-inset-left, 0px))}
 .w-form{display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px}
 .w-form .w-btn{margin-top:2px;max-width:none}
 .w-err{margin:0;font-size:12.5px;color:var(--rose-ink);font-weight:500}
+/* animações só ao chegar numa página, abrir um passo ou concluir (sem piscar a cada toque) */
+body.a-view .view,body.a-view .welcome{animation:in .4s ease both}
+body.a-step .step.open .step-b{animation:in .25s ease both}
+body.a-done .done-ring .ring{animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
+body.a-upd .upd{animation:in .4s ease both}
+/* troca de paleta e de claro/escuro: as cores mudam suavemente */
+html{transition:background-color .45s ease}
+html.morph *,html.morph *::before,html.morph *::after{transition:background-color .45s ease,color .45s ease,border-color .45s ease,fill .45s ease,stroke .45s ease,box-shadow .45s ease!important}
+.inp.masked{-webkit-text-security:disc}
+.keyrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:-6px}
+.keyrow .mono{font-weight:500;letter-spacing:.06em}
 /* aviso de versão nova */
 .upd{position:fixed;z-index:35;top:calc(74px + env(safe-area-inset-top, 0px));left:0;right:0;margin:0 auto;width:max-content;max-width:calc(100vw - 32px);display:flex;align-items:center;gap:10px;
-  background:var(--rosa);color:var(--on-accent);border:0;border-radius:999px;padding:8px 8px 8px 16px;font-size:13px;box-shadow:0 14px 30px -12px rgba(var(--ink-rgb),.5);animation:in .4s ease both;white-space:nowrap}
+  background:var(--rosa);color:var(--on-accent);border:0;border-radius:999px;padding:8px 8px 8px 16px;font-size:13px;box-shadow:0 14px 30px -12px rgba(var(--ink-rgb),.5);white-space:nowrap}
 .upd b{font-weight:500;background:var(--on-accent);color:var(--rosa);border-radius:999px;padding:6px 14px}
 /* rodapé: assinatura discreta */
 .foot{max-width:720px;margin:36px auto 0;text-align:center;font-size:11.5px;color:var(--muted);opacity:.8}
@@ -760,7 +771,7 @@ const S = {
   sel:null, selPlan:null, open:null, aula:null, ctab:'planos', chatCtx:'leitura', form:null, confirmDel:false, step3:'palavras',
   engine: IN_CLAUDE ? 'claude' : 'gemini', gkey:'', gmodel:'gemini-3-flash-preview', hora:'07:30',
   db:null, sample:null, busy:{}, draft:{}, pending:false, ctl:null,
-  wmode:'entrar', wf:{}, werr:'', ui:{ nome:'', foto:'', fotoOrig:'', ajuste:null, paleta:'dusty', tema:'auto', simbolo:'1' }, edit:null, sync:{ st:'ok' }
+  fx:{ view:true }, wmode:'entrar', wf:{}, werr:'', ui:{ nome:'', foto:'', fotoOrig:'', ajuste:null, paleta:'dusty', tema:'auto', simbolo:'1' }, edit:null, sync:{ st:'ok' }
 };
 const nome = () => (S.ui.nome || (S.user && S.user.displayName ? S.user.displayName.split(' ')[0] : '')).trim();
 const fotoURL = () => S.ui.foto || (!S.ui.semFoto && S.user && S.user.photoURL) || '';
@@ -816,7 +827,7 @@ async function checaVersao(){
   if (checando || S.update || IN_CLAUDE || location.protocol === 'file:') return; checando = true;
   try { const r = await fetch(location.pathname + '?checar=' + Date.now(), { cache:'no-store' });
     if (r.ok) { const doc = new DOMParser().parseFromString(await r.text(), 'text/html');
-      if (doc.querySelector('script:not([src])') && assinatura(doc) !== assinatura(document)) { S.update = true; render(); } } } catch {}
+      if (doc.querySelector('script:not([src])') && assinatura(doc) !== assinatura(document)) { S.update = true; S.fx.upd = true; render(); } } } catch {}
   checando = false;
 }
 setTimeout(checaVersao, 4000); setInterval(checaVersao, 20 * 60 * 1000);
@@ -1503,7 +1514,7 @@ function viewPerfil(){
   <section class="card"><div class="card-h"><span class="label">claro ou escuro</span></div>
     <div class="seg">${[['claro', 'sun', 'claro'], ['escuro', 'moon', 'escuro'], ['auto', 'clock', 'auto']].map(([k, i, t]) => `<button data-tema="${k}" aria-pressed="${S.ui.tema === k}">${ico(i)} ${t}</button>`).join('')}</div>
     <p class="hint">No automático, segue o modo do aparelho.</p></section>
-  <section class="card"><div class="card-h"><span class="label">sua paleta</span><span class="small">${esc(P.nome)}</span></div>
+  <section class="card"><div class="card-h"><span class="label">sua paleta</span><span class="small" id="pal-nome">${esc(P.nome)}</span></div>
     <div class="pals">${PALETAS.map(x => `<button class="pal ${x.id === P.id ? 'on' : ''}" data-paleta="${x.id}" aria-pressed="${x.id === P.id}"><span class="pal-sw">${[x.l.bg, x.l.soft, x.l.accent, x.l.ink].map(c => `<i style="background:${c}"></i>`).join('')}</span><span style="display:flex;flex-direction:column;gap:3px;min-width:0"><b>${esc(x.nome)}${x.id === 'dusty' ? '<span class="tag">padrão</span>' : ''}</b><small>${esc(x.sub)}</small></span></button>`).join('')}</div></section>
   <section class="card"><div class="card-h"><span class="label">seu símbolo</span><span class="small">ícone do app</span></div>
     <div class="syms">${SIMBOLOS.map(x => `<button class="symb ${x.id === (S.ui.simbolo || '1') ? 'on' : ''}" data-simbolo="${x.id}" aria-pressed="${x.id === (S.ui.simbolo || '1')}" aria-label="Símbolo ${esc(x.nome)}" style="--sym-bg:${x.bg};--sym-halo:${x.halo};--sym-arch:${x.arch}">${SYMT()}<small>${esc(x.nome)}</small></button>`).join('')}</div>
@@ -1610,7 +1621,8 @@ function cAjustes(){
   return `<section class="card">
     <div class="card-h"><span class="label">${ico('key')}Gemini</span><span class="small">${geminiReady() ? 'conectado' : IN_CLAUDE ? 'no app publicado' : S.gkey ? 'chave salva' : 'sem chave'}</span></div>
     <p class="hint" style="margin-top:-8px">${S.user ? 'A chave fica guardada na sua conta e vale em todos os aparelhos.' : 'A chave fica guardada só neste aparelho.'} Gere em <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> e cole aqui.</p>
-    <label class="field"><span>sua chave</span><input class="inp" id="g-key" type="password" autocomplete="off" placeholder="cole a chave aqui" value="${esc(S.gkey)}"></label>
+    <label class="field"><span>${S.gkey ? 'trocar a chave' : 'sua chave'}</span><input class="inp masked" id="g-key" name="gemini-api-chave" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-1p-ignore data-lpignore="true" placeholder="${S.gkey ? 'cole uma chave nova pra trocar' : 'cole a chave aqui'}" value=""></label>
+    ${S.gkey ? `<div class="keyrow"><span class="small">chave salva: <b class="mono">••••${esc(S.gkey.slice(-4))}</b></span><button class="linkbtn muted" data-act="g-del">apagar chave</button></div>` : ''}
     <label class="field"><span>modelo</span><select class="inp" id="g-model">${(MODELOS.some(m => m[0] === S.gmodel) ? MODELOS : MODELOS.concat([[S.gmodel, S.gmodel, 'outro']])).map(m => `<option value="${esc(m[0])}" ${m[0] === S.gmodel ? 'selected' : ''}>${esc(m[1])} · ${esc(m[2])}</option>`).join('')}</select></label>
     <button class="btn ghost" data-act="g-test" ${S.busy.teste ? 'disabled' : ''}>${S.busy.teste ? 'testando…' : 'testar conexão'}</button>
     ${S.gtest ? `<p class="small" style="margin:-4px 0 0;color:${S.gtest.ok ? 'var(--ok)' : 'var(--rose-ink)'}">${esc(S.gtest.msg)}</p>` : `<p class="small" style="margin:-4px 0 0">A chave e o modelo salvam sozinhos.</p>`}
@@ -1672,6 +1684,7 @@ function auto(){
   if (S.open === 'palavras') { if (S.step3 === 'palavras' && !c.dificeis) run('dif', dificeis); if (S.step3 === 'versoes' && !c.palavras) run('cmp', comparar); }
 }
 function render(){
+  const fx = S.fx || {}; S.fx = {}; ['view','step','done','upd'].forEach(k => document.body.classList.toggle('a-' + k, !!fx[k]));
   const v = document.getElementById('view'), c = document.getElementById('chat');
   const entrada = pedeEntrada(); document.body.classList.toggle('w-on', entrada);
   if (entrada) { v.innerHTML = viewEntrada(); document.getElementById('chat').innerHTML = ''; duo(v); return; }
@@ -1685,7 +1698,16 @@ function render(){
   auto();
   document.querySelectorAll('.tab').forEach(t => { if (t.dataset.tab === S.tab) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
 }
-function go(tab){ S.tab = tab; S.confirmDel = false; try { history.replaceState(null, '', '#' + tab); } catch {} render(); window.scrollTo({ top:0 }); }
+/* muda cores sem redesenhar a página: só marca as escolhas e deixa a transição suave */
+function visual(){
+  const r = document.documentElement; r.classList.add('morph'); clearTimeout(visual.t); visual.t = setTimeout(() => r.classList.remove('morph'), 520);
+  saveUI();
+  const mark = (sel, key, val) => document.querySelectorAll(sel).forEach(b => { const on = b.dataset[key] === val; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+  mark('[data-paleta]', 'paleta', S.ui.paleta); mark('[data-simbolo]', 'simbolo', S.ui.simbolo || '1'); mark('[data-tema]', 'tema', S.ui.tema);
+  document.querySelectorAll('[data-act="tema-toggle"]').forEach(b => { b.innerHTML = ico(escuro() ? 'sun' : 'moon'); b.setAttribute('aria-label', escuro() ? 'Modo claro' : 'Modo escuro'); });
+  const pn = document.getElementById('pal-nome'); if (pn) pn.textContent = (PALETAS.find(x => x.id === S.ui.paleta) || PALETAS[0]).nome;
+}
+function go(tab){ S.fx.view = true; S.tab = tab; S.confirmDel = false; try { history.replaceState(null, '', '#' + tab); } catch {} render(); window.scrollTo({ top:0 }); }
 function readHash(){ const h = (location.hash || '').slice(1); if (VIEWS[h]) S.tab = h; if (h === 'conversa') S.chatOpen = true; }
 function setAtivo(id){ S.ativo = id; S.sel = null; S.open = null; S.confirmDel = false; savePerfil(); }
 let tt;
@@ -1696,7 +1718,7 @@ function marcaPasso(k, on = true){ const d = cur(); const ps = S.passos[d.key] =
 function marcar(){
   const p = plan(), d = cur(), L = lidosOf(p);
   if (L[d.key]) delete L[d.key]; else L[d.key] = iso(new Date());
-  const agora = !!L[d.key];
+  const agora = !!L[d.key]; if (agora) S.fx.done = true;
   if (agora) S.open = '';
   render(); p.id === 'natal' ? savePerfil() : savePlano(p);
   if (!agora) return;
@@ -1726,12 +1748,12 @@ document.addEventListener('click', async e => {
   if (!el) return;
   const ds = el.dataset;
   if (ds.tab) { if (ds.tab !== 'perfil') S.edit = null; if (ds.tab === 'aprender') S.aula = null; if (ds.tab === 'caminhada') S.form = null; return go(ds.tab); }
-  if (ds.paleta) { S.ui.paleta = ds.paleta; saveUI(); return render(); }
-  if (ds.simbolo) { S.ui.simbolo = ds.simbolo; saveUI(); return render(); }
-  if (ds.tema) { S.ui.tema = ds.tema; saveUI(); return render(); }
+  if (ds.paleta) { S.ui.paleta = ds.paleta; return visual(); }
+  if (ds.simbolo) { S.ui.simbolo = ds.simbolo; return visual(); }
+  if (ds.tema) { S.ui.tema = ds.tema; return visual(); }
   if (ds.chat) { if (ds.chat === 'open') return openChat(); S.chatOpen = false; return render(); }
   if (ds.goAjustes) { S.form = null; S.chatOpen = false; go('perfil'); setTimeout(() => { const el = document.getElementById('ia'); if (el) el.scrollIntoView({ block:'start' }); }, 120); return; }
-  if (ds.step) { S.open = S.open === ds.step ? '' : ds.step; return render(); }
+  if (ds.step) { S.open = S.open === ds.step ? '' : ds.step; S.fx.step = true; return render(); }
   if (ds.done) { marcaPasso(ds.done); return render(); }
   if (ds.s3) { S.step3 = ds.s3; return render(); }
   if (ds.ctx) { S.chatCtx = ds.ctx; return render(); }
@@ -1776,7 +1798,7 @@ document.addEventListener('click', async e => {
     case 'w-entrar': S.wmode = 'entrar'; S.werr = ''; render(); break;
     case 'w-senha': esqueciSenha(); break;
     case 'atualizar': location.replace(location.pathname + '?v=' + Date.now() + location.hash); break;
-    case 'tema-toggle': S.ui.tema = escuro() ? 'claro' : 'escuro'; saveUI(); render(); break;
+    case 'tema-toggle': S.ui.tema = escuro() ? 'claro' : 'escuro'; visual(); break;
     case 'foto-ajustar': ajustarFoto(); break;
     case 'foto-salvar': salvarFoto(); break;
     case 'foto-cancelar': S.edit = null; render(); break;
@@ -1788,7 +1810,8 @@ document.addEventListener('click', async e => {
       if (await saveNota(d.key, v, refName(d))) { delete S.draft[d.key]; if (v.trim()) marcaPasso('refletir'); toast(v.trim() ? 'guardado no diário' : 'reflexão apagada'); render(); } break; }
     case 'ask-note': { const v = document.getElementById('nota').value.trim(); perguntar(v ? 'Escrevi isso sobre a leitura, me ajuda a pensar mais: ' + v : 'Me ajuda a refletir sobre essa leitura?', 'leitura'); break; }
     case 'g-save': S.gkey = document.getElementById('g-key').value.trim(); S.gmodel = document.getElementById('g-model').value.trim() || 'gemini-3-flash-preview'; if (S.gkey) S.engine = 'gemini'; saveIA(); toast(S.gkey ? (S.user ? 'chave salva na sua conta' : 'chave salva neste aparelho') : 'chave apagada'); render(); break;
-    case 'g-test': S.gkey = document.getElementById('g-key').value.trim(); S.gmodel = document.getElementById('g-model').value.trim() || 'gemini-3-flash-preview'; saveIA(); testarGemini(); break;
+    case 'g-test': { const k = document.getElementById('g-key').value.trim(); if (k) S.gkey = k; S.gmodel = document.getElementById('g-model').value.trim() || 'gemini-3-flash-preview'; saveIA(); testarGemini(); break; }
+    case 'g-del': S.gkey = ''; S.gtest = null; saveIA(); render(); toast('chave apagada'); break;
   }
 });
 document.addEventListener('input', e => {
@@ -1801,7 +1824,7 @@ document.addEventListener('input', e => {
     if (map[id]) S.form[map[id]] = e.target.value; const pv = document.getElementById('f-prev'); if (pv) pv.innerHTML = previewTxt(); }
 });
 document.addEventListener('change', e => {
-  if (e.target.id === 'g-key' || e.target.id === 'g-model') { S.gkey = document.getElementById('g-key').value.trim(); S.gmodel = document.getElementById('g-model').value || 'gemini-3-flash-preview'; if (S.gkey) S.engine = 'gemini'; saveIA(); toast(S.gkey ? 'Gemini salvo' : 'chave apagada'); }
+  if (e.target.id === 'g-key' || e.target.id === 'g-model') { const k = document.getElementById('g-key').value.trim(); if (k) { S.gkey = k; S.engine = 'gemini'; S.gtest = null; } S.gmodel = document.getElementById('g-model').value || 'gemini-3-flash-preview'; saveIA(); if (k || e.target.id === 'g-model') { toast(k ? 'chave salva' : 'modelo salvo'); render(); } }
   if (e.target.id === 'foto-in' && e.target.files && e.target.files[0]) escolherFoto(e.target.files[0]);
   if (e.target.id === 'u-nome') render();
 });
