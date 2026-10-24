@@ -324,6 +324,10 @@ details.fold[open] > summary .chev{transform:rotate(90deg)}
 .msg .who{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:var(--rose-ink);margin-bottom:4px}
 
 
+/* aviso de versão nova */
+.upd{position:fixed;z-index:35;top:calc(74px + env(safe-area-inset-top, 0px));left:0;right:0;margin:0 auto;width:max-content;max-width:calc(100vw - 32px);display:flex;align-items:center;gap:10px;
+  background:var(--rosa);color:var(--on-accent);border:0;border-radius:999px;padding:8px 8px 8px 16px;font-size:13px;box-shadow:0 14px 30px -12px rgba(var(--ink-rgb),.5);animation:in .4s ease both;white-space:nowrap}
+.upd b{font-weight:500;background:var(--on-accent);color:var(--rosa);border-radius:999px;padding:6px 14px}
 /* rodapé: assinatura discreta */
 .foot{max-width:720px;margin:36px auto 0;text-align:center;font-size:11.5px;color:var(--muted);opacity:.8}
 .foot i{font-style:normal;color:var(--rose)}
@@ -416,6 +420,7 @@ body.chat-open{overflow:hidden}
   .me-chip span.t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .toast{bottom:28px}
   .fab{right:32px;bottom:32px}
+  .upd{top:24px}
   .sheet{left:auto;right:24px;bottom:24px;top:24px;height:auto;width:440px;border-radius:30px;box-shadow:0 30px 70px -30px rgba(var(--deep-rgb),.5);padding-top:18px}
   .sheet::before{display:none}
   .scrim{background:rgba(var(--deep-rgb),.12)}
@@ -786,6 +791,19 @@ function loadLocal(){
   else if (LS.get('perfil', null) || LS.get('lidos', null)) S.ui.nome = 'Laís';
   applyUI();
 }
+/* ---------- versão nova: compara o código desta página com o publicado (sem número de versão pra lembrar) ---------- */
+const assinatura = d => { let h = 5381; const t = [...d.querySelectorAll('script:not([src]),style:not(#pal)')].map(x => x.textContent).join('|'); for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return h; };
+let checando = false;
+async function checaVersao(){
+  if (checando || S.update || IN_CLAUDE || location.protocol === 'file:') return; checando = true;
+  try { const r = await fetch(location.pathname + '?checar=' + Date.now(), { cache:'no-store' });
+    if (r.ok) { const doc = new DOMParser().parseFromString(await r.text(), 'text/html');
+      if (doc.querySelector('script:not([src])') && assinatura(doc) !== assinatura(document)) { S.update = true; render(); } } } catch {}
+  checando = false;
+}
+setTimeout(checaVersao, 4000); setInterval(checaVersao, 20 * 60 * 1000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checaVersao(); });
+
 /* ---------- salvamento automático: sempre no aparelho na hora; na conta logo em seguida, com nova tentativa ---------- */
 const limpo = x => JSON.parse(JSON.stringify(x));   /* o banco não aceita "undefined" */
 const errSave = e => { const c = (e && e.code) || '';
@@ -1578,7 +1596,7 @@ function auto(){
 }
 function render(){
   const v = document.getElementById('view'), c = document.getElementById('chat');
-  v.innerHTML = VIEWS[S.tab]().replace('<div class="view">', '<div class="view">' + appbar()) + `<footer class="foot">lâmpada<i>.</i> · feito por <em>Laís</em></footer>`;
+  v.innerHTML = (S.update ? `<button class="upd" data-act="atualizar">nova versão do lâmpada <b>atualizar</b></button>` : '') + VIEWS[S.tab]().replace('<div class="view">', '<div class="view">' + appbar()) + `<footer class="foot">lâmpada<i>.</i> · feito por <em>Laís</em></footer>`;
   c.innerHTML = S.chatOpen ? viewChat() : ''; S.chatAnim = false;
   document.body.classList.toggle('chat-open', !!S.chatOpen);
   document.getElementById('fab').classList.toggle('busy', !!S.busy.chat);
@@ -1675,6 +1693,7 @@ document.addEventListener('click', async e => {
     case 'clear-books': S.form.livros = []; render(); break;
     case 'criar': criarPlano(); break;
     case 'ics-plano': agendaPlano(); break;
+    case 'atualizar': location.replace(location.pathname + '?v=' + Date.now() + location.hash); break;
     case 'tema-toggle': S.ui.tema = escuro() ? 'claro' : 'escuro'; saveUI(); render(); break;
     case 'foto-ajustar': ajustarFoto(); break;
     case 'foto-salvar': salvarFoto(); break;
