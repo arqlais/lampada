@@ -1,0 +1,1322 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lâmpada">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Lâmpada</title>
+<meta name="theme-color" content="#FBF4F2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap">
+<style>
+/* Layout: leitura guiada. Celular: uma coluna, menu de vidro embaixo. iPad/computador: menu de vidro flutuando à esquerda, conteúdo centralizado; no computador o "hoje" ganha uma coluna lateral. Escala de espaço 4/8/12/16/24/32. */
+:root{
+  --bg:#FBF4F2; --surface:#FFFFFF; --glass:rgba(255,255,255,.78); --glass-line:rgba(255,255,255,.95);
+  --ink:#4A3530; --muted:#7E645E; --line:#EEDFD9;
+  --rose:#8E5563; --on-rose:#FFFFFF; --rose-soft:#F4DDE0; --rose-num:#A85C6E; --blush:#FBF0EE;
+  --latte:#EFE3DA; --cocoa:#6B4A44; --on-cocoa:#FFFCFA; --tile:rgba(255,255,255,.62); --ok:#5F7A58;
+  --shadow:0 12px 32px rgba(110,63,75,.09);
+  --f-sans:'Poppins',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-serif:'Cormorant Garamond',Cormorant,'Times New Roman',Georgia,serif;
+  --r-card:26px; --r-ctl:16px; --r-sm:12px; --pad:20px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1D1617; --surface:#281F21; --glass:rgba(40,31,33,.82); --glass-line:rgba(255,255,255,.08);
+  --ink:#F3E5E1; --muted:#BFA6A0; --line:#3B2D2F;
+  --rose:#E2A3B1; --on-rose:#2A1A1E; --rose-soft:#3F2A31; --rose-num:#EBA9B8; --blush:#30232A;
+  --latte:#33282A; --cocoa:#E3CBC0; --on-cocoa:#2A1D1A; --tile:rgba(255,255,255,.06); --ok:#A9C79F;
+  --shadow:0 12px 32px rgba(0,0,0,.35); color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#1D1617; --surface:#281F21; --glass:rgba(40,31,33,.82); --glass-line:rgba(255,255,255,.08);
+  --ink:#F3E5E1; --muted:#BFA6A0; --line:#3B2D2F;
+  --rose:#E2A3B1; --on-rose:#2A1A1E; --rose-soft:#3F2A31; --rose-num:#EBA9B8; --blush:#30232A;
+  --latte:#33282A; --cocoa:#E3CBC0; --on-cocoa:#2A1D1A; --tile:rgba(255,255,255,.06); --ok:#A9C79F;
+  --shadow:0 12px 32px rgba(0,0,0,.35); color-scheme:dark }
+
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--f-sans);font-weight:300;font-size:14px;line-height:1.6;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--rose)}
+:focus-visible{outline:2px solid var(--rose);outline-offset:2px;border-radius:10px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;flex:none}
+svg.i.lg{width:22px;height:22px}
+.serif{font-family:var(--f-serif);font-style:italic;font-weight:500}
+
+.shell{max-width:1180px;margin:0 auto;padding-block:24px 128px}
+.view{display:flex;flex-direction:column;gap:16px;animation:in .35s ease both}
+.narrow{max-width:720px;width:100%;margin:0 auto}
+@keyframes in{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* topo */
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding-bottom:4px}
+.eyebrow{margin:0;font-size:12px;font-weight:400;color:var(--muted);display:flex;align-items:center;gap:6px}
+.eyebrow svg{color:var(--rose);width:15px;height:15px}
+.title{margin:2px 0 0;font-weight:300;font-size:28px;line-height:1.15;text-wrap:balance}
+.title b{font-weight:500}
+.title em{font-family:var(--f-serif);font-weight:500;color:var(--rose-num)}
+.top-r{display:flex;align-items:center;gap:8px;flex:none}
+.avatar{width:42px;height:42px;border-radius:21px;border:none;background:var(--rose-soft);color:var(--rose);font-size:16px;font-weight:400}
+.streak{display:inline-flex;align-items:center;gap:5px;height:32px;font-size:12px;font-weight:500;color:var(--rose);background:var(--rose-soft);border-radius:16px;padding:0 12px;white-space:nowrap}
+.streak svg{width:15px;height:15px}
+
+/* cartões */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);padding:var(--pad);display:flex;flex-direction:column;gap:16px;min-width:0}
+.card.glass{background:var(--glass);border-color:var(--glass-line);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:var(--shadow)}
+.card.rose{background:var(--rose-soft);border-color:transparent}
+.card.latte{background:var(--latte);border-color:transparent}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:24px}
+.label{margin:0;font-size:11px;font-weight:500;letter-spacing:1.3px;text-transform:uppercase;color:var(--rose);display:flex;align-items:center;gap:8px}
+.label.muted{color:var(--muted)}
+.small{font-size:12px;font-weight:400;color:var(--muted)}
+.pill{height:26px;display:inline-flex;align-items:center;font-size:12px;font-weight:400;background:var(--tile);border-radius:13px;padding:0 11px;white-space:nowrap}
+.prose{margin:0;font-size:14.5px;line-height:1.75}
+.hint{margin:0;font-size:12.5px;color:var(--muted);line-height:1.55}
+.stack{display:flex;flex-direction:column;gap:12px}
+
+/* hero */
+.ref{margin:0;font-weight:300;font-size:44px;line-height:1.02;letter-spacing:-.5px;display:flex;align-items:baseline;gap:4px 12px;flex-wrap:wrap;text-wrap:balance}
+.ref .n{color:var(--rose-num)}
+.ref .dsep{color:var(--muted)}
+.sub{margin:6px 0 0;font-size:13px;font-weight:400;color:var(--muted)}
+.bar{height:6px;border-radius:3px;background:var(--tile);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:3px;background:var(--rose);transition:width .6s ease}
+.meta-row{display:flex;justify-content:space-between;gap:12px;font-size:12px;font-weight:400;color:var(--muted)}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.day{border:none;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.day .wd{font-size:11px;font-weight:400;color:var(--muted)}
+.day.today .wd{color:var(--rose);font-weight:500}
+.day .sq{width:100%;max-width:40px;aspect-ratio:1;border-radius:14px;background:var(--tile);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:400;color:var(--muted);border:1.5px solid transparent;font-variant-numeric:tabular-nums;transition:transform .15s}
+.day:hover .sq{transform:translateY(-1px)}
+.day.read .sq{background:var(--rose);color:var(--on-rose)}
+.day.sel .sq{border-color:var(--rose);color:var(--rose);font-weight:500}
+.day.read.sel .sq{color:var(--on-rose);box-shadow:0 0 0 3px var(--rose-soft),0 0 0 4.5px var(--rose)}
+.day .cap{font-size:10px;color:var(--muted);line-height:1;white-space:nowrap}
+
+/* passos de hoje */
+.steps{display:flex;flex-direction:column}
+.step{border-top:1px solid var(--line)}
+.step:first-child{border-top:none}
+.step-h{width:100%;display:flex;align-items:center;gap:14px;border:none;background:none;text-align:left;padding:14px 0;color:var(--ink)}
+.step:first-child .step-h{padding-top:2px}
+.num{width:36px;height:36px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex:none;font-size:13px;font-weight:500;background:var(--blush);color:var(--rose);font-variant-numeric:tabular-nums;transition:background .2s,color .2s}
+.step.done .num{background:var(--rose);color:var(--on-rose)}
+.step-t{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.step-t b{font-size:15px;font-weight:400}
+.step-t span{font-size:12px;color:var(--muted)}
+.chev{color:var(--muted);transition:transform .2s}
+.step.open .chev{transform:rotate(90deg)}
+.step-b{padding:0 0 18px 50px;display:flex;flex-direction:column;gap:14px;animation:in .25s ease both}
+.finish{display:flex;flex-direction:column;gap:10px;padding-top:4px}
+.done-ring{display:flex;align-items:center;gap:14px;background:var(--blush);border-radius:20px;padding:14px 16px}
+.done-ring .ring{width:44px;height:44px;border-radius:22px;background:var(--rose);color:var(--on-rose);display:flex;align-items:center;justify-content:center;flex:none;animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
+.done-ring .ring svg{width:22px;height:22px;stroke-width:1.6}
+.done-ring b{font-weight:500;font-size:14px;display:block}
+.done-ring span{font-size:12.5px;color:var(--muted)}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:none;opacity:1}}
+
+/* botões */
+.btn{min-height:48px;border-radius:var(--r-ctl);border:1px solid transparent;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13.5px;font-weight:400;text-decoration:none;padding:8px 14px;text-align:center;line-height:1.25;transition:transform .12s,filter .12s;width:100%}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--rose);color:var(--on-rose)}
+.btn.cocoa{background:var(--cocoa);color:var(--on-cocoa)}
+.btn.ghost{background:var(--surface);border-color:var(--line);color:var(--ink)}
+.btn.soft{background:var(--blush);color:var(--rose)}
+.btn.done{background:var(--surface);border-color:var(--rose);color:var(--rose)}
+.btn.big{min-height:54px;font-size:14.5px;font-weight:500}
+.btn[disabled]{opacity:.55;cursor:default}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.linkbtn{border:none;background:none;color:var(--rose);font-size:12.5px;font-weight:400;padding:4px 0;display:inline-flex;align-items:center;gap:4px;align-self:flex-start;text-decoration:none}
+.linkbtn.muted{color:var(--muted)}
+
+/* conteúdo dos passos */
+.take{background:var(--blush);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.take .serif{font-size:21px;line-height:1.3}
+.ctx{border-left:none;background:var(--bg);border-radius:16px;padding:12px 14px;font-size:13px;line-height:1.65;color:var(--muted)}
+.ctx b{display:block;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--cocoa);margin-bottom:2px}
+.thinking{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);min-height:24px}
+.dots{display:inline-flex;gap:4px}
+.dots i{width:5px;height:5px;border-radius:50%;background:var(--rose);opacity:.35;animation:blink 1.2s infinite}
+.dots i:nth-child(2){animation-delay:.2s}.dots i:nth-child(3){animation-delay:.4s}
+@keyframes blink{50%{opacity:1}}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:4px}
+.card.glass .seg,.card.rose .seg{background:var(--tile)}
+.seg button{min-height:38px;border:none;border-radius:14px;background:transparent;font-size:12.5px;font-weight:400;color:var(--muted);padding:4px 6px;line-height:1.2}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--rose);font-weight:500;box-shadow:0 2px 8px rgba(110,63,75,.08)}
+.side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.side > div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.side > div:first-child{padding-right:14px;border-right:1px solid var(--line)}
+.side > div:last-child{padding-left:14px}
+.v{font-size:11px;font-weight:500;letter-spacing:1.2px}
+.v.nvi{color:var(--rose)} .v.alm{color:var(--cocoa)}
+.w{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--line);padding-top:12px;row-gap:6px}
+.w .q{font-family:var(--f-serif);font-style:italic;font-weight:500;font-size:18px;line-height:1.3;min-width:0}
+.w .q:first-of-type{padding-right:14px;border-right:1px solid var(--line)}
+.w .q + .q{padding-left:14px}
+.w .vs{grid-column:1/-1;font-size:11px;font-weight:500;color:var(--muted)}
+.w .why{grid-column:1/-1;font-size:12.5px;line-height:1.55;color:var(--muted)}
+.gloss{display:flex;flex-direction:column}
+.g{display:flex;gap:12px;align-items:flex-start;border-top:1px solid var(--line);padding:12px 0}
+.gloss > .g:first-child{border-top:none;padding-top:0}
+.g > div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.g .t{font-family:var(--f-serif);font-style:italic;font-weight:600;font-size:19px;line-height:1.25}
+.g .s{font-size:13px;line-height:1.55;color:var(--muted)}
+.g .r{font-size:11px;color:var(--rose);font-weight:500}
+.star{width:38px;height:38px;border-radius:13px;border:1px solid var(--line);background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;flex:none;padding:0}
+.star.on{background:var(--rose-soft);border-color:transparent;color:var(--rose)}
+.star.on svg{fill:currentColor}
+
+/* campos */
+.ask{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:0 6px 0 16px;min-height:52px}
+.ask:focus-within{border-color:var(--rose)}
+.ask input{flex:1;min-width:0;border:none;outline:none;background:transparent;font-weight:300;font-size:14px;height:48px}
+.ask input::placeholder,.inp::placeholder,textarea::placeholder{color:var(--muted)}
+.send{width:40px;height:40px;border-radius:14px;border:none;background:var(--rose);color:var(--on-rose);display:flex;align-items:center;justify-content:center;flex:none}
+.send[disabled]{opacity:.45}
+.note-area{width:100%;min-height:130px;resize:vertical;border:1px solid var(--line);border-radius:18px;background:var(--bg);padding:14px 16px;font-weight:300;font-size:14px;line-height:1.7;outline:none}
+.note-area:focus{border-color:var(--rose)}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field > span{font-size:12px;font-weight:500;color:var(--muted)}
+.inp{height:48px;border-radius:var(--r-ctl);border:1px solid var(--line);background:var(--bg);padding:0 14px;font-weight:300;font-size:14px;outline:none;width:100%;min-width:0;color:var(--ink)}
+select.inp{appearance:none;-webkit-appearance:none}
+.inp:focus{border-color:var(--rose)}
+.row-add{display:flex;gap:8px}
+.row-add .btn{width:auto;flex:none}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:520px){.form-grid{grid-template-columns:minmax(0,1fr)}}
+.chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:10px 12px;font-size:12.5px;font-weight:400;text-align:left;line-height:1.35;color:var(--ink);min-height:44px}
+.picked{display:flex;flex-wrap:wrap;gap:8px}
+.bchip{display:inline-flex;align-items:center;gap:6px;height:34px;border-radius:12px;border:none;background:var(--rose-soft);color:var(--rose);padding:0 10px 0 12px;font-size:12.5px;font-weight:400}
+.bchip svg{width:14px;height:14px}
+.preview{background:var(--blush);border-radius:16px;padding:12px 14px;font-size:13px;line-height:1.55}
+.preview b{font-weight:500}
+
+/* linhas de lista */
+.list{display:flex;flex-direction:column}
+.li{display:flex;align-items:center;gap:12px;border:none;background:none;text-align:left;padding:12px 0;border-top:1px solid var(--line);color:var(--ink);width:100%;text-decoration:none}
+.list > .li:first-child{border-top:none;padding-top:2px}
+.li .lt{flex:1;min-width:0;font-size:14px;font-weight:400;display:flex;flex-direction:column;line-height:1.35}
+.li .lt small{font-size:11.5px;color:var(--muted);font-weight:300}
+.li > svg{color:var(--muted)}
+.li.done .num{background:var(--rose);color:var(--on-rose)}
+.li.next .num{background:var(--surface);border:1.5px solid var(--rose)}
+
+/* banner */
+.banner{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:12px 14px;text-align:left;width:100%;color:var(--ink)}
+.banner .ic{width:36px;height:36px;border-radius:12px;background:var(--rose-soft);color:var(--rose);display:flex;align-items:center;justify-content:center;flex:none}
+.banner > span:nth-child(2){font-size:13px;line-height:1.45;min-width:0;flex:1}
+.banner b{font-weight:500}
+.banner > svg{color:var(--muted)}
+
+/* grade do hoje */
+.today-grid{display:grid;gap:16px;grid-template-columns:minmax(0,1fr);align-items:start}
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+
+/* planos */
+.plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.plan-pick{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0;color:var(--ink);min-height:118px}
+.plan-pick.on{border-color:var(--rose);box-shadow:0 0 0 3px var(--rose-soft)}
+.plan-pick b{font-weight:500;font-size:14.5px;line-height:1.3}
+.plan-pick .small{line-height:1.4;flex:1}
+.plan-pick.add{align-items:center;justify-content:center;border-style:dashed;color:var(--rose);font-weight:400;text-align:center;gap:4px}
+.stat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:640px){.stat{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.stat > div{background:var(--tile);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;min-width:0}
+.stat b{font-weight:400;font-size:24px;line-height:1.15;font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--muted);line-height:1.35}
+.book{display:flex;flex-direction:column;gap:10px}
+.book h3{margin:0;font-weight:400;font-size:15px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.book h3 span{font-size:12px;color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:8px}
+.tile{aspect-ratio:1;border-radius:14px;border:1.5px solid transparent;background:var(--blush);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0;font-variant-numeric:tabular-nums;min-width:0;color:var(--ink)}
+.tile b{font-weight:400;font-size:14px;line-height:1}
+.tile small{font-size:9.5px;color:var(--muted);line-height:1}
+.tile.read{background:var(--rose);color:var(--on-rose)}
+.tile.read small{color:var(--on-rose);opacity:.8}
+.tile.today{border-color:var(--rose);color:var(--rose)}
+.tile.future{opacity:.72}
+.sep{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);font-weight:400;margin:0}
+.sep::before,.sep::after{content:"";flex:1;height:1px;background:var(--line)}
+.bks{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:6px}
+.bk{display:flex;flex-direction:column;gap:5px;background:var(--blush);border-radius:11px;padding:7px 8px;min-width:0}
+.bk span{font-size:11px;font-weight:400;color:var(--muted);line-height:1}
+.bk i{display:block;height:3px;border-radius:2px;background:var(--line);overflow:hidden}
+.bk i b{display:block;height:100%;background:var(--rose)}
+.bk.full{background:var(--rose)} .bk.full span{color:var(--on-rose)} .bk.full i{background:color-mix(in srgb,var(--on-rose) 40%,transparent)} .bk.full i b{background:var(--on-rose)}
+details.fold > summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}
+details.fold > summary::-webkit-details-marker{display:none}
+details.fold[open] > summary .chev{transform:rotate(90deg)}
+.danger{color:var(--rose-num);background:none;border:none;font-size:12.5px;text-decoration:underline;padding:4px 0;align-self:flex-start}
+
+/* diário */
+.entry{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;width:100%;color:var(--ink)}
+.entry .em{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted)}
+.entry .em b{color:var(--ink);font-weight:500}
+.entry p{margin:0;font-size:13.5px;line-height:1.65;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.empty{text-align:center;padding:28px 18px;color:var(--muted);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.empty svg{width:28px;height:28px;color:var(--rose)}
+
+/* conversa */
+.engine{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.eng{min-height:52px;border-radius:var(--r-ctl);border:1px solid var(--line);background:var(--surface);display:flex;align-items:center;gap:10px;padding:8px 12px;text-align:left;color:var(--ink)}
+.eng b{display:block;font-size:13.5px;font-weight:500;line-height:1.2}
+.eng small{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);line-height:1.2}
+.eng small i{width:6px;height:6px;border-radius:3px;background:var(--muted);flex:none}
+.eng small i.on{background:var(--ok)}
+.eng[aria-pressed="true"]{border-color:var(--rose);box-shadow:0 0 0 3px var(--rose-soft)}
+.eng .mk{width:32px;height:32px;border-radius:11px;background:var(--blush);color:var(--rose);display:flex;align-items:center;justify-content:center;flex:none}
+.ctxsel{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.ctxsel button{flex:none;height:34px;border-radius:17px;border:1px solid var(--line);background:var(--surface);font-size:12.5px;padding:0 14px;color:var(--muted);white-space:nowrap}
+.ctxsel button[aria-pressed="true"]{background:var(--rose);border-color:var(--rose);color:var(--on-rose)}
+.chat{display:flex;flex-direction:column;gap:12px}
+.msg{max-width:88%;padding:12px 16px;border-radius:22px;font-size:14px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;background:var(--rose);color:var(--on-rose);border-bottom-right-radius:8px}
+.msg.ai{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:8px}
+.msg .who{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500;color:var(--rose);margin-bottom:4px}
+.composer{position:sticky;bottom:calc(96px + env(safe-area-inset-bottom, 0px));z-index:5}
+.composer .ask{box-shadow:var(--shadow)}
+
+/* menu de vidro */
+.nav{position:fixed;z-index:20;left:max(16px, env(safe-area-inset-left, 0px));right:max(16px, env(safe-area-inset-right, 0px));
+  bottom:calc(14px + env(safe-area-inset-bottom, 0px));height:68px;max-width:520px;margin:0 auto;border-radius:26px;
+  background:var(--glass);-webkit-backdrop-filter:blur(20px) saturate(1.2);backdrop-filter:blur(20px) saturate(1.2);
+  border:1px solid var(--glass-line);box-shadow:0 12px 30px rgba(110,63,75,.13);
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;padding:0 8px}
+.nav .brand{display:none}
+.tab{height:52px;margin:0 3px;border-radius:18px;border:none;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:400;transition:background .2s,color .2s}
+.tab[aria-current="page"]{background:var(--rose-soft);color:var(--rose);font-weight:500}
+.toast{position:fixed;z-index:30;left:50%;bottom:calc(98px + env(safe-area-inset-bottom, 0px));transform:translate(-50%,10px);opacity:0;pointer-events:none;
+  background:var(--cocoa);color:var(--on-cocoa);font-size:12.5px;font-weight:400;padding:10px 16px;border-radius:14px;transition:.25s ease;display:flex;align-items:center;gap:8px;max-width:calc(100vw - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.note-local{font-size:11.5px;color:var(--muted);text-align:center;margin:0}
+
+@media (min-width:820px){
+  .shell{padding-left:124px;padding-block:40px 64px}
+  .nav{right:auto;left:calc(20px + env(safe-area-inset-left, 0px));top:calc(24px + env(safe-area-inset-top, 0px));bottom:auto;margin:0;
+    width:88px;height:auto;max-width:none;display:flex;flex-direction:column;gap:6px;padding:16px 8px;border-radius:30px}
+  .nav .brand{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--rose);font-size:11px;font-weight:500;padding-bottom:12px;margin-bottom:4px;border-bottom:1px solid var(--line);width:100%}
+  .nav .brand svg{width:26px;height:26px}
+  .tab{width:100%;height:62px;margin:0}
+  .toast{bottom:28px}
+  .composer{bottom:16px}
+  .title{font-size:32px}
+  .ref{font-size:52px}
+  :root{--pad:24px}
+}
+@media (min-width:1120px){ .today-grid{grid-template-columns:minmax(0,1.4fr) minmax(300px,1fr)} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M2.5 5.5h6.5a3 3 0 0 1 3 3v11a2 2 0 0 0-2-2H2.5z"/><path d="M21.5 5.5H15a3 3 0 0 0-3 3v11a2 2 0 0 1 2-2h7.5z"/></symbol>
+  <symbol id="i-path" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h6a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h6"/></symbol>
+  <symbol id="i-steps" viewBox="0 0 24 24"><path d="M4 19.5h5v-5h5v-5h6"/><circle cx="20" cy="5.5" r="1.6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="4"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 6.5a2.5 2.5 0 0 1 2.5-2.5h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H9l-5 4z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19.5 7"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M18.5 16.5l.6 1.7 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6z"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M8 16L16 8"/><path d="M9 8h7v7"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></symbol>
+  <symbol id="i-lamp" viewBox="0 0 24 24"><path d="M12 3.5c1.9 2.3 2.8 3.8 2.8 5.3a2.8 2.8 0 0 1-5.6 0c0-1.5.9-3 2.8-5.3z"/><path d="M12 11.6v2.4"/><path d="M4.5 14h15l-1.6 3.4a3 3 0 0 1-2.7 1.6H8.8a3 3 0 0 1-2.7-1.6z"/><path d="M9 21h6"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c2-6 6-10 14-14-1 8-5 12-11 13"/><path d="M5 19l6-6"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.8l2.5 5.1 5.6.8-4 3.9.9 5.6-5-2.6-5 2.6.9-5.6-4-3.9 5.6-.8z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7L7 17"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c3 3.5 5.5 6.3 5.5 10a5.5 5.5 0 0 1-11 0c0-2.2 1-3.8 2.5-5.3.3 1.6 1 2.6 2 3.1C11 8.4 11.3 5.6 12 3z"/></symbol>
+  <symbol id="i-word" viewBox="0 0 24 24"><path d="M4 19L9 5h1l5 14"/><path d="M6.2 14h6.6"/><path d="M17 10.5h3.5M17 14.5h3.5"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l8-8M16 7l2 2M14 9l2 2"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
+</defs></svg>
+
+<div class="shell"><main id="view" aria-live="polite"></main></div>
+<nav class="nav" aria-label="Menu">
+  <div class="brand"><svg class="i"><use href="#i-lamp"/></svg>lâmpada</div>
+  <button class="tab" data-tab="hoje"><svg class="i lg"><use href="#i-book"/></svg>hoje</button>
+  <button class="tab" data-tab="aprender"><svg class="i lg"><use href="#i-steps"/></svg>aprender</button>
+  <button class="tab" data-tab="conversa"><svg class="i lg"><use href="#i-chat"/></svg>conversa</button>
+  <button class="tab" data-tab="caminhada"><svg class="i lg"><use href="#i-path"/></svg>caminhada</button>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+const BIBLIA = ('GEN|Gênesis|Gn|50;EXO|Êxodo|Êx|40;LEV|Levítico|Lv|27;NUM|Números|Nm|36;DEU|Deuteronômio|Dt|34;JOS|Josué|Js|24;JDG|Juízes|Jz|21;RUT|Rute|Rt|4;1SA|1 Samuel|1Sm|31;2SA|2 Samuel|2Sm|24;1KI|1 Reis|1Rs|22;2KI|2 Reis|2Rs|25;1CH|1 Crônicas|1Cr|29;2CH|2 Crônicas|2Cr|36;EZR|Esdras|Ed|10;NEH|Neemias|Ne|13;EST|Ester|Et|10;JOB|Jó|Jó|42;PSA|Salmos|Sl|150;PRO|Provérbios|Pv|31;ECC|Eclesiastes|Ec|12;SNG|Cânticos|Ct|8;ISA|Isaías|Is|66;JER|Jeremias|Jr|52;LAM|Lamentações|Lm|5;EZK|Ezequiel|Ez|48;DAN|Daniel|Dn|12;HOS|Oseias|Os|14;JOL|Joel|Jl|3;AMO|Amós|Am|9;OBA|Obadias|Ob|1;JON|Jonas|Jn|4;MIC|Miqueias|Mq|7;NAM|Naum|Na|3;HAB|Habacuque|Hc|3;ZEP|Sofonias|Sf|3;HAG|Ageu|Ag|2;ZEC|Zacarias|Zc|14;MAL|Malaquias|Ml|4;MAT|Mateus|Mt|28;MRK|Marcos|Mc|16;LUK|Lucas|Lc|24;JHN|João|Jo|21;ACT|Atos|At|28;ROM|Romanos|Rm|16;1CO|1 Coríntios|1Co|16;2CO|2 Coríntios|2Co|13;GAL|Gálatas|Gl|6;EPH|Efésios|Ef|6;PHP|Filipenses|Fp|4;COL|Colossenses|Cl|4;1TH|1 Tessalonicenses|1Ts|5;2TH|2 Tessalonicenses|2Ts|3;1TI|1 Timóteo|1Tm|6;2TI|2 Timóteo|2Tm|4;TIT|Tito|Tt|3;PHM|Filemom|Fm|1;HEB|Hebreus|Hb|13;JAS|Tiago|Tg|5;1PE|1 Pedro|1Pe|5;2PE|2 Pedro|2Pe|3;1JN|1 João|1Jo|5;2JN|2 João|2Jo|1;3JN|3 João|3Jo|1;JUD|Judas|Jd|1;REV|Apocalipse|Ap|22')
+  .split(';').map((s, i) => { const [c, n, ab, caps] = s.split('|'); return { c, n, ab, caps:+caps, nt: i >= 39 }; });
+
+const BK = Object.fromEntries(BIBLIA.map(b => [b.c, b]));
+const TOTAL_CAPS = BIBLIA.reduce((a, b) => a + b.caps, 0);
+const AT = BIBLIA.filter(b => !b.nt).map(b => b.c), NT = BIBLIA.filter(b => b.nt).map(b => b.c);
+const PERFIL = 'lais', NOME = 'Laís';
+const ESTUDOS = [
+  { id:'amor',     nome:'O amor de Deus',      sub:'7 dias pra sentir o tamanho desse amor', dias:['JHN.3','LUK.15','ROM.8','1JN.4','PSA.103','EPH.2','1CO.13'] },
+  { id:'oracao',   nome:'Aprender a orar',      sub:'7 dias com as orações da Bíblia',        dias:['MAT.6','LUK.11','PSA.23','PSA.51','PHP.4','JHN.17','PSA.139'] },
+  { id:'jesus',    nome:'Quem é Jesus',         sub:'7 dias olhando pra ele de vários jeitos', dias:['JHN.1','COL.1','HEB.1','PHP.2','ISA.53','LUK.24','REV.1'] },
+  { id:'coragem',  nome:'Coragem e confiança',  sub:'7 dias pra quando o coração aperta',      dias:['JOS.1','PSA.27','PSA.91','ISA.40','ROM.5','2CO.4','HEB.11'] }
+];
+
+/* trilha: do básico ao profundo */
+const NIVEIS = [
+  { n:1, nome:'primeiros passos', sub:'o que é a Bíblia e como ler' },
+  { n:2, nome:'a grande história', sub:'do começo até o tempo de Jesus' },
+  { n:3, nome:'conhecer Jesus', sub:'quem ele é e o que ele fez' },
+  { n:4, nome:'vida com Deus', sub:'oração, graça e comunidade' },
+  { n:5, nome:'aprofundar', sub:'ler com contexto e ver o todo' }
+];
+const AULAS = [
+  { id:'biblia', nv:1, t:'O que é a Bíblia', ler:'', p:[
+    'A Bíblia não é um livro só. Ela é uma pequena biblioteca: são 66 livros nas Bíblias evangélicas e 73 nas católicas, que incluem alguns livros a mais no Antigo Testamento.',
+    'Ela foi escrita ao longo de mais de mil anos, por dezenas de autores diferentes: reis, pastores, pescadores, um médico, um cobrador de impostos. Os idiomas originais são o hebraico, um pouco de aramaico e o grego.',
+    'Mesmo com tantos autores, ela conta uma grande história: Deus criou o mundo, a humanidade se afastou dele, e Deus vem buscando as pessoas de volta. Para os cristãos, essa história chega ao centro em Jesus.'],
+    q:'O que você espera encontrar nessa leitura?' },
+  { id:'testamentos', nv:1, t:'Antigo e Novo Testamento', ler:'', p:[
+    'A Bíblia tem duas grandes partes. O Antigo Testamento conta o que aconteceu antes de Jesus: a criação, a história do povo de Israel, as leis, as orações e os profetas. São 39 livros nas Bíblias evangélicas.',
+    'O Novo Testamento começa com a vida de Jesus nos quatro evangelhos, mostra como as primeiras igrejas nasceram e reúne as cartas escritas para elas. São 27 livros.',
+    '"Testamento" aqui quer dizer aliança, um compromisso entre Deus e as pessoas. O Novo não apaga o Antigo: um ajuda a entender o outro.'],
+    q:'Você já tinha ouvido falar de algum livro do Antigo Testamento?' },
+  { id:'versiculo', nv:1, t:'Como achar um versículo', ler:'MRK.2', p:[
+    'Quando alguém fala "Marcos 2:5", são três informações: o livro (Marcos), o capítulo (2) e o versículo (5), que é uma frase ou um pedacinho do capítulo.',
+    'Os autores não escreveram com números. Os capítulos foram criados por volta do ano 1200 e os versículos, por volta de 1550, só para ficar mais fácil achar os trechos.',
+    'Por isso às vezes um capítulo termina no meio de uma história. Vale ler um pouco antes e um pouco depois para não perder o fio.'],
+    q:'Abra Marcos 2 e tente achar o versículo 5 sozinha.' },
+  { id:'traducoes', nv:1, t:'Por que existem traduções diferentes', ler:'', p:[
+    'Como a Bíblia foi escrita em outros idiomas, toda Bíblia em português é uma tradução. Os tradutores sempre precisam escolher entre ficar mais perto das palavras originais ou mais perto do jeito que a gente fala.',
+    'A Almeida, de 1681 e revisada várias vezes, fica bem perto das palavras originais e tem um português mais clássico. A NVI, de 2000, busca o sentido de cada frase em português de hoje.',
+    'Nenhuma delas está errada. Comparar as duas, como no seu lado a lado, é um ótimo jeito de entender melhor.'],
+    q:'Qual das duas formas de escrever te soa mais próxima?' },
+  { id:'generos', nv:1, t:'Os tipos de livro da Bíblia', ler:'PSA.23', p:[
+    'Assim como numa biblioteca há romance, poesia e cartas, a Bíblia tem tipos diferentes de texto: leis, histórias, poesia e canções (como os Salmos), sabedoria (como Provérbios), profecias, evangelhos, cartas e o Apocalipse, que usa muitas imagens e símbolos.',
+    'Cada tipo se lê de um jeito. Poesia fala ao coração com imagens, carta responde a problemas de uma igreja específica, profecia chama o povo de volta para Deus.',
+    'Perguntar "que tipo de texto é este?" já resolve muita confusão.'],
+    q:'Leia o Salmo 23. Que imagens ele usa para falar de Deus?' },
+  { id:'criacao', nv:2, t:'A criação e o afastamento', ler:'GEN.1', p:[
+    'A Bíblia começa com Deus criando tudo e chamando o que fez de bom. O ser humano é criado à imagem de Deus, para viver em relação com ele, com os outros e com a criação.',
+    'Em Gênesis 3, as pessoas escolhem seguir o próprio caminho em vez de confiar em Deus. A Bíblia chama isso de pecado, e a partir daí a relação fica quebrada.',
+    'O resto da Bíblia mostra Deus agindo para restaurar o que se perdeu.'],
+    q:'O que te chama atenção no jeito como Deus cria?' },
+  { id:'abraao', nv:2, t:'Abraão e a promessa', ler:'GEN.12', p:[
+    'Deus chama um homem chamado Abraão e promete que dele nascerá um povo, e que por meio desse povo todas as famílias da terra seriam abençoadas.',
+    'Abraão não era perfeito, mas confiou. Essa confiança, a fé, vira um exemplo para toda a Bíblia.',
+    'Dele vêm Isaque, Jacó e as doze tribos de Israel. Guarde essa promessa: ela volta muitas vezes.'],
+    q:'Como seria deixar tudo para trás confiando numa promessa?' },
+  { id:'exodo', nv:2, t:'Moisés e a libertação', ler:'EXO.14', p:[
+    'Os descendentes de Abraão vão para o Egito e acabam escravizados. Deus chama Moisés para libertar o povo, e eles atravessam o mar rumo à liberdade. Esse é o êxodo, a "saída".',
+    'No deserto, Deus faz uma aliança com o povo e dá os Dez Mandamentos, um jeito de viver como povo de Deus.',
+    'Para Israel, o êxodo vira a grande lembrança de que Deus liberta. A Páscoa judaica celebra justamente isso.'],
+    q:'De que você gostaria de ser libertada hoje?' },
+  { id:'reis', nv:2, t:'Reis, exílio e profetas', ler:'2SA.7', p:[
+    'Israel ganha reis. O mais lembrado é Davi, que recebe a promessa de que um descendente dele reinaria para sempre. Depois o reino se divide e muitos reis se afastam de Deus.',
+    'Os profetas são pessoas que Deus envia para chamar o povo de volta. Mesmo assim, o povo acaba levado para longe, para a Babilônia. Isso se chama exílio.',
+    'No meio dessa tristeza, os profetas anunciam esperança: um dia viria um rei ungido, o Messias.'],
+    q:'Por que você acha que a esperança aparece justo nos tempos difíceis?' },
+  { id:'epoca', nv:2, t:'O mundo no tempo de Jesus', ler:'', p:[
+    'Entre o último livro do Antigo Testamento e o nascimento de Jesus passam uns 400 anos. Quando Jesus nasce, a terra de Israel está sob o domínio do Império Romano.',
+    'Aparecem grupos que você vai ver nos evangelhos: fariseus, muito rigorosos com a lei; saduceus, ligados ao templo; samaritanos, vizinhos que os judeus evitavam; cobradores de impostos, que trabalhavam para Roma.',
+    'O povo esperava o Messias, muitos imaginando um líder que expulsaria os romanos. Jesus surpreende essas expectativas.'],
+    q:'Quais desses grupos você já encontrou em Marcos?' },
+  { id:'evangelhos', nv:3, t:'Por que quatro evangelhos', ler:'', p:[
+    '"Evangelho" quer dizer boa notícia. São quatro relatos da vida de Jesus, cada um com um olhar.',
+    'Marcos é o mais curto e direto, cheio de ação. Mateus escreve pensando nos judeus e mostra Jesus cumprindo as promessas antigas. Lucas é detalhista e cuida dos esquecidos: mulheres, pobres, estrangeiros. João, o mais diferente, foca em quem Jesus é.',
+    'É como quatro amigos contando a mesma pessoa: as diferenças completam o retrato.'],
+    q:'Depois de Marcos, o que você imagina que Mateus vai acrescentar?' },
+  { id:'reino', nv:3, t:'O Reino de Deus e as parábolas', ler:'LUK.15', p:[
+    'O tema central de Jesus é o Reino de Deus: Deus reinando, as coisas sendo colocadas no lugar, começando já agora no coração e na vida das pessoas.',
+    'Para explicar, Jesus conta parábolas, histórias curtas do dia a dia, como sementes, ovelhas, moedas e filhos, que guardam um ensino.',
+    'Lucas 15 tem três delas sobre coisas perdidas e achadas. Elas mostram como Deus se alegra quando alguém volta.'],
+    q:'Com qual personagem de Lucas 15 você se identifica?' },
+  { id:'cruz', nv:3, t:'A cruz e a ressurreição', ler:'LUK.24', p:[
+    'Os evangelhos dão muito espaço à última semana de Jesus. Ele é preso, condenado e crucificado, a forma de morte mais humilhante do Império Romano.',
+    'Para a fé cristã, ali Jesus entrega a própria vida no lugar das pessoas, para perdoar e reconciliar com Deus.',
+    'No terceiro dia, as mulheres encontram o túmulo vazio. A ressurreição é o centro da esperança cristã: a morte não tem a última palavra.'],
+    q:'O que muda em você saber que a morte não tem a última palavra?' },
+  { id:'oracao', nv:4, t:'Orar: conversar com Deus', ler:'MAT.6', p:[
+    'Orar é conversar com Deus, com as suas palavras, do jeito que você é. Não precisa de frase bonita.',
+    'Os discípulos pediram para Jesus ensinar a orar, e ele deu o Pai Nosso: chamar Deus de Pai, desejar o Reino dele, pedir o pão de cada dia, perdão e proteção.',
+    'Os Salmos também são orações, com alegria, medo, raiva e gratidão. Dá para orar com eles.'],
+    q:'Que tal terminar a leitura de hoje com uma frase sua para Deus?' },
+  { id:'graca', nv:4, t:'Graça e fé', ler:'EPH.2', p:[
+    'Graça é receber de Deus um amor e um perdão que a gente não precisa merecer. É presente.',
+    'Fé é confiar nesse presente e em quem o dá. Não é ter todas as respostas: é se apoiar em Deus mesmo com dúvidas.',
+    'Efésios 2 resume isso num trecho bem conhecido. Leia com calma.'],
+    q:'Onde você sente que precisa receber graça e não tentar merecer?' },
+  { id:'igreja', nv:4, t:'Comunidade e igreja', ler:'ACT.2', p:[
+    'No Novo Testamento, "igreja" quer dizer as pessoas, não o prédio. Desde o começo, quem seguia Jesus vivia junto: aprendendo, orando, comendo juntos e cuidando uns dos outros.',
+    'Atos 2 mostra a primeira comunidade logo depois que o Espírito Santo vem sobre os discípulos.',
+    'Ler a Bíblia com outras pessoas, como você e o Igor estão fazendo, faz parte disso.'],
+    q:'Com quem você gostaria de conversar sobre o que está lendo?' },
+  { id:'espirito', nv:4, t:'Quem é o Espírito Santo', ler:'JHN.14', p:[
+    'A fé cristã fala de um só Deus que se revela como Pai, Filho e Espírito Santo. É o que se chama de Trindade.',
+    'Antes de partir, Jesus promete que o Espírito estaria com os discípulos para consolar, ensinar e lembrar das palavras dele.',
+    'Muitos cristãos pedem ajuda ao Espírito antes de ler a Bíblia, para entender e aplicar.'],
+    q:'Que tal pedir ajuda para entender antes da próxima leitura?' },
+  { id:'contexto', nv:5, t:'Ler no contexto', ler:'', p:[
+    'Para entender um texto de verdade, ajuda fazer quatro perguntas: quem escreveu, para quem, quando e por quê.',
+    'Depois vem a pergunta central: o que isso queria dizer para quem ouviu primeiro? Só então: o que isso diz para mim hoje?',
+    'Isso evita tirar uma frase do lugar e fazer ela dizer algo que o autor nunca quis. É o que separa ler de estudar.'],
+    q:'Experimente as quatro perguntas na leitura de hoje.' },
+  { id:'conexoes', nv:5, t:'Como os testamentos se ligam', ler:'LUK.24', p:[
+    'Depois de ressuscitar, Jesus caminha com dois discípulos e explica como as Escrituras falavam dele, começando por Moisés e os profetas.',
+    'Muitas coisas do Antigo Testamento preparam o Novo: a promessa a Abraão, o cordeiro da Páscoa, o rei descendente de Davi, o servo sofredor de Isaías.',
+    'Quando você ler o Antigo Testamento, procure esses fios. Eles mostram uma história só.'],
+    q:'Que ligação você já percebeu entre algo antigo e Jesus?' },
+  { id:'profetas', nv:5, t:'Entender os profetas', ler:'JON.1', p:[
+    'Os profetas não eram, antes de tudo, adivinhos do futuro. Eles falavam ao povo do seu tempo: denunciavam injustiça, idolatria e falta de cuidado com os pobres, e chamavam de volta para Deus.',
+    'Às vezes também anunciavam o que Deus faria mais à frente, como a vinda do Messias.',
+    'Jonas é um bom começo: curto, cheio de surpresas e com um profeta que não queria obedecer.'],
+    q:'Por que você acha que Jonas fugiu?' }
+];
+
+/* explicações já prontas, escritas para o começo do plano (o app completa o resto com a IA) */
+const BASE = {
+ 'MRK.1':{ titulo:'o começo da missão de Jesus',
+  resumo:'Marcos começa direto ao ponto. João Batista prepara o caminho, Jesus é batizado e passa um tempo no deserto. Depois ele chama os primeiros amigos, pescadores simples, e começa a ensinar e a curar muita gente na Galileia. Mesmo cercado de gente, Jesus acorda cedo para orar sozinho.',
+  contexto:'Marcos é o evangelho mais curto e, para muitos estudiosos, o mais antigo; por isso é rápido e usa muito a palavra "logo". A Galileia era uma região simples do norte, longe do centro religioso de Jerusalém.',
+  levar:'Em meio à correria, onde cabe um momento só seu com Deus hoje?',
+  dificeis:[{palavra:'arrependimento',sentido:'Mudar de direção por dentro: perceber que estava no caminho errado e voltar para Deus.'},{palavra:'batismo',sentido:'Um mergulho na água que simboliza começar de novo, limpo, para uma vida com Deus.'},{palavra:'Reino de Deus',sentido:'Deus reinando, colocando as coisas no lugar. Jesus diz que ele já está chegando.'},{palavra:'espírito imundo',sentido:'Um espírito mau que domina a pessoa. Jesus tem autoridade sobre ele.'},{palavra:'leproso',sentido:'Pessoa com uma doença de pele que obrigava a viver isolada. Jesus toca nele, algo que ninguém fazia.'}] },
+ 'MRK.2':{ titulo:'a cura do paralítico e o chamado de Levi',
+  resumo:'Jesus está numa casa lotada em Cafarnaum. Quatro amigos não conseguem passar pela multidão, então abrem o telhado e descem um homem que não andava. Antes de curar o corpo, Jesus fala de perdão, e mostra que veio cuidar da pessoa inteira. Depois ele chama Levi, um cobrador de impostos, e senta à mesa com pessoas que os religiosos evitavam.',
+  contexto:'Cobradores de impostos trabalhavam para Roma e muitas vezes cobravam a mais, por isso eram malvistos. Os fariseus eram um grupo muito rigoroso com as regras, e por isso estranham Jesus comer com eles.',
+  levar:'Quem você levaria até Jesus, mesmo que precisasse abrir um telhado?',
+  dificeis:[{palavra:'paralítico',sentido:'Pessoa que não conseguia andar nem se mexer direito.'},{palavra:'blasfêmia',sentido:'Ofender a Deus ou se colocar no lugar dele. Os religiosos acharam que Jesus fazia isso ao perdoar pecados.'},{palavra:'publicano',sentido:'Cobrador de impostos para os romanos, visto como traidor e desonesto.'},{palavra:'sábado',sentido:'O dia de descanso dos judeus, com muitas regras sobre o que podia ou não ser feito.'},{palavra:'odre',sentido:'Um saco de couro usado para guardar vinho. Odre velho rasga com vinho novo.'}] },
+ 'MRK.3':{ titulo:'os doze escolhidos e a nova família',
+  resumo:'Jesus cura um homem num sábado, e os líderes começam a planejar contra ele. Uma multidão enorme o segue. Ele escolhe doze discípulos para ficar perto dele e anunciar a mensagem. Alguns dizem que ele age pelo poder do mal, e até a família acha que ele perdeu o juízo. Jesus responde que quem faz a vontade de Deus é a sua família.',
+  contexto:'O número doze lembra as doze tribos de Israel: é como se Jesus começasse um novo povo. Herodianos eram apoiadores do rei Herodes, e normalmente não se davam com os fariseus.',
+  levar:'O que significa para você fazer parte da família de Deus?',
+  dificeis:[{palavra:'apóstolo',sentido:'Enviado. É o nome dado aos doze que Jesus escolheu para mandar adiante.'},{palavra:'Belzebu',sentido:'Um nome para o chefe dos demônios. Acusaram Jesus de agir por ele.'},{palavra:'escribas',sentido:'Especialistas que copiavam e ensinavam a lei de Moisés.'},{palavra:'blasfêmia contra o Espírito Santo',sentido:'Chamar de mal aquilo que Deus está fazendo e se fechar de vez para ele.'}] },
+ 'MRK.4':{ titulo:'parábolas da semente e a tempestade',
+  resumo:'Jesus ensina contando histórias do campo. Na parábola do semeador, a mesma semente cai em tipos diferentes de terreno e dá resultados diferentes. Ele fala da semente que cresce sozinha e do grão de mostarda, pequeno que vira uma grande planta. À noite, no barco, vem uma tempestade forte. Jesus acalma o vento e pergunta aos discípulos por que tiveram tanto medo.',
+  contexto:'O mar da Galileia é um lago grande, cercado de montes, onde tempestades surgem de repente. Vários discípulos eram pescadores ali e sabiam o perigo que corriam.',
+  levar:'Que tipo de terreno o seu coração está sendo hoje?',
+  dificeis:[{palavra:'parábola',sentido:'Uma história curta do dia a dia que guarda um ensino sobre Deus.'},{palavra:'semeador',sentido:'Quem espalha as sementes no campo. Na história, a semente é a palavra de Deus.'},{palavra:'candeia',sentido:'Uma lamparina a óleo. Não se acende para esconder debaixo de uma vasilha.'},{palavra:'alqueire',sentido:'Uma vasilha usada para medir grãos.'}] },
+ 'MRK.5':{ titulo:'três histórias de cura e de vida',
+  resumo:'Do outro lado do lago, Jesus liberta um homem dominado por muitos espíritos maus, que vivia entre os túmulos. Na volta, Jairo, um líder da sinagoga, pede ajuda para a filha que está morrendo. No caminho, uma mulher doente há doze anos toca na roupa de Jesus e é curada. Quando chegam, a menina já morreu, mas Jesus segura a mão dela e diz: menina, levante-se.',
+  contexto:'A região dos gerasenos era de maioria não judia, por isso havia porcos ali, animal que os judeus não comiam. Pela lei da época, a mulher com hemorragia era considerada impura e vivia afastada.',
+  levar:'O que você precisa entregar a Jesus com a coragem daquela mulher?',
+  dificeis:[{palavra:'Legião',sentido:'Um grupo de cerca de seis mil soldados romanos. O nome mostra quantos espíritos dominavam o homem.'},{palavra:'sinagoga',sentido:'O lugar onde os judeus se reuniam para orar e ouvir as Escrituras.'},{palavra:'fluxo de sangue',sentido:'Uma hemorragia que não parava.'},{palavra:'Talita cumi',sentido:'Palavras em aramaico, a língua de Jesus. Querem dizer: menina, levante-se.'}] },
+ 'MRK.6':{ titulo:'rejeição em casa e pão para milhares',
+  resumo:'Em Nazaré, a cidade onde cresceu, Jesus não é aceito: as pessoas só veem o carpinteiro que conheciam. Ele envia os doze, dois a dois. Marcos conta como João Batista foi morto por ordem do rei Herodes. Depois, Jesus alimenta mais de cinco mil pessoas com cinco pães e dois peixes, e à noite caminha sobre as águas até os discípulos.',
+  contexto:'Esse Herodes é Herodes Antipas, que governava a Galileia sob Roma. João tinha criticado o casamento dele com Herodias, que era mulher do irmão.',
+  levar:'Que pouco que você tem pode ser multiplicado nas mãos de Deus?',
+  dificeis:[{palavra:'carpinteiro',sentido:'Quem trabalhava com madeira e construção. Era a profissão de Jesus.'},{palavra:'ungir com óleo',sentido:'Passar óleo na pessoa como sinal de cuidado e de oração por cura.'},{palavra:'tetrarca',sentido:'Governante de uma parte de um território. Herodes é chamado de rei, mas era tetrarca.'},{palavra:'quarta vigília',sentido:'A última parte da noite, de madrugada, entre três e seis da manhã.'}] },
+ 'MRK.7':{ titulo:'o que vem de dentro do coração',
+  resumo:'Os fariseus reclamam que os discípulos comem sem lavar as mãos do jeito tradicional. Jesus responde que o que torna alguém impuro não é o que entra pela boca, e sim o que sai do coração. Depois, uma mulher estrangeira insiste por sua filha e é atendida pela fé. Jesus também cura um surdo que mal conseguia falar.',
+  contexto:'A lavagem das mãos era um ritual religioso, não uma questão de higiene. A mulher era siro-fenícia, ou seja, não judia, e mesmo assim Jesus a ouve.',
+  levar:'O que está saindo do seu coração nos últimos dias?',
+  dificeis:[{palavra:'tradição dos anciãos',sentido:'Regras que os mestres foram acrescentando à lei de Moisés com o tempo.'},{palavra:'Corbã',sentido:'Palavra que significa oferta para Deus. Alguns usavam isso como desculpa para não ajudar os pais.'},{palavra:'impuro',sentido:'Que não podia participar do culto até ser purificado, segundo a lei.'},{palavra:'Efatá',sentido:'Palavra em aramaico que quer dizer: abra-se.'}] },
+ 'MRK.8':{ titulo:'quem vocês dizem que eu sou?',
+  resumo:'Jesus alimenta outra multidão, agora com sete pães. Os discípulos ainda não entendem quem ele é. Ele cura um cego aos poucos, em duas etapas. Então pergunta: quem vocês dizem que eu sou? Pedro responde: tu és o Cristo. Jesus começa a explicar que vai sofrer, morrer e ressuscitar, e diz que segui-lo é negar a si mesmo e tomar a sua cruz.',
+  contexto:'Este capítulo é a virada de Marcos: até aqui a pergunta era quem é Jesus; daqui em diante o foco é o caminho até Jerusalém e a cruz. Cesareia de Filipe ficava no norte, numa região pagã.',
+  levar:'Se Jesus te perguntasse hoje quem ele é para você, o que você responderia?',
+  dificeis:[{palavra:'Cristo',sentido:'Palavra grega para Messias: o ungido, o rei que Deus prometeu enviar.'},{palavra:'fermento dos fariseus',sentido:'Uma imagem para uma influência ruim que se espalha por dentro, como fermento na massa.'},{palavra:'Filho do Homem',sentido:'O jeito como Jesus mais fala de si mesmo. Lembra uma figura do livro de Daniel que recebe o reino de Deus.'},{palavra:'tomar a cruz',sentido:'Seguir Jesus de verdade, mesmo quando custa alguma coisa.'}] },
+ 'MRK.9':{ titulo:'a glória no monte e o menor de todos',
+  resumo:'No alto de um monte, Pedro, Tiago e João veem Jesus transformado, brilhando, conversando com Moisés e Elias, e ouvem a voz de Deus. Lá embaixo, os outros discípulos não conseguem libertar um menino, e o pai diz: eu creio, ajuda a minha falta de fé. Depois, os discípulos discutem quem é o maior, e Jesus coloca uma criança no meio deles.',
+  contexto:'Moisés representa a Lei e Elias, os profetas: os dois juntos com Jesus mostram que ele completa a história do Antigo Testamento. Na época, crianças não tinham importância social nenhuma.',
+  levar:'Onde a sua fé precisa dizer hoje: ajuda a minha falta de fé?',
+  dificeis:[{palavra:'transfiguração',sentido:'Quando a aparência de Jesus muda e mostra a glória dele, por alguns instantes.'},{palavra:'tabernáculo',sentido:'Uma tenda. Pedro quer montar três tendas para ficar ali.'},{palavra:'Elias',sentido:'Um grande profeta do Antigo Testamento. Esperavam que ele voltasse antes do Messias.'},{palavra:'escandalizar',sentido:'Fazer alguém tropeçar na fé ou se afastar de Deus.'}] },
+ 'MRK.10':{ titulo:'servir em vez de ser servido',
+  resumo:'Jesus fala sobre casamento e abraça as crianças, dizendo que o Reino é delas. Um homem rico quer a vida eterna, mas vai embora triste quando Jesus pede que deixe as riquezas. Tiago e João pedem os melhores lugares, e Jesus ensina que quem quer ser grande deve servir, como ele, que veio para servir e dar a vida. No fim, cura o cego Bartimeu.',
+  contexto:'Jericó ficava perto de Jerusalém: Jesus está quase chegando ao lugar onde vai morrer. Para muita gente da época, riqueza era sinal de bênção, por isso os discípulos se espantam.',
+  levar:'Em que lugar você pode servir alguém hoje, sem esperar nada?',
+  dificeis:[{palavra:'carta de divórcio',sentido:'Um documento que o marido dava à mulher para encerrar o casamento.'},{palavra:'camelo e agulha',sentido:'Uma imagem exagerada de propósito para mostrar como é difícil confiar em Deus quando se confia no dinheiro.'},{palavra:'resgate',sentido:'O preço pago para libertar alguém. Jesus diz que dá a vida como resgate por muitos.'},{palavra:'Filho de Davi',sentido:'Um título do Messias, o rei prometido da família de Davi.'}] },
+ 'MRK.11':{ titulo:'a chegada a Jerusalém',
+  resumo:'Jesus entra em Jerusalém montado num jumentinho, e o povo estende mantos e ramos gritando hosana. No dia seguinte, ele expulsa do templo os que vendiam e trocavam dinheiro, dizendo que a casa de Deus deveria ser casa de oração. Ele fala da força da fé e do perdão, e os líderes questionam com que autoridade ele faz essas coisas.',
+  contexto:'O profeta Zacarias tinha dito que o rei viria montado num jumentinho, um animal simples e de paz, não um cavalo de guerra. O templo era o centro da fé judaica e também de muito comércio.',
+  levar:'Que espaço da sua vida precisa voltar a ser lugar de oração?',
+  dificeis:[{palavra:'hosana',sentido:'Um grito que quer dizer: salva, por favor. Virou uma forma de louvor.'},{palavra:'cambistas',sentido:'Pessoas que trocavam moedas estrangeiras pela moeda aceita no templo, muitas vezes com lucro alto.'},{palavra:'figueira sem fruto',sentido:'Uma imagem de algo que parece vivo por fora, mas não dá fruto.'},{palavra:'autoridade',sentido:'O direito de agir e falar em nome de alguém.'}] },
+ 'MRK.12':{ titulo:'perguntas difíceis e o maior mandamento',
+  resumo:'No templo, Jesus conta a parábola dos lavradores que maltratam os enviados do dono da vinha e até matam o filho dele. Vários grupos tentam pegar Jesus com perguntas sobre impostos e ressurreição. Um escriba pergunta qual é o maior mandamento, e Jesus responde: amar a Deus de todo o coração e ao próximo como a si mesmo. No fim, ele elogia a viúva pobre que deu tudo o que tinha.',
+  contexto:'Os saduceus eram ligados ao templo e não acreditavam na ressurreição. A moeda do imposto tinha a imagem do imperador, por isso Jesus diz para dar a César o que é de César.',
+  levar:'Como você pode amar alguém hoje como ama a si mesma?',
+  dificeis:[{palavra:'vinha',sentido:'Plantação de uvas. No Antigo Testamento, era uma imagem do povo de Deus.'},{palavra:'César',sentido:'O título do imperador romano.'},{palavra:'saduceus',sentido:'Grupo de sacerdotes ricos, ligados ao templo, que não acreditavam na ressurreição.'},{palavra:'duas pequenas moedas',sentido:'As moedas de menor valor que existiam. Para a viúva, era tudo o que ela tinha.'}] },
+ 'MRK.13':{ titulo:'vigiem e não se assustem',
+  resumo:'Saindo do templo, Jesus diz que aquele prédio enorme seria destruído. Os discípulos perguntam quando. Ele fala de guerras, terremotos, perseguições e falsos messias, mas pede que não se assustem e não se deixem enganar. Termina dizendo que ninguém sabe o dia nem a hora da sua volta, e por isso é preciso estar sempre atento.',
+  contexto:'O templo de Jerusalém foi de fato destruído pelos romanos no ano 70. Este capítulo mistura esse acontecimento próximo com a volta futura de Jesus, e os cristãos o leem de jeitos diferentes.',
+  levar:'O que significa para você viver acordada e em paz, sem medo do futuro?',
+  dificeis:[{palavra:'abominação da desolação',sentido:'Uma expressão do livro de Daniel para algo que profana o lugar santo.'},{palavra:'falsos cristos',sentido:'Pessoas que diriam ser o Messias sem ser.'},{palavra:'vigiar',sentido:'Ficar atento e acordado, vivendo de um jeito pronto para encontrar Jesus.'},{palavra:'eleitos',sentido:'O povo que Deus escolheu e reúne para si.'}] },
+ 'MRK.14':{ titulo:'a última ceia e a noite no jardim',
+  resumo:'Uma mulher derrama um perfume caríssimo na cabeça de Jesus, e ele defende o gesto. Judas combina entregá-lo. Na ceia da Páscoa, Jesus parte o pão e passa o cálice, dizendo que é o seu corpo e o seu sangue. No Getsêmani, ele ora angustiado: não o que eu quero, mas o que tu queres. É preso, julgado à noite, e Pedro nega conhecê-lo três vezes.',
+  contexto:'A Páscoa judaica lembrava a libertação do Egito, com o cordeiro sacrificado. Ao fazer a ceia nessa festa, Jesus dá a ela um novo sentido. O sinédrio era o conselho que julgava as questões religiosas.',
+  levar:'Que entrega você consegue fazer hoje dizendo: seja feita a tua vontade?',
+  dificeis:[{palavra:'nardo',sentido:'Um perfume raro e caro, que valia quase um ano de salário.'},{palavra:'aliança',sentido:'Um compromisso firmado entre Deus e o seu povo.'},{palavra:'Getsêmani',sentido:'Um jardim de oliveiras ao pé do monte das Oliveiras. O nome quer dizer prensa de azeite.'},{palavra:'Aba',sentido:'Palavra aramaica carinhosa para pai, como papai.'},{palavra:'sinédrio',sentido:'O conselho dos líderes judeus que julgava as questões religiosas.'}] },
+ 'MRK.15':{ titulo:'a cruz',
+  resumo:'Jesus é levado a Pilatos, o governador romano. A multidão pede a libertação de Barrabás e a crucificação de Jesus. Ele é açoitado, zombado com uma coroa de espinhos e crucificado entre dois ladrões. Ao meio-dia o céu escurece, Jesus clama a Deus e morre. O véu do templo se rasga, e um soldado romano diz: este homem era o Filho de Deus. José de Arimateia o sepulta.',
+  contexto:'A crucificação era a forma de morte mais cruel e humilhante do Império Romano, reservada a escravos e rebeldes. O véu do templo separava o lugar mais sagrado: rasgado, mostra o acesso aberto a Deus.',
+  levar:'O que você sente ao saber que Jesus passou por tudo isso por amor?',
+  dificeis:[{palavra:'Pilatos',sentido:'Pôncio Pilatos, o governador romano da Judeia, que tinha o poder de condenar à morte.'},{palavra:'pretório',sentido:'A residência oficial do governador, onde ficavam os soldados.'},{palavra:'Gólgota',sentido:'O lugar da crucificação. O nome quer dizer lugar da caveira.'},{palavra:'Eloí, Eloí, lamá sabactâni',sentido:'Em aramaico: meu Deus, meu Deus, por que me abandonaste? É o começo do Salmo 22.'}] },
+ 'MRK.16':{ titulo:'o túmulo vazio',
+  resumo:'No domingo bem cedo, três mulheres vão ao túmulo para cuidar do corpo de Jesus. A pedra já está removida, e um jovem vestido de branco diz que Jesus ressuscitou e que elas devem avisar os discípulos. Elas saem tremendo de espanto. Nas versões mais longas do capítulo, Jesus aparece a várias pessoas e envia os discípulos a anunciar a boa notícia ao mundo.',
+  contexto:'Os manuscritos mais antigos de Marcos terminam no versículo 8, com as mulheres assustadas; os versículos 9 a 20 aparecem em cópias posteriores, e muitas Bíblias avisam isso numa nota. As mulheres são as primeiras testemunhas, algo marcante numa época em que o testemunho delas valia pouco.',
+  levar:'Que esperança a ressurreição traz para alguma área da sua vida?',
+  dificeis:[{palavra:'ressuscitou',sentido:'Voltou a viver depois de morto, com um corpo novo, para não morrer mais.'},{palavra:'especiarias',sentido:'Perfumes e ervas usados para preparar o corpo de quem morria.'},{palavra:'evangelho',sentido:'Boa notícia: a mensagem sobre Jesus.'},{palavra:'toda criatura',sentido:'Todas as pessoas do mundo, sem exceção.'}] }
+};
+const capOf = k => Object.assign({}, BASE[k], S.caps[k]);
+const PRESETS = [
+  { id:'evang', nome:'Evangelhos', livros:['MAT','MRK','LUK','JHN'] },
+  { id:'salmos', nome:'Salmos', livros:['PSA'] },
+  { id:'nt', nome:'Novo Testamento', livros:NT },
+  { id:'toda', nome:'Bíblia inteira', livros:[...NT, ...AT] }
+];
+
+/* ---------- utilidades ---------- */
+const day0 = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+const parseISO = s => { const [y, m, d] = String(s).split('-').map(Number); return new Date(y, (m || 1) - 1, d || 1); };
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const diffDays = (a, b) => Math.round((day0(b) - day0(a)) / 864e5);
+const iso = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+const WD = ['dom','seg','ter','qua','qui','sex','sáb'];
+const fmtLong = d => d.toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long' });
+const fmtShort = d => d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
+const fmtDia = d => d.toLocaleDateString('pt-BR', { day:'numeric', month:'long' });
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clean = s => String(s ?? '').replace(/\*\*(.+?)\*\*/g, '$1').replace(/^#+\s*/gm, '').replace(/^\s*[-*]\s+/gm, '· ');
+const ico = (id, cls='') => `<svg class="i ${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
+const fmtN = n => n.toLocaleString('pt-BR');
+const chOf = k => { const [c, n] = k.split('.'); return { book:BK[c], cap:+n, key:k }; };
+const bookChapters = codes => { const out = []; codes.forEach(c => { for (let i = 1; i <= BK[c].caps; i++) out.push(c + '.' + i); }); return out; };
+function parts(chs){ const ps = []; chs.map(chOf).forEach(x => { const l = ps[ps.length-1]; if (l && l.book === x.book && x.cap === l.to + 1) l.to = x.cap; else ps.push({ book:x.book, from:x.cap, to:x.cap }); }); return ps; }
+const num = p => p.from === p.to ? String(p.from) : p.from + '–' + p.to;
+const refName = d => parts(d.chs).map(p => p.book.n + ' ' + num(p)).join(' · ');
+function hkey(s){ if (s.length <= 180) return s; let h = 0; for (const ch of s) h = (h * 31 + ch.charCodeAt(0)) | 0; return 'k' + (h >>> 0).toString(36) + '-' + s.length; }
+const yvKey = (k, v) => v === 'alm' ? `https://www.bible.com/bible/212/${k}.ARC` : `https://www.bible.com/bible/129/${k}.NVI`;
+const yv = (d, v) => yvKey(d.chs[0], v);
+
+/* ---------- planos ---------- */
+function expand(def){
+  const start = parseISO(def.inicio);
+  const days = (def.dias || []).map((s, i) => ({ i, chs:s.split('+'), key:hkey(s), date:addDays(start, i) }));
+  return Object.assign({}, def, { start, days, lidos:def.lidos || {} });
+}
+const NATAL = expand({ id:'natal', nome:'até o Natal', inicio:'2026-10-22', sub:'Marcos, Mateus e João, um capítulo por dia · depois Atos',
+  meta:{ dia:65, nome:'Natal', data:'2026-12-25' }, dias:bookChapters(['MRK','MAT','JHN','ACT']), fixo:true });
+function buildDias(codes, nDays){
+  const C = bookChapters(codes), D = Math.max(1, Math.min(nDays, C.length)), out = [];
+  for (let i = 0; i < D; i++) out.push(C.slice(Math.floor(i * C.length / D), Math.floor((i + 1) * C.length / D)).join('+'));
+  return out;
+}
+
+/* ---------- estado ---------- */
+const IN_CLAUDE = !!(window.claude && typeof window.claude.use === 'function');
+const S = {
+  tab:'hoje', ativo:'natal', planos:{}, lidosNatal:{}, notas:{}, caps:{}, conversas:{}, vocab:{}, aulas:{}, passos:{},
+  sel:null, selPlan:null, open:null, aula:null, ctab:'planos', chatCtx:'leitura', form:null, confirmDel:false, step3:'palavras',
+  engine: IN_CLAUDE ? 'claude' : 'gemini', gkey:'', gmodel:'gemini-2.5-flash',
+  db:null, sample:null, busy:{}, draft:{}, pending:false, ctl:null
+};
+const planById = id => id === 'natal' ? NATAL : (S.planos[id] || NATAL);
+const plan = () => planById(S.ativo);
+const lidosOf = p => { if (p.id === 'natal') return S.lidosNatal; if (!p.lidos) p.lidos = {}; return p.lidos; };
+const todayIdx = p => diffDays(p.start, new Date());
+function curIdx(){
+  const p = plan();
+  if (S.selPlan !== p.id || S.sel == null || S.sel >= p.days.length) { S.selPlan = p.id; S.sel = Math.max(0, Math.min(p.days.length - 1, todayIdx(p))); }
+  return S.sel;
+}
+const cur = () => plan().days[curIdx()];
+const allPlans = () => [NATAL, ...Object.values(S.planos).sort((a, b) => String(a.criado).localeCompare(String(b.criado)))];
+function capsLidos(){ const set = new Set(); for (const p of allPlans()) { const L = lidosOf(p); p.days.forEach(d => { if (L[d.key]) d.chs.forEach(c => set.add(c)); }); } return set; }
+function streak(){
+  const set = new Set();
+  [S.lidosNatal, ...Object.values(S.planos).map(p => p.lidos || {})].forEach(m => Object.values(m).forEach(v => set.add(v)));
+  let d = day0(new Date()); if (!set.has(iso(d))) d = addDays(d, -1);
+  let n = 0; while (set.has(iso(d))) { n++; d = addDays(d, -1); }
+  return n;
+}
+function progresso(p){
+  const L = lidosOf(p), total = p.meta ? p.meta.dia : p.days.length;
+  const n = p.days.filter(d => d.i < total && L[d.key]).length, t = todayIdx(p);
+  const atras = p.days.filter(d => d.i < Math.min(t, p.days.length) && !L[d.key]);
+  return { n, total, atras, pct:Math.round(n / total * 100) };
+}
+const proxAula = () => AULAS.find(x => !S.aulas[x.id]);
+
+/* ---------- armazenamento: banco do app no Claude, ou este aparelho ---------- */
+const LS = {
+  get(k, f){ try { const v = localStorage.getItem('lampada.' + k); return v ? JSON.parse(v) : f; } catch { return f; } },
+  set(k, v){ try { localStorage.setItem('lampada.' + k, JSON.stringify(v)); } catch {} }
+};
+function loadLocal(){
+  const pf = LS.get('perfil', null) || {};
+  S.lidosNatal = pf.lidos || LS.get('lidos', {}); S.ativo = pf.ativo || 'natal'; S.aulas = pf.aulas || {}; S.passos = pf.passos || {};
+  const pl = LS.get('planos', {}); S.planos = {}; Object.values(pl).forEach(d => { S.planos[d.id] = expand(d); });
+  S.notas = LS.get('notas', {}); S.caps = LS.get('caps', {}); S.conversas = LS.get('conversas', {}); S.vocab = LS.get('vocab', {});
+  const cfg = LS.get('ia', {}); S.gkey = cfg.gkey || ''; S.gmodel = cfg.gmodel || 'gemini-2.5-flash';
+  if (cfg.engine) S.engine = cfg.engine;
+}
+const failSave = () => toast('não deu para salvar agora');
+let perfilT;
+function savePerfil(){
+  const body = { nome:NOME, lidos:S.lidosNatal, ativo:S.ativo, aulas:S.aulas, passos:S.passos };
+  if (!S.db) return LS.set('perfil', body);
+  clearTimeout(perfilT); perfilT = setTimeout(() => { S.db.doc('perfis/' + PERFIL).set(body).catch(failSave); }, 250);
+}
+function planoBody(p){ return { id:p.id, nome:p.nome, sub:p.sub || '', inicio:p.inicio, dias:p.dias, lidos:p.lidos || {}, criado:p.criado || new Date().toISOString(), tipo:p.tipo || 'plano' }; }
+async function savePlano(p){
+  if (S.db) { try { await S.db.doc('perfis/' + PERFIL + '/planos/' + p.id).set(planoBody(p)); } catch { failSave(); } }
+  else { const all = LS.get('planos', {}); all[p.id] = planoBody(p); LS.set('planos', all); }
+}
+async function delPlano(id){
+  delete S.planos[id];
+  if (S.ativo === id) { S.ativo = 'natal'; S.sel = null; savePerfil(); }
+  if (S.db) { try { await S.db.doc('perfis/' + PERFIL + '/planos/' + id).delete(); } catch {} }
+  else { const all = LS.get('planos', {}); delete all[id]; LS.set('planos', all); }
+}
+async function saveNota(key, texto, nome){
+  if (texto.trim()) S.notas[key] = { ref:key, texto, quando:new Date().toISOString(), nome }; else delete S.notas[key];
+  if (S.db) { const ref = S.db.doc('perfis/' + PERFIL + '/diario/' + key);
+    try { texto.trim() ? await ref.set(S.notas[key]) : await ref.delete(); } catch { failSave(); return false; } }
+  else LS.set('notas', S.notas);
+  return true;
+}
+async function saveCap(key, patch){
+  S.caps[key] = Object.assign({}, BASE[key], S.caps[key], patch);
+  if (S.db) { try { await S.db.doc('capitulos/' + key).set(S.caps[key]); } catch {} } else LS.set('caps', S.caps);
+}
+async function saveConversa(key){
+  const turns = (S.conversas[key] || []).slice(-40); S.conversas[key] = turns;
+  if (S.db) { try { await S.db.doc('perfis/' + PERFIL + '/conversas/' + key).set({ turns }); } catch {} } else LS.set('conversas', S.conversas);
+}
+async function saveVocab(){ if (S.db) { try { await S.db.doc('perfis/' + PERFIL + '/extras/vocab').set({ itens:S.vocab }); } catch { failSave(); } } else LS.set('vocab', S.vocab); }
+const saveIA = () => LS.set('ia', { gkey:S.gkey, gmodel:S.gmodel, engine:S.engine });
+
+function typing(){ const a = document.activeElement; return a && (a.tagName === 'TEXTAREA' || a.tagName === 'SELECT' || a.tagName === 'INPUT'); }
+function soft(){ if (typing()) { S.pending = true; return; } render(); }
+document.addEventListener('focusout', () => setTimeout(() => { if (S.pending && !typing()) { S.pending = false; render(); } }, 150));
+
+async function boot(){
+  loadLocal(); readHash(); render();
+  if (!IN_CLAUDE) return;
+  claude.use('sample').then(s => { S.sample = s; soft(); }).catch(() => {});
+  let db = null; try { db = await claude.use('db'); } catch {}
+  if (!db) return;
+  S.db = db;
+  const P = 'perfis/' + PERFIL;
+  db.doc(P).onSnapshot(s => { if (s.exists) { const d = s.data(); S.lidosNatal = Object.assign({}, d.lidos || {}); S.aulas = Object.assign({}, d.aulas || {});
+    S.passos = JSON.parse(JSON.stringify(d.passos || {})); if (d.ativo) S.ativo = d.ativo; } soft(); }, () => {});
+  db.collection(P + '/planos').onSnapshot(q => { const n = {}; q.docs.forEach(d => { const v = d.data(); n[d.id] = expand(Object.assign({}, v, { id:d.id, lidos:Object.assign({}, v.lidos || {}) })); }); S.planos = n; soft(); }, () => {});
+  db.collection(P + '/diario').onSnapshot(q => { const n = {}; q.docs.forEach(d => n[d.id] = d.data()); S.notas = n; soft(); }, () => {});
+  db.collection('capitulos').onSnapshot(q => { const n = {}; q.docs.forEach(d => n[d.id] = d.data()); S.caps = n; soft(); }, () => {});
+  db.doc(P + '/extras/vocab').onSnapshot(s => { S.vocab = s.exists ? Object.assign({}, s.data().itens || {}) : {}; soft(); }, () => {});
+  db.collection(P + '/conversas').onSnapshot(q => { if (!S.busy.chat) q.docs.forEach(d => { S.conversas[d.id] = (d.data().turns || []).slice(); }); if (S.tab === 'conversa') soft(); }, () => {});
+}
+
+/* ---------- inteligência artificial: Gemini (API) e Claude ---------- */
+const GUIA = 'Você é um guia gentil para a Laís, que está começando a ler a Bíblia, não tem costume de ler e quer entender de verdade, do básico ao profundo, e criar amor pela Palavra. Escreva em português do Brasil, com frases curtas e palavras simples; quando usar uma palavra difícil, explique. Respeite a fé dela; quando tradições cristãs entendem algo de formas diferentes, diga isso com leveza. Não use emojis nem markdown.';
+const geminiReady = () => !IN_CLAUDE && !!S.gkey;
+const claudeReady = () => !!S.sample;
+const engineReady = e => e === 'gemini' ? geminiReady() : claudeReady();
+const aiEngine = () => engineReady(S.engine) ? S.engine : engineReady('gemini') ? 'gemini' : engineReady('claude') ? 'claude' : null;
+const aiName = e => e === 'gemini' ? 'Gemini' : 'Claude';
+class AIError extends Error { constructor(code, msg, text){ super(msg || code); this.code = code; this.text = text; } }
+
+async function geminiCall(turns, { json = false, onText, signal } = {}){
+  const model = (S.gmodel || 'gemini-2.5-flash').trim();
+  const base = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model);
+  const sys = turns[0].content, rest = turns.slice(1);
+  const body = { systemInstruction:{ parts:[{ text:sys }] },
+    contents: rest.map(t => ({ role: t.role === 'assistant' ? 'model' : 'user', parts:[{ text:t.content }] })),
+    generationConfig: json ? { responseMimeType:'application/json', temperature:.6 } : { temperature:.7 } };
+  let res;
+  try {
+    res = await fetch(base + (onText ? ':streamGenerateContent?alt=sse' : ':generateContent'), {
+      method:'POST', signal, headers:{ 'Content-Type':'application/json', 'x-goog-api-key':S.gkey }, body:JSON.stringify(body) });
+  } catch (e) { if (signal && signal.aborted) throw new AIError('cancelled'); throw new AIError('network'); }
+  if (!res.ok) { let m = ''; try { m = (await res.json()).error.message; } catch {}
+    throw new AIError(res.status === 400 && /API key/i.test(m) ? 'bad_key' : res.status === 403 ? 'bad_key' : res.status === 429 ? 'rate_limited' : res.status === 404 ? 'bad_model' : 'upstream', m); }
+  const pick = o => ((o.candidates && o.candidates[0] && o.candidates[0].content && o.candidates[0].content.parts) || []).map(p => p.text || '').join('');
+  if (!onText) { const o = await res.json(); const t = pick(o); if (!t) throw new AIError('empty'); return t; }
+  const rd = res.body.getReader(), dec = new TextDecoder(); let buf = '', text = '';
+  try {
+    for (;;) { const { done, value } = await rd.read(); if (done) break;
+      buf += dec.decode(value, { stream:true }); const lines = buf.split('\n'); buf = lines.pop();
+      for (const ln of lines) { if (!ln.startsWith('data:')) continue; try { const t = pick(JSON.parse(ln.slice(5))); if (t) { text += t; onText(text); } } catch {} } }
+  } catch (e) { if (signal && signal.aborted) throw new AIError('cancelled', '', text); throw new AIError('network', '', text); }
+  if (!text) throw new AIError('empty');
+  return text;
+}
+function parseJSON(t){
+  try { return JSON.parse(t); } catch {}
+  const m = String(t).match(/```(?:json)?\s*([\s\S]*?)```/); if (m) { try { return JSON.parse(m[1]); } catch {} }
+  const a = Math.min(...['{','['].map(c => { const i = t.indexOf(c); return i < 0 ? Infinity : i; })), b = Math.max(t.lastIndexOf('}'), t.lastIndexOf(']'));
+  if (a < b) { try { return JSON.parse(t.slice(a, b + 1)); } catch {} }
+  throw new AIError('invalid_json');
+}
+async function aiJSON(prompt, quick){
+  const e = aiEngine(); if (!e) throw new AIError('no_ai');
+  if (e === 'gemini') return parseJSON(await geminiCall([{ role:'user', content:GUIA }, { role:'user', content:prompt }], { json:true }));
+  try { return await S.sample.json(GUIA + '\n\n' + prompt, Object.assign({ cache:{ gcTime:86400000 } }, quick ? { modelTier:'quick' } : {})); }
+  catch (x) { throw new AIError(x && x.code || 'upstream', '', x && x.text); }
+}
+async function aiChat(turns, { onText, signal }){
+  const e = aiEngine(); if (!e) throw new AIError('no_ai');
+  if (e === 'gemini') return { engine:e, text:await geminiCall(turns, { onText, signal }) };
+  try { const r = await S.sample(turns, { cache:false, signal, onText:({ text }) => onText(text) }); return { engine:e, text:r.text }; }
+  catch (x) { throw new AIError(x && x.code || 'upstream', '', x && x.text); }
+}
+const errCopy = c => ({
+  no_ai: IN_CLAUDE ? 'Libere o Claude quando o pedido de permissão aparecer.' : 'Coloque sua chave do Gemini em caminhada › ajustes.',
+  bad_key:'A chave do Gemini não funcionou. Confira em caminhada › ajustes.',
+  bad_model:'Esse modelo do Gemini não foi encontrado. Confira o nome em ajustes.',
+  network:'Sem conexão com a IA agora. Confira a internet e tente de novo.',
+  not_granted:'O Claude não foi liberado nesta página. O pedido aparece de novo na próxima vez que abrir o app.',
+  sampling_disabled:'O Claude não está disponível nesta conta.',
+  rate_limited:'Muitas perguntas seguidas. Espera um minutinho e tenta de novo.',
+  session_expired:'Sua sessão expirou. Entra de novo e volta aqui.',
+  refused:'A IA não respondeu a esse pedido. Tenta perguntar de outro jeito.',
+  invalid_json:'A resposta veio bagunçada. Toca para tentar de novo.'
+}[c] || 'Não deu certo agora. Tenta de novo daqui a pouco.');
+const oops = e => { if (e && e.code !== 'cancelled') toast(errCopy(e && e.code)); };
+
+async function explicar(d){
+  if (S.busy['exp' + d.key]) return; S.busy['exp' + d.key] = true; render();
+  try {
+    const r = await aiJSON(`Leitura de hoje: ${refName(d)}.\nResponda só com um objeto JSON neste formato:\n{"titulo":"até 7 palavras, em minúsculas, dizendo do que trata a leitura","resumo":"3 ou 4 frases simples contando o que acontece, com suas próprias palavras, sem citar o texto bíblico","contexto":"2 frases com um detalhe histórico ou cultural que ajuda a entender","levar":"uma pergunta curta e acolhedora para pensar durante o dia"}`);
+    if (r && r.resumo) await saveCap(d.key, { titulo:String(r.titulo || ''), resumo:String(r.resumo), contexto:String(r.contexto || ''), levar:String(r.levar || '') });
+  } catch (e) { oops(e); }
+  S.busy['exp' + d.key] = false; render();
+}
+async function comparar(d){
+  if (S.busy['cmp' + d.key]) return; S.busy['cmp' + d.key] = true; render();
+  try {
+    const r = await aiJSON(`Compare como a Nova Versão Internacional (NVI) e a Almeida Revista e Corrigida (ARC) traduzem ${refName(d)}. Escolha 4 versículos em que as palavras mudam de um jeito que ajuda a aprender. Use trechos bem curtos (no máximo 10 palavras cada). Responda só com um array JSON:\n[{"versiculo":"capítulo:versículo","nvi":"trecho curto","almeida":"trecho curto","sentido":"uma frase simples explicando a diferença ou o que a palavra antiga quer dizer"}]`);
+    const list = Array.isArray(r) ? r.filter(x => x && x.nvi && x.almeida).slice(0, 5).map(x => ({ versiculo:String(x.versiculo || ''), nvi:String(x.nvi), almeida:String(x.almeida), sentido:String(x.sentido || '') })) : [];
+    if (list.length) await saveCap(d.key, { palavras:list });
+  } catch (e) { oops(e); }
+  S.busy['cmp' + d.key] = false; render();
+}
+async function dificeis(d){
+  if (S.busy['dif' + d.key]) return; S.busy['dif' + d.key] = true; render();
+  try {
+    const r = await aiJSON(`Leitura: ${refName(d)}. Liste as 5 palavras ou expressões que mais costumam confundir quem lê esse trecho pela primeira vez (pense em como aparecem na NVI e na Almeida). Responda só com um array JSON:\n[{"palavra":"palavra ou expressão","sentido":"o que quer dizer, em uma ou duas frases simples"}]`);
+    const list = Array.isArray(r) ? r.filter(x => x && x.palavra && x.sentido).slice(0, 6).map(x => ({ palavra:String(x.palavra), sentido:String(x.sentido) })) : [];
+    if (list.length) await saveCap(d.key, { dificeis:list });
+  } catch (e) { oops(e); }
+  S.busy['dif' + d.key] = false; render();
+}
+async function palavraLivre(d, w){
+  w = w.trim(); if (!w || S.busy['dif' + d.key]) return; S.busy['dif' + d.key] = true; render();
+  try {
+    const r = await aiJSON(`Na leitura de ${refName(d)}, a Laís travou nesta palavra ou expressão: "${w}". Explique o que quer dizer nesse trecho. Responda só com um objeto JSON: {"palavra":"a palavra como ela escreveu","sentido":"explicação simples em até 3 frases"}`, true);
+    if (r && r.sentido) { const list = (capOf(d.key).dificeis || []).filter(x => x.palavra.toLowerCase() !== String(r.palavra || w).toLowerCase());
+      list.unshift({ palavra:String(r.palavra || w), sentido:String(r.sentido) }); await saveCap(d.key, { dificeis:list }); }
+  } catch (e) { oops(e); }
+  S.busy['dif' + d.key] = false; render();
+}
+async function prepararSemana(){
+  const p = plan(), t = Math.max(0, todayIdx(p));
+  const alvo = p.days.slice(t, t + 7).filter(d => !capOf(d.key).resumo);
+  if (!alvo.length) return toast('as explicações da semana já estão prontas');
+  if (S.busy.semana) return; S.busy.semana = true; render();
+  try {
+    const r = await aiJSON(`Prepare explicações para estas leituras, nesta ordem: ${alvo.map(refName).join('; ')}.\nResponda só com um array JSON, um objeto por leitura, na mesma ordem:\n[{"titulo":"até 7 palavras, em minúsculas","resumo":"3 ou 4 frases simples contando o que acontece, sem citar o texto bíblico","contexto":"2 frases com um detalhe histórico ou cultural","levar":"uma pergunta curta e acolhedora para o dia"}]`);
+    let k = 0;
+    if (Array.isArray(r)) for (let i = 0; i < alvo.length; i++) { const x = r[i]; if (x && x.resumo) { k++; await saveCap(alvo[i].key, { titulo:String(x.titulo || ''), resumo:String(x.resumo), contexto:String(x.contexto || ''), levar:String(x.levar || '') }); } }
+    toast(k ? `${k} ${k === 1 ? 'explicação pronta' : 'explicações prontas'}` : 'não deu certo agora');
+  } catch (e) { oops(e); }
+  S.busy.semana = false; render();
+}
+
+/* conversa: um fio por leitura ou por aula */
+function chatKey(){ return S.chatCtx === 'leitura' ? cur().key : 'aula-' + S.chatCtx; }
+function chatAbout(){ if (S.chatCtx === 'leitura') return refName(cur()); const a = AULAS.find(x => x.id === S.chatCtx); return a ? 'a aula "' + a.t + '"' : refName(cur()); }
+async function perguntar(texto, ctx){
+  texto = String(texto || '').trim(); if (!texto || S.busy.chat) return;
+  if (ctx) S.chatCtx = ctx;
+  if (!aiEngine()) { go('conversa'); return toast(errCopy('no_ai')); }
+  const key = chatKey(), turns = S.conversas[key] = (S.conversas[key] || []).slice();
+  turns.push({ role:'user', content:texto });
+  S.busy.chat = true; S.tab !== 'conversa' ? go('conversa') : render(); scrollEnd();
+  let about = chatAbout();
+  if (S.chatCtx !== 'leitura') { const a = AULAS.find(x => x.id === S.chatCtx); if (a) about += '. Resumo da aula: ' + a.p.join(' '); }
+  const regras = GUIA + `\nEla quer conversar sobre ${about}. Ela também está no plano de leitura "${plan().nome}". Responda como numa conversa: curto (até 2 parágrafos), acolhedor e claro. Se ela pedir o texto bíblico inteiro, sugira abrir no YouVersion em vez de copiar.`;
+  const ctl = S.ctl = new AbortController();
+  try {
+    const r = await aiChat([{ role:'user', content:regras }, ...turns.slice(-16)], { signal:ctl.signal,
+      onText: t => { const b = document.getElementById('live'); if (b) { b.textContent = clean(t); scrollEnd(); } } });
+    turns.push({ role:'assistant', content:clean(r.text), by:r.engine });
+  } catch (e) {
+    if (e && e.text) turns.push({ role:'assistant', content:clean(e.text), by:aiEngine() });
+    else if (e && e.code !== 'cancelled') turns.push({ role:'assistant', content:errCopy(e && e.code), by:'app' });
+    else turns.pop();
+  }
+  S.busy.chat = false; S.ctl = null;
+  await saveConversa(key); render(); scrollEnd();
+}
+function scrollEnd(){ requestAnimationFrame(() => window.scrollTo({ top:document.body.scrollHeight, behavior:'smooth' })); }
+async function testarGemini(){
+  if (!S.gkey) return toast('cole sua chave primeiro');
+  if (IN_CLAUDE) return toast('o Gemini funciona no app publicado no seu endereço');
+  S.busy.teste = true; render();
+  try { await geminiCall([{ role:'user', content:'Responda só: ok' }, { role:'user', content:'teste' }]); toast('Gemini conectado'); S.engine = 'gemini'; saveIA(); }
+  catch (e) { toast(errCopy(e.code)); }
+  S.busy.teste = false; render();
+}
+
+/* ---------- pedaços de tela ---------- */
+const greeting = () => { const h = new Date().getHours(); return h < 5 ? 'boa noite' : h < 12 ? 'bom dia' : h < 18 ? 'boa tarde' : 'boa noite'; };
+const thinking = t => `<div class="thinking"><span class="dots"><i></i><i></i><i></i></span>${t}</div>`;
+const aiOff = () => `<p class="hint">${IN_CLAUDE ? 'A IA aparece aqui assim que o Claude for liberado.' : 'Pra gerar isso, coloque sua chave do Gemini em <button class="linkbtn" data-go-ajustes="1" style="display:inline;padding:0">caminhada › ajustes</button>.'}</p>`;
+function header(){
+  const st = streak();
+  return `<header class="top">
+    <div><p class="eyebrow">${ico('lamp')}${esc(fmtLong(new Date()))}</p><h1 class="title">${greeting()}, <b>${NOME}</b></h1></div>
+    <div class="top-r">${st ? `<span class="streak" title="dias seguidos lendo">${ico('flame')}${st}</span>` : ''}<button class="avatar" data-tab="caminhada" aria-label="Sua caminhada">L</button></div></header>`;
+}
+const heroRef = d => parts(d.chs).map(p => `${esc(p.book.n)} <span class="n">${num(p)}</span>`).join(' <span class="dsep">·</span> ');
+
+function heroCard(d){
+  const p = plan(), L = lidosOf(p), t = todayIdx(p), pr = progresso(p);
+  const depois = p.meta && d.i >= p.meta.dia;
+  const label = p.meta ? (depois ? 'depois do ' + p.meta.nome : 'até o ' + p.meta.nome) : p.nome;
+  let right;
+  if (p.meta) { const f = diffDays(new Date(), parseISO(p.meta.data)); right = f > 0 ? `faltam ${f} dias pro ${p.meta.nome}` : f === 0 ? `hoje é ${p.meta.nome}` : `até ${fmtShort(p.days[p.days.length-1].date)}`; }
+  else right = `até ${fmtShort(p.days[p.days.length-1].date)}`;
+  const when = t < 0 ? `o plano começa em ${fmtDia(p.start)}` : d.i === t ? '' : `leitura de ${fmtLong(d.date)}${d.i < t ? ' · ficou pra trás' : ''}`;
+  let week = '';
+  const w0 = Math.max(0, Math.min(d.i - 3, p.days.length - 7));
+  for (let i = w0; i < w0 + 7; i++) {
+    if (i < 0 || i >= p.days.length) { week += '<span></span>'; continue; }
+    const q = p.days[i], r = !!L[q.key], c0 = chOf(q.chs[0]);
+    week += `<button class="day ${r ? 'read' : ''} ${i === d.i ? 'sel' : ''} ${i === t ? 'today' : ''}" data-sel="${i}" aria-label="${esc(refName(q))}, ${esc(fmtLong(q.date))}${r ? ', lido' : ''}">
+      <span class="wd">${WD[q.date.getDay()]}</span><span class="sq">${r ? ico('check') : q.date.getDate()}</span><span class="cap">${q.chs.length === 1 ? esc(c0.book.ab + ' ' + c0.cap) : 'dia ' + (i + 1)}</span></button>`;
+  }
+  const titulo = capOf(d.key).titulo;
+  return `<section class="card rose">
+    <div class="card-h"><span class="label">${esc(label)}</span><span class="pill">${depois ? 'dia ' + (d.i + 1) : `dia ${d.i + 1} de ${pr.total}`}</span></div>
+    <div><h2 class="ref">${heroRef(d)}</h2>${titulo ? `<p class="sub">${esc(titulo)}</p>` : when ? `<p class="sub">${esc(when)}</p>` : ''}</div>
+    <div class="stack" style="gap:8px">
+      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${pr.total}" aria-valuenow="${pr.n}" aria-label="leituras feitas"><i style="width:${Math.max(2, pr.pct)}%"></i></div>
+      <div class="meta-row"><span>${pr.n} de ${pr.total} leituras</span><span>${right}</span></div>
+    </div>
+    <div class="week">${week}</div>
+  </section>`;
+}
+
+function explainCard(d){
+  const c = capOf(d.key);
+  let body;
+  if (c.resumo) body = `<p class="prose">${esc(c.resumo)}</p>
+    ${c.contexto ? `<div class="ctx"><b>contexto</b>${esc(c.contexto)}</div>` : ''}
+    ${c.levar ? `<div class="take"><span class="label" style="font-size:10.5px">pra levar no dia</span><span class="serif">${esc(c.levar)}</span></div>` : ''}`;
+  else if (S.busy['exp' + d.key] || (aiEngine() && !tried.has('exp' + d.key))) body = thinking('preparando uma explicação simples');
+  else body = aiEngine() ? `<button class="btn soft" data-act="explain">${ico('spark')}tentar de novo</button>` : aiOff();
+  return `<section class="card glass"><div class="card-h"><span class="label">${ico('spark')}em poucas palavras</span></div>${body}</section>`;
+}
+/* os passos de cada leitura */
+function stepsCard(d){
+  const p = plan(), L = lidosOf(p), read = !!L[d.key], ps = S.passos[d.key] || {}, c = capOf(d.key);
+  const AI = !!aiEngine();
+  const steps = [
+    { k:'ler', t:'ler', s:'no YouVersion, na NVI ou na Almeida', body: () => `
+        <div class="two"><a class="btn primary" data-read="nvi" href="${yv(d)}" target="_blank" rel="noopener">${ico('book')}ler na NVI</a><a class="btn ghost" data-read="alm" href="${yv(d,'alm')}" target="_blank" rel="noopener">${ico('book')}ler na Almeida</a></div>
+        ${d.chs.length > 1 ? `<p class="hint">Hoje são ${d.chs.length} capítulos. No YouVersion é só seguir para o próximo.</p>` : `<p class="hint">Leia com calma. Se travar em alguma palavra, o próximo passo ajuda.</p>`}
+        <button class="btn soft" data-done="ler">${ico('check')}terminei de ler</button>` },
+    { k:'palavras', t:'palavras e versões', s:'o que confunde e o que muda entre as duas', body: () => step3(d) },
+    { k:'refletir', t:'refletir', s:'uma pergunta e o seu diário', body: () => {
+        const nota = S.notas[d.key], val = S.draft[d.key] ?? (nota ? nota.texto : '');
+        return `${c.levar ? `<p class="hint">Pense na pergunta do dia: <span class="serif" style="font-size:16px;color:var(--ink)">${esc(c.levar)}</span></p>` : ''}
+        <label for="nota" class="sr">sua reflexão</label>
+        <textarea id="nota" class="note-area" placeholder="escreva com calma: uma frase que marcou, uma dúvida, uma oração…">${esc(val)}</textarea>
+        <div class="two"><button class="btn soft" data-act="save-note">${ico('pen')}guardar no diário</button><button class="btn ghost" data-act="ask-note">${ico('chat')}conversar sobre isso</button></div>`; } }
+  ];
+  const doneN = steps.filter(s => ps[s.k]).length;
+  if (S.open == null) S.open = read ? '' : (steps.find(s => !ps[s.k]) || {}).k || '';
+  return `<section class="card">
+    <div class="card-h"><span class="label muted">seu momento de hoje</span><span class="small">${read ? 'concluído' : doneN + ' de ' + steps.length}</span></div>
+    <div class="steps">${steps.map((s, i) => { const on = !!ps[s.k], open = S.open === s.k;
+      return `<div class="step ${on ? 'done' : ''} ${open ? 'open' : ''}">
+        <button class="step-h" data-step="${s.k}" aria-expanded="${open}"><span class="num">${on ? ico('check') : i + 1}</span><span class="step-t"><b>${s.t}</b><span>${s.s}</span></span><span class="chev">${ico('right')}</span></button>
+        ${open ? `<div class="step-b">${s.body()}</div>` : ''}</div>`; }).join('')}</div>
+    <div class="finish">${read
+      ? `<div class="done-ring"><span class="ring">${ico('check')}</span><div><b>leitura concluída</b><span>${esc(refName(d))} · ${esc(fraseDia(d))}</span></div></div><button class="linkbtn muted" data-act="toggle">desmarcar</button>`
+      : `<button class="btn primary big" data-act="toggle">${ico('check')}concluir a leitura de hoje</button>`}</div>
+  </section>`;
+}
+function fraseDia(d){ const st = streak(); return st > 1 ? `${st} dias seguidos` : 'um passo de cada vez'; }
+function step3(d){
+  const c = capOf(d.key), AI = !!aiEngine(), tab = S.step3;
+  const seg = `<div class="seg"><button data-s3="palavras" aria-pressed="${tab === 'palavras'}">palavras difíceis</button><button data-s3="versoes" aria-pressed="${tab === 'versoes'}">NVI e Almeida</button></div>`;
+  let body = '';
+  if (tab === 'palavras') {
+    const list = c.dificeis || [];
+    if (list.length) body = `<div class="gloss">${list.map((w, i) => { const on = !!S.vocab[w.palavra.toLowerCase()];
+      return `<div class="g"><div><span class="t">${esc(w.palavra)}</span><span class="s">${esc(w.sentido)}</span></div><button class="star ${on ? 'on' : ''}" data-star="${i}" aria-pressed="${on}" aria-label="${on ? 'Tirar das' : 'Guardar nas'} suas palavras: ${esc(w.palavra)}">${ico('star')}</button></div>`; }).join('')}</div>`;
+    else if (S.busy['dif' + d.key] || (AI && !tried.has('dif' + d.key))) body = thinking('procurando o sentido das palavras');
+    else body = AI ? `<button class="btn soft" data-act="dificeis">${ico('word')}tentar de novo</button>` : aiOff();
+    body += `<form class="ask" data-form="word"><label for="ask-word" class="sr">Palavra que você não entendeu</label>
+      <input id="ask-word" type="text" autocomplete="off" placeholder="qual palavra te travou?" ${AI ? '' : 'disabled'}>
+      <button class="send" aria-label="Explicar palavra" ${AI ? '' : 'disabled'}>${ico('send')}</button></form>
+      ${list.length ? `<p class="hint">A estrela guarda a palavra em caminhada › palavras.</p>` : ''}`;
+  } else {
+    body = `<div class="side"><div><span class="v nvi">NVI</span><span class="small">português de hoje, mais fácil</span></div><div><span class="v alm">ALMEIDA</span><span class="small">português clássico, tradicional</span></div></div>`;
+    if (c.palavras && c.palavras.length) body += c.palavras.map(w => `<div class="w">${w.versiculo ? `<span class="vs">${esc(w.versiculo)}</span>` : ''}<span class="q">${esc(w.nvi)}</span><span class="q">${esc(w.almeida)}</span>${w.sentido ? `<span class="why">${esc(w.sentido)}</span>` : ''}</div>`).join('');
+    else if (S.busy['cmp' + d.key] || (AI && !tried.has('cmp' + d.key))) body += thinking('procurando o que muda entre as duas');
+    else body += AI ? `<button class="btn soft" data-act="compare">${ico('spark')}tentar de novo</button>` : aiOff();
+  }
+  return seg + body + `<button class="btn soft" data-done="palavras">${ico('check')}entendi</button>`;
+}
+function sideCol(d){
+  const a = proxAula(), feitas = AULAS.filter(x => S.aulas[x.id]).length, nv = a && NIVEIS.find(n => n.n === a.nv);
+  const AI = !!aiEngine();
+  return `${a ? `<section class="card glass">
+      <div class="card-h"><span class="label">${ico('steps')}sua trilha</span><span class="small">${feitas} de ${AULAS.length}</span></div>
+      <div><p class="small" style="margin:0">nível ${a.nv} · ${esc(nv.nome)}</p><p style="margin:2px 0 0;font-size:17px;font-weight:400;line-height:1.35">${esc(a.t)}</p></div>
+      <button class="btn cocoa" data-aula="${a.id}">${feitas ? 'continuar a trilha' : 'começar do zero'}</button></section>` : ''}
+    <section class="card latte">
+      <div class="card-h"><span class="label muted">${ico('chat')}ficou alguma dúvida?</span><span class="small">${AI ? 'com o ' + aiName(aiEngine()) : ''}</span></div>
+      <form class="ask" data-form="ask-home"><label for="ask-home" class="sr">Pergunta sobre ${esc(refName(d))}</label>
+        <input id="ask-home" type="text" autocomplete="off" placeholder="pergunte sobre ${esc(refName(d))}…">
+        <button class="send" aria-label="Perguntar">${ico('send')}</button></form>
+    </section>`;
+}
+function banner(){
+  const p = plan(), pr = progresso(p), t = todayIdx(p);
+  if (t >= p.days.length) return `<button class="banner" data-tab="caminhada"><span class="ic">${ico('heart')}</span><span><b>Você terminou "${esc(p.nome)}".</b> Escolha o próximo plano ou um estudo pra continuar.</span>${ico('right')}</button>`;
+  if (pr.atras.length) { const f = pr.atras[0];
+    return `<button class="banner" data-sel="${f.i}"><span class="ic">${ico('clock')}</span><span>${pr.atras.length === 1 ? `<b>${esc(refName(f))}</b> ficou pra trás. Toque pra ler.` : `<b>${pr.atras.length} leituras</b> pra colocar em dia, começando por ${esc(refName(f))}.`}</span>${ico('right')}</button>`; }
+  return '';
+}
+
+/* ---------- telas ---------- */
+function viewHoje(){
+  const d = cur();
+  return `<div class="view">${header()}${banner()}<div class="today-grid">
+    <div class="col">${heroCard(d)}${explainCard(d)}${stepsCard(d)}</div>
+    <div class="col">${sideCol(d)}</div></div>${localNote()}</div>`;
+}
+
+function viewAprender(){
+  if (S.aula) return viewAula(AULAS.find(x => x.id === S.aula) || AULAS[0]);
+  const feitas = AULAS.filter(x => S.aulas[x.id]).length, prox = proxAula();
+  return `<div class="view narrow">
+  <header class="top"><div><p class="eyebrow">${ico('steps')}aprender</p><h1 class="title">do básico ao <em>profundo</em></h1></div></header>
+  <section class="card rose">
+    <p class="prose">Aulas curtas, de poucos minutos, pra entender a Bíblia aos poucos. Siga na ordem: cada uma prepara a próxima.</p>
+    <div class="stack" style="gap:8px"><div class="bar"><i style="width:${Math.max(2, Math.round(feitas / AULAS.length * 100))}%"></i></div>
+    <div class="meta-row"><span>${feitas} de ${AULAS.length} aulas</span><span>${prox ? 'nível ' + prox.nv : 'trilha completa'}</span></div></div>
+    ${prox ? `<button class="btn primary" data-aula="${prox.id}">${feitas ? 'continuar: ' + esc(prox.t) : 'começar pela primeira aula'}</button>` : ''}
+  </section>
+  ${NIVEIS.map(n => { const as = AULAS.filter(x => x.nv === n.n), ok = as.filter(x => S.aulas[x.id]).length;
+    return `<section class="card">
+      <div class="card-h"><span class="label">nível ${n.n} · ${esc(n.nome)}</span><span class="small">${ok}/${as.length}</span></div>
+      <p class="hint" style="margin-top:-10px">${esc(n.sub)}</p>
+      <div class="list">${as.map(x => { const done = !!S.aulas[x.id], next = prox && prox.id === x.id;
+        return `<button class="li ${done ? 'done' : ''} ${next ? 'next' : ''}" data-aula="${x.id}"><span class="num">${done ? ico('check') : AULAS.indexOf(x) + 1}</span>
+          <span class="lt">${esc(x.t)}${x.ler ? `<small>com leitura de ${esc(chOf(x.ler).book.n)} ${chOf(x.ler).cap}</small>` : ''}</span>${ico('right')}</button>`; }).join('')}</div>
+    </section>`; }).join('')}
+  </div>`;
+}
+function viewAula(a){
+  const i = AULAS.indexOf(a), nv = NIVEIS.find(n => n.n === a.nv), done = !!S.aulas[a.id], nx = AULAS[i + 1], ch = a.ler ? chOf(a.ler) : null;
+  return `<div class="view narrow">
+  <button class="linkbtn" data-act="trilha" style="padding:0">${ico('right')}</button>
+  <header class="top"><div><p class="eyebrow">nível ${a.nv} · ${esc(nv.nome)} · aula ${i + 1} de ${AULAS.length}</p><h1 class="title">${esc(a.t)}</h1></div></header>
+  <section class="card glass">
+    ${a.p.map(t => `<p class="prose">${esc(t)}</p>`).join('')}
+    <div class="take"><span class="label" style="font-size:10.5px">pra pensar</span><span class="serif">${esc(a.q)}</span></div>
+    ${ch ? `<a class="btn ghost" href="${yvKey(a.ler)}" target="_blank" rel="noopener">${ico('book')}ler ${esc(ch.book.n)} ${ch.cap} no YouVersion</a>` : ''}
+    <button class="btn soft" data-act="aula-ai" data-id="${a.id}">${ico('spark')}me explica mais a fundo</button>
+  </section>
+  <div class="two">
+    <button class="btn ${done ? 'done' : 'cocoa'}" data-act="aula-ok" data-id="${a.id}">${ico('check')}${done ? 'concluída' : 'concluir aula'}</button>
+    ${nx ? `<button class="btn ghost" data-aula="${nx.id}">próxima aula ${ico('right')}</button>` : `<button class="btn ghost" data-act="trilha">ver a trilha</button>`}
+  </div></div>`;
+}
+
+function viewConversa(){
+  const key = chatKey(), turns = S.conversas[key] || [], e = aiEngine(), d = cur();
+  const sugest = S.chatCtx === 'leitura'
+    ? ['me explica com outras palavras', 'qual é o contexto dessa época?', 'quem são as pessoas dessa leitura?', 'como isso fala com a minha vida hoje?']
+    : ['me dá um exemplo', 'explica de um jeito ainda mais simples', 'onde isso aparece na Bíblia?', 'o que eu leio depois disso?'];
+  const ctxs = [{ id:'leitura', t:refName(d) }].concat(AULAS.filter(x => S.aulas[x.id] || x.id === S.chatCtx || (proxAula() && proxAula().id === x.id)).slice(-4).map(x => ({ id:x.id, t:'aula: ' + x.t })));
+  const status = en => en === 'gemini'
+    ? (IN_CLAUDE ? 'no app publicado' : S.gkey ? 'pronto' : 'precisa da chave')
+    : (S.sample ? 'pronto' : IN_CLAUDE ? 'aguardando permissão' : 'só dentro do Claude');
+  let msgs = turns.map(t => t.role === 'user' ? `<div class="msg me">${esc(t.content)}</div>` : `<div class="msg ai"><span class="who">${ico('spark')}${t.by === 'app' ? 'Lâmpada' : aiName(t.by || 'claude')}</span>${esc(t.content)}</div>`).join('');
+  if (S.busy.chat) msgs += `<div class="msg ai"><span class="who">${ico('spark')}${aiName(e)}</span><span id="live">${thinking('pensando')}</span></div><button class="linkbtn muted" data-act="stop">parar resposta</button>`;
+  return `<div class="view narrow">
+  <header class="top"><div><p class="eyebrow">${ico('chat')}conversa</p><h1 class="title">pergunte <em>sem medo</em></h1></div></header>
+  <div class="engine" role="group" aria-label="Com quem conversar">
+    ${['gemini','claude'].map(en => `<button class="eng" data-engine="${en}" aria-pressed="${S.engine === en}"><span class="mk">${ico('spark')}</span><span><b>${aiName(en)}</b><small><i class="${engineReady(en) ? 'on' : ''}"></i>${status(en)}</small></span></button>`).join('')}
+  </div>
+  ${S.engine === 'gemini' && !geminiReady() ? `<div class="banner" style="cursor:default"><span class="ic">${ico('key')}</span><span>${IN_CLAUDE ? 'Aqui dentro do Claude a conversa é com o Claude. O Gemini responde no app publicado no seu endereço, com a sua chave.' : 'Pra conversar com o Gemini aqui, cole sua chave gratuita em <b>caminhada › ajustes</b>.'}</span></div>` : ''}
+  <div class="ctxsel" role="group" aria-label="Sobre o que conversar">${ctxs.map(c => `<button data-ctx="${c.id}" aria-pressed="${S.chatCtx === c.id}">${esc(c.t)}</button>`).join('')}</div>
+  ${turns.length || S.busy.chat ? `<div class="chat">${msgs}</div>` : `<section class="card glass">
+      <p class="prose">Pergunte o que quiser sobre ${esc(chatAbout())}, do jeito que vier. Não existe pergunta boba. A conversa fica guardada aqui.</p>
+      <div class="chips">${sugest.map(s => `<button class="chip" data-chip="${esc(s)}">${esc(s)}</button>`).join('')}</div></section>`}
+  <form class="ask composer" data-form="ask-chat"><label for="ask-chat" class="sr">Sua pergunta</label>
+    <input id="ask-chat" type="text" autocomplete="off" placeholder="escreva sua pergunta…" ${S.busy.chat ? 'disabled' : ''}>
+    <button class="send" aria-label="Enviar" ${S.busy.chat ? 'disabled' : ''}>${ico('send')}</button></form>
+  </div>`;
+}
+
+/* caminhada: planos, diário, palavras, ajustes */
+function viewCaminhada(){
+  if (S.form) return viewNovo();
+  const tabs = [['planos','planos'],['diario','diário'],['palavras','palavras'],['ajustes','ajustes']];
+  const body = { planos:cPlanos, diario:cDiario, palavras:cPalavras, ajustes:cAjustes }[S.ctab]();
+  return `<div class="view narrow">
+  <header class="top"><div><p class="eyebrow">${ico('path')}caminhada</p><h1 class="title">sua <em>caminhada</em></h1></div></header>
+  <div class="seg" role="group" aria-label="Seções">${tabs.map(([k, t]) => `<button data-ctab="${k}" aria-pressed="${S.ctab === k}">${t}</button>`).join('')}</div>
+  ${body}${localNote()}</div>`;
+}
+function cPlanos(){
+  const p = plan(), pr = progresso(p), t = todayIdx(p), L = lidosOf(p), st = streak(), last = p.days[p.days.length-1];
+  const falta = p.meta ? Math.max(0, diffDays(new Date(), parseISO(p.meta.data))) : Math.max(0, diffDays(new Date(), last.date));
+  let secs = [], prev = null;
+  p.days.forEach(d => { const b = chOf(d.chs[0]).book; if (b !== prev) { secs.push({ book:b, days:[] }); prev = b; } secs[secs.length-1].days.push(d); });
+  let tiles = '', metaShown = false;
+  for (const s of secs) {
+    if (p.meta && !metaShown && s.days[0].i >= p.meta.dia) { tiles += `<p class="sep">depois do ${esc(p.meta.nome)}</p>`; metaShown = true; }
+    tiles += `<div class="book"><h3>${esc(s.book.n)} <span>${fmtShort(s.days[0].date)} a ${fmtShort(s.days[s.days.length-1].date)}</span></h3>
+      <div class="tiles">${s.days.map(d => { const r = !!L[d.key], ps = parts(d.chs);
+        return `<button class="tile ${r ? 'read' : ''} ${d.i === t ? 'today' : ''} ${d.i > t ? 'future' : ''}" data-open="${d.i}" aria-label="${esc(refName(d))}, ${esc(fmtLong(d.date))}${r ? ', lido' : ''}"><b>${num(ps[0])}${ps.length > 1 ? '+' : ''}</b><small>${fmtShort(d.date)}</small></button>`; }).join('')}</div></div>`;
+    if (p.id === 'natal' && s.book.c === 'ACT') tiles += `<p class="hint">Sugestão do Igor: terminar João no Natal e seguir com Atos dos Apóstolos.</p>`;
+  }
+  const set = capsLidos(), n = set.size, nAT = [...set].filter(k => !chOf(k).book.nt).length;
+  const cell = b => { let r = 0; for (let i = 1; i <= b.caps; i++) if (set.has(b.c + '.' + i)) r++; const pct = Math.round(r / b.caps * 100);
+    return `<div class="bk ${pct === 100 ? 'full' : ''}" title="${esc(b.n)}: ${r} de ${b.caps}"><span>${esc(b.ab)}</span><i><b style="width:${pct}%"></b></i></div>`; };
+  return `
+  <section class="card rose">
+    <div class="card-h"><span class="label">plano ativo</span><span class="pill">${fmtShort(p.start)} a ${fmtShort(last.date)}</span></div>
+    <div><p style="margin:0;font-size:22px;font-weight:400;line-height:1.25">${esc(p.nome)}</p>${p.sub ? `<p class="sub" style="margin-top:2px">${esc(p.sub)}</p>` : ''}</div>
+    <div class="bar"><i style="width:${Math.max(2, pr.pct)}%"></i></div>
+    <div class="stat">
+      <div><b>${st}</b><span>${st === 1 ? 'dia seguido' : 'dias seguidos'}</span></div>
+      <div><b>${pr.n}</b><span>de ${pr.total} leituras</span></div>
+      <div><b>${pr.atras.length}</b><span>pra colocar em dia</span></div>
+      <div><b>${falta}</b><span>${p.meta ? 'dias pro ' + esc(p.meta.nome) : 'dias pro fim'}</span></div>
+    </div>
+    ${aiEngine() ? (S.busy.semana ? thinking('preparando as explicações da semana') : `<button class="btn ghost" data-act="semana">${ico('spark')}deixar as explicações da semana prontas</button>`) : ''}
+  </section>
+  <section class="card">
+    <div class="card-h"><span class="label muted">seus planos</span><span class="small">toque pra trocar</span></div>
+    <div class="plans">${allPlans().map(x => { const q = progresso(x);
+      return `<button class="plan-pick ${x.id === S.ativo ? 'on' : ''}" data-plan="${esc(x.id)}" aria-pressed="${x.id === S.ativo}"><b>${esc(x.nome)}</b><span class="small">${q.n} de ${q.total} leituras</span><div class="bar"><i style="width:${Math.max(2, q.pct)}%"></i></div></button>`; }).join('')}
+      <button class="plan-pick add" data-act="novo">${ico('plus', 'lg')}<span>criar plano</span><span class="small">livros e prazo do seu jeito</span></button></div>
+  </section>
+  <details class="card fold" ${p.days.length <= 70 ? 'open' : ''}><summary><span class="label muted">${ico('cal')}todas as leituras</span><span class="chev">${ico('right')}</span></summary>
+    <div class="stack" style="gap:16px">${tiles}</div>
+    ${p.fixo ? '' : (S.confirmDel ? `<button class="danger" data-act="del-ok">toque de novo para apagar "${esc(p.nome)}" de vez</button>` : `<button class="danger" data-act="del">apagar este plano</button>`)}
+  </details>
+  <section class="card">
+    <div class="card-h"><span class="label muted">sua Bíblia</span><span class="small">${(Math.floor(n / TOTAL_CAPS * 1000) / 10).toLocaleString('pt-BR')}%</span></div>
+    <div><span style="font-size:32px;font-weight:300;line-height:1;font-variant-numeric:tabular-nums">${fmtN(n)}</span> <span class="small">de ${fmtN(TOTAL_CAPS)} capítulos</span></div>
+    <div class="bar"><i style="width:${Math.max(1, n / TOTAL_CAPS * 100)}%"></i></div>
+    <p class="hint">Antigo Testamento: ${nAT} de 929 · Novo Testamento: ${n - nAT} de 260</p>
+    <p class="sep">Antigo Testamento</p><div class="bks">${BIBLIA.filter(b => !b.nt).map(cell).join('')}</div>
+    <p class="sep">Novo Testamento</p><div class="bks">${BIBLIA.filter(b => b.nt).map(cell).join('')}</div>
+  </section>
+  <section class="card glass">
+    <div class="card-h"><span class="label">${ico('leaf')}estudos de 7 dias</span></div>
+    <p class="hint" style="margin-top:-8px">Um tema por semana, um capítulo por dia. Fica junto dos seus planos.</p>
+    <div class="list">${ESTUDOS.map(e => { const ex = S.planos['estudo-' + e.id];
+      return `<button class="li" data-estudo="${e.id}"><span class="num">${ico('leaf')}</span><span class="lt">${esc(e.nome)}<small>${esc(e.sub)}</small></span><span class="small" style="color:var(--rose)">${ex ? 'abrir' : 'começar'}</span></button>`; }).join('')}</div>
+  </section>`;
+}
+function cDiario(){
+  const list = Object.entries(S.notas).filter(([, x]) => x && x.texto).sort((a, b) => String(b[1].quando).localeCompare(String(a[1].quando)));
+  const find = k => { for (const p of allPlans()) { const q = p.days.find(x => x.key === k); if (q) return { p, q }; } return null; };
+  if (!list.length) return `<div class="empty">${ico('pen')}<span>Suas reflexões aparecem aqui. Escreva a primeira no passo "refletir" da leitura de hoje.</span><button class="btn soft" data-tab="hoje" style="max-width:260px">ir pra leitura de hoje</button></div>`;
+  return `<div class="stack">${list.map(([k, x]) => { const f = find(k);
+    return `<button class="entry" ${f ? `data-open-note="${esc(f.p.id)}|${f.q.i}"` : ''}><span class="em"><b>${esc(f ? refName(f.q) : (x.nome || k))}</b><span>${esc(new Date(x.quando).toLocaleDateString('pt-BR', { day:'numeric', month:'short' }))}</span></span><p>${esc(x.texto)}</p></button>`; }).join('')}</div>`;
+}
+function cPalavras(){
+  const list = Object.values(S.vocab).sort((a, b) => String(b.quando).localeCompare(String(a.quando)));
+  if (!list.length) return `<div class="empty">${ico('star')}<span>As palavras que você guardar com a estrela, no passo "palavras e versões", aparecem aqui pra rever quando quiser.</span></div>`;
+  return `<section class="card"><div class="card-h"><span class="label muted">suas palavras</span><span class="small">${list.length}</span></div><div class="gloss">${list.map(w => `<div class="g"><div><span class="t">${esc(w.palavra)}</span><span class="s">${esc(w.sentido)}</span><span class="r">${esc(w.ref || '')}</span></div>
+    <button class="star on" data-unstar="${esc(w.palavra.toLowerCase())}" aria-label="Tirar ${esc(w.palavra)} das suas palavras">${ico('star')}</button></div>`).join('')}</div></section>`;
+}
+function cAjustes(){
+  return `<section class="card">
+    <div class="card-h"><span class="label">${ico('key')}Gemini</span><span class="small">${geminiReady() ? 'conectado' : IN_CLAUDE ? 'no app publicado' : S.gkey ? 'chave salva' : 'sem chave'}</span></div>
+    <p class="hint" style="margin-top:-8px">A chave fica guardada só neste aparelho. Pra gerar uma, entre em <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> com sua conta Google, toque em "Create API key" e cole aqui. O nível gratuito tem limite de perguntas por minuto e por dia.</p>
+    <label class="field"><span>sua chave</span><input class="inp" id="g-key" type="password" autocomplete="off" placeholder="cole a chave aqui" value="${esc(S.gkey)}"></label>
+    <label class="field"><span>modelo</span><input class="inp" id="g-model" type="text" autocomplete="off" value="${esc(S.gmodel)}"></label>
+    <div class="two"><button class="btn primary" data-act="g-save">${ico('check')}salvar</button><button class="btn ghost" data-act="g-test" ${S.busy.teste ? 'disabled' : ''}>${S.busy.teste ? 'testando…' : 'testar conexão'}</button></div>
+    ${IN_CLAUDE ? `<p class="hint">Aqui dentro do Claude a página não consegue falar com o Google, então quem responde é o Claude. A chave vale quando o app estiver publicado no seu endereço.</p>` : ''}
+  </section>
+  <section class="card">
+    <div class="card-h"><span class="label muted">quem responde primeiro</span></div>
+    <div class="seg">${['gemini','claude'].map(en => `<button data-engine="${en}" aria-pressed="${S.engine === en}">${aiName(en)}</button>`).join('')}</div>
+    <p class="hint">Se o escolhido não estiver disponível, o app usa o outro.</p>
+  </section>`;
+}
+function viewNovo(){
+  const f = S.form, opts = (list, label) => `<optgroup label="${label}">${list.map(b => `<option value="${b.c}">${esc(b.n)}</option>`).join('')}</optgroup>`;
+  return `<div class="view narrow">
+  <button class="linkbtn" data-act="cancel-novo" style="padding:0">${ico('x')}cancelar</button>
+  <header class="top"><div><p class="eyebrow">${ico('cal')}planos</p><h1 class="title">novo <em>plano</em></h1></div></header>
+  <section class="card glass">
+    <label class="field"><span>nome do plano</span><input class="inp" id="f-nome" type="text" placeholder="ex.: até a Páscoa" value="${esc(f.nome)}"></label>
+    <div class="field"><span>o que ler</span>
+      <div class="chips">${PRESETS.map(x => `<button class="chip" style="text-align:center" data-preset="${x.id}">${esc(x.nome)}</button>`).join('')}</div>
+      <div class="row-add"><label for="f-livro" class="sr">Livro</label><select class="inp" id="f-livro">${opts(BIBLIA.filter(b => !b.nt), 'Antigo Testamento')}${opts(BIBLIA.filter(b => b.nt), 'Novo Testamento')}</select>
+        <button class="btn soft" data-act="add-book">${ico('plus')}somar</button></div>
+      ${f.livros.length ? `<div class="picked">${f.livros.length > 12 ? `<button class="bchip" data-act="clear-books">${f.livros.length} livros ${ico('x')}</button>` : f.livros.map(c => `<button class="bchip" data-rm-book="${c}" aria-label="Tirar ${esc(BK[c].n)}">${esc(BK[c].n)} ${ico('x')}</button>`).join('')}</div>` : `<p class="hint">Escolha um atalho ou some livros na ordem em que quer ler.</p>`}
+    </div>
+    <div class="form-grid">
+      <label class="field"><span>começar em</span><input class="inp" id="f-inicio" type="date" value="${esc(f.inicio)}"></label>
+      <div class="field"><span>ritmo</span><div class="seg"><button data-modo="data" aria-pressed="${f.modo === 'data'}">até uma data</button><button data-modo="ritmo" aria-pressed="${f.modo === 'ritmo'}">por dia</button></div></div>
+    </div>
+    ${f.modo === 'data' ? `<label class="field"><span>terminar em</span><input class="inp" id="f-fim" type="date" value="${esc(f.fim)}"></label>`
+      : `<label class="field"><span>capítulos por dia</span><input class="inp" id="f-pordia" type="number" min="1" max="30" inputmode="numeric" value="${f.porDia}"></label>`}
+    <div class="preview" id="f-prev">${previewTxt()}</div>
+    <button class="btn primary big" data-act="criar">${ico('check')}criar plano</button>
+  </section></div>`;
+}
+function formDias(){
+  const f = S.form, C = bookChapters(f.livros).length; if (!C) return null;
+  const n = f.modo === 'data' ? diffDays(parseISO(f.inicio), parseISO(f.fim)) + 1 : Math.ceil(C / Math.max(1, +f.porDia || 1));
+  if (!(n > 0)) return { C, err:'A data de término precisa vir depois do começo.' };
+  const D = Math.min(n, C); return { C, D, fim:addDays(parseISO(f.inicio), D - 1) };
+}
+function previewTxt(){
+  const r = formDias(); if (!r) return 'Escolha pelo menos um livro.'; if (r.err) return esc(r.err);
+  const per = r.C / r.D, perTxt = per <= 1.05 ? '1 capítulo por dia' : `cerca de ${per < 10 ? per.toFixed(1).replace('.', ',') : Math.round(per)} capítulos por dia`;
+  return `<b>${fmtN(r.C)} capítulos em ${fmtN(r.D)} dias</b> · ${perTxt} · termina em ${esc(fmtDia(r.fim))}${per > 5 ? '. É bastante por dia; se quiser mais leve, estique a data.' : '.'}`;
+}
+const novoForm = () => ({ nome:'', livros:[], inicio:iso(new Date()), modo:'data', fim:'2027-03-28', porDia:1 });
+const localNote = () => S.db ? '' : `<p class="note-local">O progresso fica salvo neste aparelho.</p>`;
+
+/* ---------- render e eventos ---------- */
+const VIEWS = { hoje:viewHoje, aprender:viewAprender, conversa:viewConversa, caminhada:viewCaminhada };
+/* deixa tudo pronto na tela sem precisar pedir: explicação ao abrir a leitura, palavras e versões ao abrir o passo 3 */
+const tried = new Set();
+function auto(){
+  if (S.tab !== 'hoje' || !aiEngine()) return;
+  const d = cur(), c = capOf(d.key);
+  const run = (k, fn) => { if (tried.has(k + d.key)) return; tried.add(k + d.key); setTimeout(() => fn(d), 50); };
+  if (!c.resumo) run('exp', explicar);
+  if (S.open === 'palavras') { if (S.step3 === 'palavras' && !c.dificeis) run('dif', dificeis); if (S.step3 === 'versoes' && !c.palavras) run('cmp', comparar); }
+}
+function render(){
+  document.getElementById('view').innerHTML = VIEWS[S.tab]();
+  auto();
+  document.querySelectorAll('.tab').forEach(t => { if (t.dataset.tab === S.tab) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
+}
+function go(tab){ S.tab = tab; S.confirmDel = false; try { history.replaceState(null, '', '#' + tab); } catch {} render(); window.scrollTo({ top:0 }); }
+function readHash(){ const h = (location.hash || '').slice(1); if (VIEWS[h]) S.tab = h; }
+function setAtivo(id){ S.ativo = id; S.sel = null; S.open = null; S.confirmDel = false; savePerfil(); }
+let tt;
+function toast(msg){ const t = document.getElementById('toast'); t.innerHTML = ico('check') + esc(msg); t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 2800); }
+function marcaPasso(k, on = true){ const d = cur(); const ps = S.passos[d.key] = Object.assign({}, S.passos[d.key]); if (on) ps[k] = 1; else delete ps[k];
+  const order = ['ler','palavras','refletir']; const nx = order.find(x => !ps[x]); S.open = nx || ''; savePerfil(); }
+
+function marcar(){
+  const p = plan(), d = cur(), L = lidosOf(p);
+  if (L[d.key]) delete L[d.key]; else L[d.key] = iso(new Date());
+  const agora = !!L[d.key];
+  if (agora) S.open = '';
+  render(); p.id === 'natal' ? savePerfil() : savePlano(p);
+  if (!agora) return;
+  const last = chOf(d.chs[d.chs.length-1]), pr = progresso(p);
+  if (pr.n === pr.total) toast(p.meta ? `tudo lido até o ${p.meta.nome}` : `plano "${p.nome}" concluído`);
+  else if (last.cap === last.book.caps) toast(`você terminou ${last.book.n}`);
+  else toast(d.i === todayIdx(p) ? 'leitura de hoje concluída' : refName(d) + ' concluído');
+}
+function iniciarEstudo(id){
+  const e = ESTUDOS.find(x => x.id === id); if (!e) return;
+  if (S.planos['estudo-' + id]) { setAtivo('estudo-' + id); return go('hoje'); }
+  const def = { id:'estudo-' + id, nome:e.nome, sub:e.sub, inicio:iso(new Date()), dias:e.dias.slice(), lidos:{}, criado:new Date().toISOString(), tipo:'estudo' };
+  S.planos[def.id] = expand(def); savePlano(def); setAtivo(def.id); toast('estudo começou hoje'); go('hoje');
+}
+function criarPlano(){
+  const f = S.form, r = formDias(); if (!r) return toast('escolha pelo menos um livro'); if (r.err) return toast('confira as datas');
+  const id = 'p' + Date.now().toString(36), nomes = f.livros.map(c => BK[c].n);
+  const sub = f.livros.length > 3 ? `${nomes.slice(0, 3).join(', ')} e mais ${f.livros.length - 3}` : nomes.join(', ');
+  const def = { id, nome:f.nome.trim() || 'meu plano', sub, inicio:f.inicio, dias:buildDias(f.livros, r.D), lidos:{}, criado:new Date().toISOString(), tipo:'plano' };
+  S.planos[id] = expand(def); savePlano(def); setAtivo(id); S.form = null; S.ctab = 'planos'; toast('plano criado'); go('hoje');
+}
+const aulaPrompt = a => `Acabei de fazer a aula "${a.t}". Me explica isso um pouco mais a fundo, com um exemplo, e me sugere um próximo passo de leitura.`;
+
+document.addEventListener('click', async e => {
+  const rd = e.target.closest('[data-read]'); if (rd) { marcaPasso('ler'); setTimeout(render, 400); return; }
+  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes]');
+  if (!el) return;
+  const ds = el.dataset;
+  if (ds.tab) { if (ds.tab === 'aprender') S.aula = null; if (ds.tab === 'caminhada') S.form = null; return go(ds.tab); }
+  if (ds.goAjustes) { S.ctab = 'ajustes'; S.form = null; return go('caminhada'); }
+  if (ds.step) { S.open = S.open === ds.step ? '' : ds.step; return render(); }
+  if (ds.done) { marcaPasso(ds.done); return render(); }
+  if (ds.s3) { S.step3 = ds.s3; return render(); }
+  if (ds.ctx) { S.chatCtx = ds.ctx; return render(); }
+  if (ds.aula) { S.aula = ds.aula; return go('aprender'); }
+  if (ds.ctab) { S.ctab = ds.ctab; return render(); }
+  if (ds.engine) { S.engine = ds.engine; saveIA(); return render(); }
+  if (ds.sel) { S.sel = +ds.sel; S.selPlan = plan().id; S.open = null; return S.tab !== 'hoje' ? go('hoje') : render(); }
+  if (ds.open) { S.sel = +ds.open; S.selPlan = plan().id; S.open = null; return go('hoje'); }
+  if (ds.openNote) { const [pid, i] = ds.openNote.split('|'); if (pid !== S.ativo) setAtivo(pid); S.sel = +i; S.selPlan = pid; S.open = 'refletir'; return go('hoje'); }
+  if (ds.chip) return perguntar(ds.chip);
+  if (ds.plan) { if (ds.plan !== S.ativo) { setAtivo(ds.plan); toast('plano ativo: ' + planById(ds.plan).nome); } return render(); }
+  if (ds.estudo) return iniciarEstudo(ds.estudo);
+  if (ds.preset) { const x = PRESETS.find(y => y.id === ds.preset); S.form.livros = x.livros.slice(); if (!S.form.nome) S.form.nome = x.id === 'toda' ? 'Bíblia em um ano' : x.nome;
+    if (x.id === 'toda') { S.form.modo = 'data'; S.form.fim = iso(addDays(parseISO(S.form.inicio), 364)); } return render(); }
+  if (ds.rmBook) { S.form.livros = S.form.livros.filter(c => c !== ds.rmBook); return render(); }
+  if (ds.modo) { S.form.modo = ds.modo; return render(); }
+  if (ds.star) { const d = cur(), w = (capOf(d.key).dificeis || [])[+ds.star]; if (!w) return; const k = w.palavra.toLowerCase();
+    if (S.vocab[k]) delete S.vocab[k]; else S.vocab[k] = { palavra:w.palavra, sentido:w.sentido, ref:refName(d), quando:new Date().toISOString() };
+    render(); saveVocab(); if (S.vocab[k]) toast('palavra guardada'); return; }
+  if (ds.unstar) { delete S.vocab[ds.unstar]; render(); return saveVocab(); }
+  const d = cur();
+  switch (ds.act) {
+    case 'toggle': marcar(); break;
+    case 'explain': explicar(d); break;
+    case 'compare': comparar(d); break;
+    case 'dificeis': dificeis(d); break;
+    case 'semana': prepararSemana(); break;
+    case 'stop': S.ctl && S.ctl.abort(); break;
+    case 'trilha': S.aula = null; go('aprender'); break;
+    case 'aula-ok': { const id = ds.id; if (S.aulas[id]) delete S.aulas[id]; else S.aulas[id] = iso(new Date()); const ok = !!S.aulas[id]; savePerfil(); render();
+      if (ok) { const n = AULAS.filter(x => S.aulas[x.id]).length; toast(n === AULAS.length ? 'trilha completa' : 'aula concluída'); } break; }
+    case 'aula-ai': perguntar(aulaPrompt(AULAS.find(x => x.id === ds.id)), ds.id); break;
+    case 'novo': S.form = novoForm(); render(); window.scrollTo({ top:0 }); break;
+    case 'cancel-novo': S.form = null; render(); break;
+    case 'add-book': { const c = document.getElementById('f-livro').value; if (c && !S.form.livros.includes(c)) S.form.livros.push(c); render(); break; }
+    case 'clear-books': S.form.livros = []; render(); break;
+    case 'criar': criarPlano(); break;
+    case 'del': S.confirmDel = true; render(); break;
+    case 'del-ok': { await delPlano(plan().id); S.confirmDel = false; toast('plano apagado'); render(); break; }
+    case 'save-note': { const v = document.getElementById('nota').value;
+      if (await saveNota(d.key, v, refName(d))) { delete S.draft[d.key]; if (v.trim()) marcaPasso('refletir'); toast(v.trim() ? 'guardado no diário' : 'reflexão apagada'); render(); } break; }
+    case 'ask-note': { const v = document.getElementById('nota').value.trim(); perguntar(v ? 'Escrevi isso sobre a leitura, me ajuda a pensar mais: ' + v : 'Me ajuda a refletir sobre essa leitura?', 'leitura'); break; }
+    case 'g-save': S.gkey = document.getElementById('g-key').value.trim(); S.gmodel = document.getElementById('g-model').value.trim() || 'gemini-2.5-flash'; if (S.gkey) S.engine = 'gemini'; saveIA(); toast(S.gkey ? 'chave salva neste aparelho' : 'chave apagada'); render(); break;
+    case 'g-test': S.gkey = document.getElementById('g-key').value.trim(); S.gmodel = document.getElementById('g-model').value.trim() || 'gemini-2.5-flash'; saveIA(); testarGemini(); break;
+  }
+});
+document.addEventListener('input', e => {
+  const id = e.target.id;
+  if (id === 'nota') S.draft[cur().key] = e.target.value;
+  if (S.form && id && id.startsWith('f-')) { const map = { 'f-nome':'nome', 'f-inicio':'inicio', 'f-fim':'fim', 'f-pordia':'porDia' };
+    if (map[id]) S.form[map[id]] = e.target.value; const pv = document.getElementById('f-prev'); if (pv) pv.innerHTML = previewTxt(); }
+});
+document.addEventListener('submit', e => {
+  e.preventDefault();
+  const input = e.target.querySelector('input'); if (!input) return;
+  const v = input.value; if (!v.trim()) return; input.value = ''; input.blur();
+  const f = e.target.dataset.form;
+  if (f === 'word') return palavraLivre(cur(), v);
+  if (f === 'ask-home') return perguntar(v, 'leitura');
+  perguntar(v);
+});
+window.addEventListener('hashchange', () => { readHash(); render(); });
+boot();
+})();
+</script>
+
+</body>
+</html>
