@@ -335,7 +335,12 @@ body.w-on .shell{padding-left:max(16px, env(safe-area-inset-left, 0px))}
 .w-sub{margin:0;color:var(--muted);font-size:14px;line-height:1.65;max-width:380px}
 .w-btn{margin-top:14px;max-width:340px}
 .w-note{margin:0;font-size:12px;color:var(--muted)}
-.w-skip{align-self:center;margin-top:6px}
+.w-g{background:var(--surface)}
+.w-or{display:flex;align-items:center;gap:10px;width:100%;max-width:340px;margin:6px 0 0;font-size:11.5px;color:var(--muted)}
+.w-or::before,.w-or::after{content:"";flex:1;height:1px;background:var(--line)}
+.w-form{display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px}
+.w-form .w-btn{margin-top:2px;max-width:none}
+.w-err{margin:0;font-size:12.5px;color:var(--rose-ink);font-weight:500}
 /* aviso de versão nova */
 .upd{position:fixed;z-index:35;top:calc(74px + env(safe-area-inset-top, 0px));left:0;right:0;margin:0 auto;width:max-content;max-width:calc(100vw - 32px);display:flex;align-items:center;gap:10px;
   background:var(--rosa);color:var(--on-accent);border:0;border-radius:999px;padding:8px 8px 8px 16px;font-size:13px;box-shadow:0 14px 30px -12px rgba(var(--ink-rgb),.5);animation:in .4s ease both;white-space:nowrap}
@@ -754,7 +759,7 @@ const S = {
   sel:null, selPlan:null, open:null, aula:null, ctab:'planos', chatCtx:'leitura', form:null, confirmDel:false, step3:'palavras',
   engine: IN_CLAUDE ? 'claude' : 'gemini', gkey:'', gmodel:'gemini-3-flash-preview', hora:'07:30',
   db:null, sample:null, busy:{}, draft:{}, pending:false, ctl:null,
-  ui:{ nome:'', foto:'', fotoOrig:'', ajuste:null, paleta:'dusty', tema:'auto', simbolo:'1' }, edit:null, sync:{ st:'ok' }
+  wmode:'entrar', wf:{}, werr:'', ui:{ nome:'', foto:'', fotoOrig:'', ajuste:null, paleta:'dusty', tema:'auto', simbolo:'1' }, edit:null, sync:{ st:'ok' }
 };
 const nome = () => (S.ui.nome || (S.user && S.user.displayName ? S.user.displayName.split(' ')[0] : '')).trim();
 const fotoURL = () => S.ui.foto || (!S.ui.semFoto && S.user && S.user.photoURL) || '';
@@ -1326,18 +1331,48 @@ function trilhaCard(){
       <div><p class="small" style="margin:0">nível ${a.nv} · ${esc(nv.nome)}</p><p style="margin:2px 0 0;font-size:17px;font-weight:400;line-height:1.35">${esc(a.t)}</p></div>
       <button class="btn cocoa" data-aula="${a.id}">${feitas ? 'continuar a trilha' : 'começar do zero'}</button></section>`;
 }
-const pedeEntrada = () => !IN_CLAUDE && FB_CONFIG && !S.user && S.authReady && !LS.get('semConta', false);
+const pedeEntrada = () => !IN_CLAUDE && FB_CONFIG && !S.user && S.authReady;
 function viewEntrada(){
-  const erro = S.fb && S.fb.erro;
+  const erro = S.fb && S.fb.erro, ok = S.fb && S.fb.pronto, criar = S.wmode === 'criar', busy = S.busy.login;
   return `<div class="welcome">
     <div class="w-mark">${SYMT()}</div>
     <p class="w-word">lâmpada<i>.</i></p>
     <h1 class="title w-title">a Bíblia, um dia de cada <em>vez</em></h1>
     <p class="w-sub">Leitura guiada do básico ao profundo, com explicações simples, diário e conversa. Seu progresso fica salvo em todos os aparelhos.</p>
-    <button class="btn primary big w-btn" data-act="entrar" ${S.fb && S.fb.pronto ? '' : 'disabled'}>${GLOGO}entrar com o Google</button>
-    <p class="w-note">${erro ? 'Não deu pra carregar o login agora. Confira a internet e abra de novo.' : 'Primeira vez? É só entrar: a sua conta é criada na hora, de graça.'}</p>
-    <button class="linkbtn muted w-skip" data-act="sem-conta">usar sem conta, só neste aparelho</button>
+    <button class="btn ghost w-btn w-g" data-act="entrar" ${ok && !busy ? '' : 'disabled'}>${GLOGO}entrar com o Google</button>
+    <p class="w-or"><span>ou com e-mail</span></p>
+    <form class="w-form" data-form="email" novalidate>
+      ${criar ? `<label class="field"><span class="sr">seu nome</span><input class="inp" id="w-nome" type="text" autocomplete="given-name" placeholder="seu nome" value="${esc(S.wf.nome || '')}"></label>` : ''}
+      <label class="field"><span class="sr">e-mail</span><input class="inp" id="w-email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" placeholder="seu e-mail" value="${esc(S.wf.email || '')}"></label>
+      <label class="field"><span class="sr">senha</span><input class="inp" id="w-senha" type="password" autocomplete="${criar ? 'new-password' : 'current-password'}" placeholder="${criar ? 'crie uma senha (6 ou mais)' : 'sua senha'}"></label>
+      <button class="btn primary w-btn" ${ok && !busy ? '' : 'disabled'}>${busy ? 'um instante…' : criar ? 'criar conta' : 'entrar'}</button>
+    </form>
+    ${S.werr ? `<p class="w-err">${esc(S.werr)}</p>` : ''}
+    <p class="w-note">${erro ? 'Não deu pra carregar o login agora. Confira a internet e abra de novo.' : criar ? 'Já tem conta? <button class="linkbtn" data-act="w-entrar" style="display:inline;padding:0">entrar</button>' : 'Primeira vez? <button class="linkbtn" data-act="w-criar" style="display:inline;padding:0">criar conta</button> · <button class="linkbtn muted" data-act="w-senha" style="display:inline;padding:0">esqueci a senha</button>'}</p>
   </div>`;
+}
+const loginMsg = e => ({ 'auth/invalid-credential':'e-mail ou senha não conferem', 'auth/wrong-password':'e-mail ou senha não conferem', 'auth/user-not-found':'não tem conta com esse e-mail: toque em criar conta',
+  'auth/invalid-login-credentials':'e-mail ou senha não conferem', 'auth/email-already-in-use':'esse e-mail já tem conta: toque em entrar', 'auth/weak-password':'a senha precisa ter pelo menos 6 caracteres',
+  'auth/invalid-email':'confira o e-mail', 'auth/missing-password':'falta a senha', 'auth/operation-not-allowed':'o login por e-mail ainda não foi ligado no Firebase',
+  'auth/too-many-requests':'muitas tentativas: espere um pouco e tente de novo', 'auth/network-request-failed':'sem internet agora' }[e && e.code] || 'não deu certo agora, tente de novo');
+async function loginEmail(){
+  const g = id => (document.getElementById(id) || {}).value || '';
+  const email = g('w-email').trim(), senha = g('w-senha'), nm = g('w-nome').trim(), criar = S.wmode === 'criar';
+  S.wf = { email, nome:nm }; S.werr = '';
+  if (!email || !senha) { S.werr = 'preencha e-mail e senha'; return render(); }
+  if (criar && !nm) { S.werr = 'diga como quer ser chamado'; return render(); }
+  S.busy.login = true; render();
+  try {
+    if (criar) { const r = await S.fb.auth.createUserWithEmailAndPassword(email, senha); S.ui.nome = nm; LS.set('ui', S.ui); try { await r.user.updateProfile({ displayName:nm }); } catch {} toast('conta criada'); }
+    else { await S.fb.auth.signInWithEmailAndPassword(email, senha); toast('bem-vindo de volta'); }
+  } catch (e) { S.werr = loginMsg(e); }
+  S.busy.login = false; render();
+}
+async function esqueciSenha(){
+  const email = ((document.getElementById('w-email') || {}).value || '').trim(); S.wf.email = email;
+  if (!email) { S.werr = 'escreva seu e-mail acima e toque de novo em "esqueci a senha"'; return render(); }
+  try { await S.fb.auth.sendPasswordResetEmail(email); S.werr = ''; toast('mandamos um e-mail pra trocar a senha'); } catch (e) { S.werr = loginMsg(e); }
+  render();
 }
 const GLOGO = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style="flex:none;background:#fff;border-radius:50%;padding:2px"><path fill="#4285F4" d="M21.6 12.2c0-.7-.1-1.3-.2-1.9H12v3.6h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.2z"/><path fill="#34A853" d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22z"/><path fill="#FBBC05" d="M6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 0 0 0 9.2z"/><path fill="#EA4335" d="M12 6c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.4L6.4 10C7.2 7.7 9.4 6 12 6z"/></svg>';
 function banner(){
@@ -1721,7 +1756,9 @@ document.addEventListener('click', async e => {
     case 'clear-books': S.form.livros = []; render(); break;
     case 'criar': criarPlano(); break;
     case 'ics-plano': agendaPlano(); break;
-    case 'sem-conta': LS.set('semConta', true); render(); break;
+    case 'w-criar': S.wmode = 'criar'; S.werr = ''; render(); break;
+    case 'w-entrar': S.wmode = 'entrar'; S.werr = ''; render(); break;
+    case 'w-senha': esqueciSenha(); break;
     case 'atualizar': location.replace(location.pathname + '?v=' + Date.now() + location.hash); break;
     case 'tema-toggle': S.ui.tema = escuro() ? 'claro' : 'escuro'; saveUI(); render(); break;
     case 'foto-ajustar': ajustarFoto(); break;
@@ -1754,9 +1791,11 @@ document.addEventListener('change', e => {
 });
 document.addEventListener('submit', e => {
   e.preventDefault();
+  if (e.target.dataset.form === 'email') return loginEmail();
   const input = e.target.querySelector('input'); if (!input) return;
   const v = input.value; if (!v.trim()) return; input.value = ''; input.blur();
   const f = e.target.dataset.form;
+  if (f === 'email') return;
   if (f === 'word') return palavraLivre(cur(), v);
   perguntar(v);
 });
