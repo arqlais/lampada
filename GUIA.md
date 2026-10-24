@@ -65,24 +65,22 @@ Esses dados do `config.js` podem ficar públicos: quem protege a sua conta são 
 
 ## 2. Gemini (o chat e as explicações)
 
-### 2.1 Pegar a chave
+### 2.1 Pegar uma chave 100% grátis
+O segredo é criar a chave num **projeto sem faturamento**. Sem conta de faturamento ligada, o Google **não tem como cobrar nada**: no máximo chega no limite do dia, e no dia seguinte volta sozinho.
+
 1. Entre em **aistudio.google.com/apikey** com a sua conta Google.
-2. **Create API key** › copie.
-3. No app: **seu perfil › inteligência artificial** › cole em **sua chave** › **salvar** › **testar conexão**.
+2. Clique em **Criar chave de API** e escolha **criar um projeto novo** (nome: `lampada`).
+3. **Não** ligue faturamento nesse projeto. Na lista de chaves, ao lado dela **não** pode aparecer "Minha conta de faturamento".
+4. Copie a chave.
+5. No app: **seu perfil › inteligência artificial** › cole em **sua chave** (salva sozinha) › **testar conexão**.
 
-### 2.2 Escolher o modelo (em ajustes)
-- **Gemini 3 Flash:** rápido, com **uso grátis** (tem limite por dia). Bom para o dia a dia.
-- **Gemini 3.1 Pro:** responde mais a fundo, mas **não tem uso grátis na API**. Ele usa o crédito do seu plano (passo 2.3).
+Atenção: chaves de projetos que já têm faturamento (por exemplo o "Default Gemini Project") **podem cobrar**. Não use essas no Lâmpada.
 
-### 2.3 Usar o crédito do seu Google AI Pro
-A assinatura Google AI Pro (Google One) **não vem com chave de API**. Ela inclui um **crédito mensal no Google Cloud** (Google cita US$ 10 por mês no AI Pro), que paga a API. Para ativar:
-1. Entre em **developers.google.com/program** com a conta que tem o AI Pro e toque em **Participar do programa** (crie o perfil).
-2. No menu **Benefícios**, ache o benefício do **Google AI Pro** (créditos mensais de Cloud) e toque em **Ativar**.
-3. Escolha (ou crie) uma **conta de faturamento** do Google Cloud e confirme. O crédito vale para **uma** conta de faturamento.
-4. No **AI Studio**, abra a página das chaves e confira se o **projeto da sua chave** está ligado a essa conta de faturamento.
-5. No app, escolha **Gemini 3.1 Pro** e toque em **testar conexão**.
+### 2.2 Modelo
+Deixe no **Gemini 3 Flash** (padrão, grátis). O app só oferece modelos com uso grátis.
 
-Atenção: há relatos de que o AI Studio às vezes pede uma **recarga paga** mesmo com o crédito ativo. Se aparecer isso, fique no **3 Flash** (grátis) ou fale com o suporte do Google antes de pagar.
+### 2.3 Se aparecer "limite grátis atingido"
+É só o limite do dia da conta grátis. Espere um pouco ou volte amanhã. Nada é cobrado.
 
 ### 2.4 Chat com o Claude
 No chat (botão redondo no canto), troque para **Claude**: a pergunta abre no **claude.ai** numa aba nova, já com o contexto da leitura. As explicações do dia continuam com o Gemini.
