@@ -24,37 +24,36 @@
    Estilo angelical e limpo: fundo liso com halo de luz creme vindo de cima, seções com linha fina, pílulas, muito respiro.
    Itálico = The Seasons Italic. Resto = Poppins. */
 :root{
-  --taupe:#5E4A48; --rosa:#A0817E; --blush:#F5D5D2; --steel:#B5A79B; --slate:#E2DAC4;
-  --bg:#F0EBD5; --surface:#FBF8EE; --glass:#FBF8EE; --glass-line:#E4DDC6;
-  --ink:var(--taupe); --muted:rgba(94,74,72,.68); --line:#E4DDC6;
-  --rose:var(--rosa); --on-rose:#FBF8EE; --rose-ink:#8E6E6B; --rose-num:var(--rosa);
-  --rose-soft:var(--blush); --soft:rgba(245,213,210,.55); --well:rgba(160,129,126,.32);
-  --cocoa:var(--rosa); --on-cocoa:#F0EBD5; --tile:rgba(160,129,126,.14); --ok:#7E9A90;
-  --shadow:none;
+  /* paleta (a escolhida no perfil sobrescreve estas cores; ver PALETAS no script) */
+  --bg:#F0EBD5; --surface:#FBF8EE; --taupe:#5E4A48; --rosa:#A0817E; --rose-ink:#8E6E6B; --rose-num:var(--rosa); --blush:#F5D5D2;
+  --steel:#B5A79B; --slate:#E4DDC6; --halo:#FFFDF6; --on-accent:#FBF8EE; --lume:#F3D98F;
+  --ink-rgb:94,74,72; --accent-rgb:160,129,126; --soft-rgb:245,213,210; --surface-rgb:251,248,238; --deep-rgb:38,32,31;
+  /* derivadas */
+  --ink:var(--taupe); --line:var(--slate); --glass:var(--surface); --glass-line:var(--slate); --muted:rgba(var(--ink-rgb),.68);
+  --rose:var(--rosa); --on-rose:var(--on-accent); --rose-soft:var(--blush); --soft:rgba(var(--soft-rgb),.55); --well:rgba(var(--accent-rgb),.32);
+  --cocoa:var(--rosa); --on-cocoa:var(--on-accent); --tile:rgba(var(--accent-rgb),.14); --card:rgba(var(--surface-rgb),.78);
+  --hero:rgba(var(--soft-rgb),.5); --ctx:rgba(var(--accent-rgb),.16); --tab-on:var(--blush); --tab-on-ink:var(--taupe); --ok:#7E9A90; --shadow:none;
   --f-sans:'Poppins',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
   --f-serif:'The Seasons',Georgia,serif;
-  --r-card:28px; --card:rgba(251,248,238,.78); --arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23604D53' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.5 6l6 6-6 6'/%3E%3C/svg%3E"); --r-ctl:999px; --pad:20px;
+  --r-card:28px; --r-ctl:999px; --pad:20px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#26201F; --card:rgba(251,248,238,.045); --surface:#322A28; --glass:#322A28; --glass-line:rgba(251,248,238,.06);
-  --ink:#F0EBD5; --muted:var(--steel); --line:rgba(160,129,126,.12);
-  --rose-ink:#D2B3AF; --rose-num:#D2B3AF; --rose:#C4A5A1; --on-rose:var(--taupe);
-  --rose-soft:rgba(245,213,210,.12); --soft:rgba(245,213,210,.08); --well:rgba(160,129,126,.07);
-  --cocoa:var(--blush); --on-cocoa:var(--taupe); --tile:rgba(160,129,126,.08); --ok:#A9C3B6;
-  --arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFDBDA' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.5 6l6 6-6 6'/%3E%3C/svg%3E"); --shadow:none; color-scheme:dark }}
+  --bg:#26201F; --surface:#322A28; --hero:#3A302E; --ink:#F0EBD5; --rose:#C4A5A1; --rose-ink:#D2B3AF; --rose-num:#D2B3AF;
+  --card:rgba(255,255,255,.045); --glass:var(--surface); --glass-line:rgba(255,255,255,.06); --muted:var(--steel); --line:rgba(var(--accent-rgb),.16);
+  --on-rose:var(--bg); --rose-soft:rgba(var(--soft-rgb),.12); --soft:rgba(var(--soft-rgb),.08); --well:rgba(var(--accent-rgb),.07);
+  --cocoa:var(--blush); --on-cocoa:var(--taupe); --tile:rgba(var(--accent-rgb),.1); --ctx:rgba(var(--accent-rgb),.12);
+  --tab-on:rgba(var(--soft-rgb),.14); --tab-on-ink:var(--blush); --ok:#A9C3B6; --shadow:none; color-scheme:dark }}
 :root[data-theme="dark"]{
-  --bg:#26201F; --card:rgba(251,248,238,.045); --surface:#322A28; --glass:#322A28; --glass-line:rgba(251,248,238,.06);
-  --ink:#F0EBD5; --muted:var(--steel); --line:rgba(160,129,126,.12);
-  --rose-ink:#D2B3AF; --rose-num:#D2B3AF; --rose:#C4A5A1; --on-rose:var(--taupe);
-  --rose-soft:rgba(245,213,210,.12); --soft:rgba(245,213,210,.08); --well:rgba(160,129,126,.07);
-  --cocoa:var(--blush); --on-cocoa:var(--taupe); --tile:rgba(160,129,126,.08); --ok:#A9C3B6;
-  --arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFDBDA' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.5 6l6 6-6 6'/%3E%3C/svg%3E"); --shadow:none; color-scheme:dark }
-
+  --bg:#26201F; --surface:#322A28; --hero:#3A302E; --ink:#F0EBD5; --rose:#C4A5A1; --rose-ink:#D2B3AF; --rose-num:#D2B3AF;
+  --card:rgba(255,255,255,.045); --glass:var(--surface); --glass-line:rgba(255,255,255,.06); --muted:var(--steel); --line:rgba(var(--accent-rgb),.16);
+  --on-rose:var(--bg); --rose-soft:rgba(var(--soft-rgb),.12); --soft:rgba(var(--soft-rgb),.08); --well:rgba(var(--accent-rgb),.07);
+  --cocoa:var(--blush); --on-cocoa:var(--taupe); --tile:rgba(var(--accent-rgb),.1); --ctx:rgba(var(--accent-rgb),.12);
+  --tab-on:rgba(var(--soft-rgb),.14); --tab-on-ink:var(--blush); --ok:#A9C3B6; --shadow:none; color-scheme:dark }
 *{box-sizing:border-box}
 html{background:var(--bg)}
 /* halo de luz suave vindo de cima + brilho rosa no canto (angelical, acolhedor) */
 body::before,body::after{content:"";position:fixed;z-index:-1;border-radius:50%;pointer-events:none;filter:blur(90px);background:var(--blush)}
-body::before{width:max(130vw,900px);height:60vh;top:-34vh;left:50%;transform:translateX(-50%);opacity:1;background:#FFFDF6}
+body::before{width:max(130vw,900px);height:60vh;top:-34vh;left:50%;transform:translateX(-50%);opacity:1;background:var(--halo)}
 body::after{width:min(70vw,480px);aspect-ratio:1;bottom:-26vh;left:-30vw;opacity:.7}
 :root[data-theme="dark"] body::before,:root[data-theme="dark"] body::after{opacity:.06}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body::before,:root:not([data-theme="light"]) body::after{opacity:.06}}
@@ -85,7 +84,11 @@ svg.i.lg{width:22px;height:22px}
 .title em{font-size:1.12em;padding-left:.08em}
 .label em,.sh-title em{font-size:1.16em}
 .top-r{display:flex;align-items:center;gap:8px;flex:none;align-self:flex-start}
-.avatar{width:42px;height:42px;border-radius:50%;border:none;background:var(--rose-soft);color:var(--ink);font-size:15px;font-weight:500}
+.avatar{width:42px;height:42px;border-radius:50%;border:none;background:none;padding:0;overflow:hidden;display:flex;flex:none}
+.round{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:flex;align-items:center;justify-content:center;padding:0;flex:none}
+.round svg{width:19px;height:19px}
+.ava-img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+.ava-ini{display:flex;align-items:center;justify-content:center;width:100%;height:100%;border-radius:50%;background:var(--rose-soft);color:var(--ink);font-size:15px;font-weight:500}
 .streak{display:inline-flex;align-items:center;gap:5px;height:36px;font-size:12.5px;font-weight:500;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:0 14px 0 12px;white-space:nowrap}
 .streak svg{width:16px;height:16px;color:var(--rose)}
 
@@ -94,9 +97,9 @@ svg.sym{width:18px;height:18px;flex:none}
 /* cartões */
 .card{position:relative;background:var(--card);border:0;border-radius:var(--r-card);padding:var(--pad);display:flex;flex-direction:column;gap:16px;min-width:0}
 /* bloco do dia: blush liso */
-.card.rose{background:rgba(245,213,210,.5);border:0;border-radius:var(--r-card);padding:var(--pad);--line:rgba(94,74,72,.12);--tile:rgba(251,248,238,.7);--surface:#FBF8EE;--rose-ink:#8E6E6B}
-:root[data-theme="dark"] .card.rose{background:#3A302E;--ink:#F0EBD5;--muted:rgba(160,129,126,.8);--line:rgba(245,213,210,.12);--tile:rgba(251,248,238,.07);--surface:rgba(251,248,238,.12);--rose-ink:#D2B3AF}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .card.rose{background:#3A302E;--ink:#F0EBD5;--muted:rgba(160,129,126,.8);--line:rgba(245,213,210,.12);--tile:rgba(251,248,238,.07);--surface:rgba(251,248,238,.12);--rose-ink:#D2B3AF}}
+.card.rose{background:var(--hero);border:0;border-radius:var(--r-card);padding:var(--pad);--line:rgba(var(--ink-rgb),.12);--tile:rgba(var(--surface-rgb),.7)}
+:root[data-theme="dark"] .card.rose{--muted:rgba(var(--accent-rgb),.85);--line:rgba(var(--soft-rgb),.12);--tile:rgba(255,255,255,.07);--surface:rgba(255,255,255,.12)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .card.rose{--muted:rgba(var(--accent-rgb),.85);--line:rgba(var(--soft-rgb),.12);--tile:rgba(255,255,255,.07);--surface:rgba(255,255,255,.12)}}
 .card.rose{color:var(--ink)}
 .card-h{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:24px}
 .label{margin:0;font-size:12.5px;font-weight:500;color:var(--rose-ink);display:flex;align-items:center;gap:8px}
@@ -125,9 +128,9 @@ svg.sym{width:18px;height:18px;flex:none}
 .day .sq{width:100%;max-width:40px;aspect-ratio:1;border-radius:50%;background:var(--tile);border:1.5px solid transparent;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:400;color:var(--ink);font-variant-numeric:tabular-nums;transition:transform .15s}
 .day .sq svg{width:16px;height:16px;stroke-width:1.6}
 .day:hover .sq{transform:translateY(-1px)}
-.day.read .sq{background:var(--rose);border-color:transparent;color:#FBF8EE}
+.day.read .sq{background:var(--rose);border-color:transparent;color:var(--on-rose)}
 .day.sel .sq{background:var(--surface);border-color:var(--rose);color:var(--rose-ink);font-weight:500}
-.day.read.sel .sq{background:var(--rose);border-color:transparent;color:#FBF8EE;box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--rose)}
+.day.read.sel .sq{background:var(--rose);border-color:transparent;color:var(--on-rose);box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--rose)}
 .day .cap{display:none}
 
 /* passos de hoje */
@@ -139,7 +142,7 @@ svg.sym{width:18px;height:18px;flex:none}
 .num{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none;font-size:13px;font-weight:400;border:1px solid var(--slate);background:transparent;color:var(--ink);font-variant-numeric:tabular-nums;transition:background .2s,color .2s}
 .num svg{width:17px;height:17px;stroke-width:1.6}
 .step.open .num{background:var(--blush);border-color:transparent;color:var(--taupe)}
-.step.done .num{background:var(--rose);border-color:transparent;color:#FBF8EE}
+.step.done .num{background:var(--rose);border-color:transparent;color:var(--on-rose)}
 .step-t{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
 .step-t b{font-size:15px;font-weight:400}
 .step-t span{font-size:12px;color:var(--muted)}
@@ -148,7 +151,7 @@ svg.sym{width:18px;height:18px;flex:none}
 .step-b{padding:0 0 18px 52px;display:flex;flex-direction:column;gap:14px;animation:in .25s ease both}
 .finish{display:flex;flex-direction:column;gap:10px;padding-top:4px}
 .done-ring{display:flex;align-items:center;gap:14px;background:var(--soft);border-radius:999px;padding:8px 18px 8px 8px}
-.done-ring .ring{width:46px;height:46px;border-radius:50%;background:var(--rose);color:#FBF8EE;display:flex;align-items:center;justify-content:center;flex:none;animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
+.done-ring .ring{width:46px;height:46px;border-radius:50%;background:var(--rose);color:var(--on-rose);display:flex;align-items:center;justify-content:center;flex:none;animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
 .done-ring .ring svg{width:22px;height:22px;stroke-width:1.6}
 .done-ring b{font-weight:500;font-size:14px;display:block}
 .done-ring span{font-size:12.5px;color:var(--muted)}
@@ -169,12 +172,12 @@ svg.sym{width:18px;height:18px;flex:none}
 .linkbtn.muted{color:var(--muted)}
 
 /* conteúdo dos passos */
-.take{position:relative;background:rgba(245,213,210,.5);color:var(--taupe);border-radius:24px;padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px}
+.take{position:relative;background:var(--hero);color:var(--taupe);border-radius:24px;padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px}
 .take .label{color:var(--rose-ink)}
 .take .serif{font-size:23px;line-height:1.25}
 :root[data-theme="dark"] .take{background:var(--rose-soft);color:var(--ink)}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .take{background:var(--rose-soft);color:var(--ink)}}
-.ctx{background:rgba(160,129,126,.16);border-radius:22px;padding:14px 16px;font-size:13px;line-height:1.65;color:var(--ink)}
+.ctx{background:var(--ctx);border-radius:22px;padding:14px 16px;font-size:13px;line-height:1.65;color:var(--ink)}
 .ctx b{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-bottom:4px}
 .thinking{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);min-height:24px}
 .dots{display:inline-flex;gap:4px}
@@ -204,7 +207,7 @@ svg.sym{width:18px;height:18px;flex:none}
 .g .s{font-size:13px;line-height:1.55;color:var(--muted)}
 .g .r{font-size:11px;color:var(--rose-ink);font-weight:500}
 .star{width:40px;height:40px;border-radius:50%;border:1px solid var(--slate);background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;flex:none;padding:0}
-.star.on{background:var(--rose);border-color:transparent;color:#FBF8EE}
+.star.on{background:var(--rose);border-color:transparent;color:var(--on-rose)}
 .star.on svg{fill:currentColor}
 
 /* campos: pílula com botão redondo (referência "Find a memory…") */
@@ -240,7 +243,7 @@ select.inp{appearance:none;-webkit-appearance:none}
 .li .lt{flex:1;min-width:0;font-size:14px;font-weight:400;display:flex;flex-direction:column;line-height:1.35}
 .li .lt small{font-size:11.5px;color:var(--muted);font-weight:300}
 .li > svg{color:var(--muted)}
-.li.done .num{background:var(--rose);border-color:transparent;color:#FBF8EE}
+.li.done .num{background:var(--rose);border-color:transparent;color:var(--on-rose)}
 .li.next .num{background:var(--blush);border-color:transparent;color:var(--taupe)}
 
 /* aviso */
@@ -255,7 +258,7 @@ select.inp{appearance:none;-webkit-appearance:none}
 /* planos */
 .plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 .plan-pick{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:24px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-width:0;color:var(--ink);min-height:118px}
-.plan-pick.on{background:var(--soft);border-color:var(--rose);box-shadow:0 0 0 3px rgba(219,127,142,.15)}
+.plan-pick.on{background:var(--soft);border-color:var(--rose);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.15)}
 .plan-pick b{font-weight:500;font-size:14.5px;line-height:1.3}
 .plan-pick .small{line-height:1.4;flex:1}
 .plan-pick.add{align-items:center;justify-content:center;border-style:dashed;border-color:var(--slate);background:transparent;color:var(--ink);font-weight:400;text-align:center;gap:4px}
@@ -271,8 +274,8 @@ select.inp{appearance:none;-webkit-appearance:none}
 .tile{aspect-ratio:1;border-radius:50%;border:1px solid var(--line);background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0;font-variant-numeric:tabular-nums;min-width:0;color:var(--ink)}
 .tile b{font-weight:400;font-size:13.5px;line-height:1}
 .tile small{font-size:9px;color:var(--muted);line-height:1}
-.tile.read{background:var(--rose);border-color:transparent;color:#FBF8EE}
-.tile.read small{color:#FBF8EE;opacity:.85}
+.tile.read{background:var(--rose);border-color:transparent;color:var(--on-rose)}
+.tile.read small{color:var(--on-rose);opacity:.85}
 .tile.today{background:var(--surface);border:1.5px solid var(--rose);color:var(--rose-ink)}
 .tile.future{opacity:.6}
 .sep{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);font-weight:400;margin:0}
@@ -282,7 +285,7 @@ select.inp{appearance:none;-webkit-appearance:none}
 .bk span{font-size:11px;font-weight:400;color:var(--muted);line-height:1}
 .bk i{display:block;height:3px;border-radius:2px;background:var(--line);overflow:hidden}
 .bk i b{display:block;height:100%;background:var(--rose)}
-.bk.full{background:var(--rose)} .bk.full span{color:#FBF8EE} .bk.full i{background:rgba(251,248,238,.35)} .bk.full i b{background:#FBF8EE}
+.bk.full{background:var(--rose)} .bk.full span{color:var(--on-rose)} .bk.full i{background:rgba(var(--surface-rgb),.35)} .bk.full i b{background:var(--on-rose)}
 details.fold > summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}
 details.fold > summary::-webkit-details-marker{display:none}
 details.fold[open] > summary .chev{transform:rotate(90deg)}
@@ -305,7 +308,7 @@ details.fold[open] > summary .chev{transform:rotate(90deg)}
 .eng small i.on{background:var(--ok)}
 .eng[aria-pressed="true"]{background:var(--soft);border-color:var(--rose)}
 .eng .mk{width:42px;height:42px;border-radius:50%;background:var(--soft);color:var(--ink);display:flex;align-items:center;justify-content:center;flex:none}
-.eng[aria-pressed="true"] .mk{background:var(--rose);color:#FBF8EE}
+.eng[aria-pressed="true"] .mk{background:var(--rose);color:var(--on-rose)}
 .ctxsel{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .ctxsel button{flex:none;height:36px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:12.5px;padding:0 16px;color:var(--muted);white-space:nowrap}
 .ctxsel button[aria-pressed="true"]{background:var(--cocoa);border-color:transparent;color:var(--on-cocoa)}
@@ -316,17 +319,38 @@ details.fold[open] > summary .chev{transform:rotate(90deg)}
 .msg .who{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:var(--rose-ink);margin-bottom:4px}
 
 
+/* perfil */
+.me-row{display:flex;align-items:center;gap:18px}
+.ava-big{width:88px;height:88px;border-radius:50%;overflow:hidden;flex:none;box-shadow:0 0 0 4px var(--surface)}
+.ava-big .ava-ini{font-size:34px;font-weight:300;font-family:var(--f-serif);font-style:italic}
+.me-name{margin:0;font-size:22px;font-weight:300;line-height:1.2;letter-spacing:-.01em}
+.me-btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn.sm{width:auto;min-height:40px;font-size:12.5px;padding:6px 16px}
+label.btn{cursor:pointer}
+.crop-wrap{display:flex;justify-content:center;padding:6px 0}
+.crop{position:relative;width:min(240px,68vw);aspect-ratio:1;border-radius:50%;overflow:hidden;background:var(--surface);touch-action:none;cursor:grab;box-shadow:0 0 0 4px var(--surface),0 0 0 5px var(--line)}
+.crop img{position:absolute;left:50%;top:50%;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
+input[type=range]{width:100%;accent-color:var(--rosa)}
+.seg button svg.i{width:15px;height:15px;vertical-align:-3px;margin-right:2px}
+.pals{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.pal{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:22px;padding:13px 14px;display:flex;flex-direction:column;gap:9px;color:var(--ink);min-width:0}
+.pal.on{border-color:var(--rose);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.18)}
+.pal-sw{display:flex;padding-left:6px}
+.pal-sw i{width:26px;height:26px;border-radius:50%;border:2px solid var(--surface);margin-left:-8px}
+.pal b{font-weight:500;font-size:13.5px;line-height:1.2}
+.pal small{font-size:11px;color:var(--muted);line-height:1.35}
+.nav-me{display:none}
 /* chat flutuante: botão redondo + painel */
 .fab{position:fixed;z-index:25;right:max(18px, env(safe-area-inset-right, 0px));bottom:calc(96px + env(safe-area-inset-bottom, 0px));width:58px;height:58px;border-radius:50%;border:none;
-  background:var(--rosa);color:#F0EBD5;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 30px -12px rgba(94,74,72,.55);transition:transform .2s}
+  background:var(--rosa);color:var(--on-accent);display:flex;align-items:center;justify-content:center;box-shadow:0 14px 30px -12px rgba(var(--ink-rgb),.55);transition:transform .2s}
 .fab:active{transform:scale(.94)}
 .fab svg{width:25px;height:25px;stroke-width:1.4}
 .fab.busy::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--blush);border-top-color:transparent;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 body.chat-open .fab{display:none}
 body.chat-open{overflow:hidden}
-.scrim{position:fixed;inset:0;z-index:39;background:rgba(38,32,31,.28)}
-.sheet{position:fixed;z-index:40;left:0;right:0;bottom:0;height:min(88vh,860px);background:var(--bg);border-radius:30px 30px 0 0;box-shadow:0 -20px 50px -20px rgba(38,32,31,.35);
+.scrim{position:fixed;inset:0;z-index:39;background:rgba(var(--deep-rgb),.28)}
+.sheet{position:fixed;z-index:40;left:0;right:0;bottom:0;height:min(88vh,860px);background:var(--bg);border-radius:30px 30px 0 0;box-shadow:0 -20px 50px -20px rgba(var(--deep-rgb),.35);
   display:flex;flex-direction:column;padding:10px 18px calc(14px + env(safe-area-inset-bottom, 0px));overflow:hidden}
 .sheet.anim{animation:up .32s cubic-bezier(.2,.8,.2,1) both}
 @keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
@@ -341,13 +365,11 @@ body.chat-open{overflow:hidden}
 /* menu: barra branca simples; ativo em blush */
 .nav{position:fixed;z-index:20;left:max(16px, env(safe-area-inset-left, 0px));right:max(16px, env(safe-area-inset-right, 0px));
   bottom:calc(14px + env(safe-area-inset-bottom, 0px));height:66px;max-width:340px;margin:0 auto;border-radius:999px;
-  background:var(--surface);border:1px solid var(--line);box-shadow:0 10px 30px -14px rgba(94,74,72,.28);
+  background:var(--surface);border:1px solid var(--line);box-shadow:0 10px 30px -14px rgba(var(--ink-rgb),.28);
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;padding:0 7px}
 .nav .brand{display:none}
 .tab{height:52px;margin:0 2px;border-radius:999px;border:none;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:10.5px;font-weight:400;transition:background .2s,color .2s;min-width:0}
-.tab[aria-current="page"]{background:var(--blush);color:var(--taupe);font-weight:500}
-:root[data-theme="dark"] .tab[aria-current="page"]{background:rgba(245,213,210,.12);color:var(--blush)}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tab[aria-current="page"]{background:rgba(245,213,210,.12);color:var(--blush)}}
+.tab[aria-current="page"]{background:var(--tab-on);color:var(--tab-on-ink);font-weight:500}
 .toast{position:fixed;z-index:30;left:50%;bottom:calc(98px + env(safe-area-inset-bottom, 0px));transform:translate(-50%,10px);opacity:0;pointer-events:none;
   background:var(--cocoa);color:var(--on-cocoa);font-size:12.5px;font-weight:400;padding:12px 20px;border-radius:999px;transition:.25s ease;display:flex;align-items:center;gap:8px;max-width:calc(100vw - 32px);box-shadow:var(--shadow)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
@@ -356,17 +378,21 @@ body.chat-open{overflow:hidden}
 @media (min-width:820px){
   .shell{padding:40px 24px 64px 268px}
   .nav{right:auto;left:calc(24px + env(safe-area-inset-left, 0px));top:24px;bottom:24px;margin:0;width:220px;height:auto;max-width:none;
-    display:flex;flex-direction:column;gap:4px;padding:26px 14px;border:0;border-radius:32px;background:var(--surface);box-shadow:0 20px 50px -30px rgba(94,74,72,.45)}
+    display:flex;flex-direction:column;gap:4px;padding:26px 14px;border:0;border-radius:32px;background:var(--surface);box-shadow:0 20px 50px -30px rgba(var(--ink-rgb),.45)}
   .nav .brand{display:flex;align-items:center;gap:10px;color:var(--ink);font-size:23px;font-weight:500;letter-spacing:-.03em;padding:0 10px 26px}
   .nav .brand svg.sym{width:30px;height:30px}
   .tab{width:100%;height:48px;margin:0;border-radius:18px;flex-direction:row;justify-content:flex-start;gap:12px;padding:0 16px;font-size:14px}
   .tab svg{width:19px;height:19px}
-  .tab[aria-current="page"]{background:var(--blush);color:var(--taupe)}
+  .nav-me{display:flex;align-items:center;gap:8px;margin-top:auto;padding:14px 2px 0;border-top:1px solid var(--line)}
+  .me-chip{flex:1;display:flex;align-items:center;gap:10px;border:0;background:none;color:var(--ink);padding:6px;border-radius:18px;min-width:0;font-size:13.5px;text-align:left}
+  .me-chip:hover{background:var(--soft)}
+  .me-chip .ava-img,.me-chip .ava-ini{width:38px;height:38px;flex:none}
+  .me-chip span.t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .toast{bottom:28px}
   .fab{right:32px;bottom:32px}
-  .sheet{left:auto;right:24px;bottom:24px;top:24px;height:auto;width:440px;border-radius:30px;box-shadow:0 30px 70px -30px rgba(38,32,31,.5);padding-top:18px}
+  .sheet{left:auto;right:24px;bottom:24px;top:24px;height:auto;width:440px;border-radius:30px;box-shadow:0 30px 70px -30px rgba(var(--deep-rgb),.5);padding-top:18px}
   .sheet::before{display:none}
-  .scrim{background:rgba(38,32,31,.12)}
+  .scrim{background:rgba(var(--deep-rgb),.12)}
   .title{font-size:36px}
   .ref{font-size:50px}
   :root{--pad:28px}
@@ -395,6 +421,12 @@ body.chat-open{overflow:hidden}
   <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c3 3.5 5.5 6.3 5.5 10a5.5 5.5 0 0 1-11 0c0-2.2 1-3.8 2.5-5.3.3 1.6 1 2.6 2 3.1C11 8.4 11.3 5.6 12 3z"/></symbol>
   <symbol id="i-word" viewBox="0 0 24 24"><path d="M4 19L9 5h1l5 14"/><path d="M6.2 14h6.6"/><path d="M17 10.5h3.5M17 14.5h3.5"/></symbol>
   <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l8-8M16 7l2 2M14 9l2 2"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8.5h3l1.8-2.5h6.4L17 8.5h3V19H4z"/><circle cx="12" cy="13.5" r="3.3"/></symbol>
+  <symbol id="i-move" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M12 3l-2.5 2.5M12 3l2.5 2.5M12 21l-2.5-2.5M12 21l2.5-2.5M3 12l2.5-2.5M3 12l2.5 2.5M21 12l-2.5-2.5M21 12l-2.5 2.5"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V4.5h4V7M7 7l1 13h8l1-13"/></symbol>
+  <symbol id="i-exit" viewBox="0 0 24 24"><path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10"/></symbol>
   <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
 </defs></svg>
 
@@ -404,6 +436,7 @@ body.chat-open{overflow:hidden}
   <button class="tab" data-tab="hoje"><svg class="i lg"><use href="#i-book"/></svg><span>hoje</span></button>
   <button class="tab" data-tab="aprender"><svg class="i lg"><use href="#i-steps"/></svg><span>aprender</span></button>
   <button class="tab" data-tab="caminhada"><svg class="i lg"><use href="#i-path"/></svg><span>caminhada</span></button>
+  <div class="nav-me" id="navme"></div>
 </nav>
 <button class="fab" id="fab" data-chat="open" aria-label="Conversar com a IA"><svg class="i"><use href="#i-chat"/></svg></button>
 <div id="chat"></div>
@@ -418,7 +451,7 @@ const BIBLIA = ('GEN|Gênesis|Gn|50;EXO|Êxodo|Êx|40;LEV|Levítico|Lv|27;NUM|N�
 const BK = Object.fromEntries(BIBLIA.map(b => [b.c, b]));
 const TOTAL_CAPS = BIBLIA.reduce((a, b) => a + b.caps, 0);
 const AT = BIBLIA.filter(b => !b.nt).map(b => b.c), NT = BIBLIA.filter(b => b.nt).map(b => b.c);
-const PERFIL = 'lais', NOME = 'Laís';
+const PERFIL = 'lais';
 const ESTUDOS = [
   { id:'amor',     nome:'O amor de Deus',      sub:'7 dias pra sentir o tamanho desse amor', dias:['JHN.3','LUK.15','ROM.8','1JN.4','PSA.103','EPH.2','1CO.13'] },
   { id:'oracao',   nome:'Aprender a orar',      sub:'7 dias com as orações da Bíblia',        dias:['MAT.6','LUK.11','PSA.23','PSA.51','PHP.4','JHN.17','PSA.139'] },
@@ -513,7 +546,7 @@ const AULAS = [
   { id:'igreja', nv:4, t:'Comunidade e igreja', ler:'ACT.2', p:[
     'No Novo Testamento, "igreja" quer dizer as pessoas, não o prédio. Desde o começo, quem seguia Jesus vivia junto: aprendendo, orando, comendo juntos e cuidando uns dos outros.',
     'Atos 2 mostra a primeira comunidade logo depois que o Espírito Santo vem sobre os discípulos.',
-    'Ler a Bíblia com outras pessoas, como você e o Igor estão fazendo, faz parte disso.'],
+    'Ler a Bíblia junto com outras pessoas faz parte disso.'],
     q:'Com quem você gostaria de conversar sobre o que está lendo?' },
   { id:'espirito', nv:4, t:'Quem é o Espírito Santo', ler:'JHN.14', p:[
     'A fé cristã fala de um só Deus que se revela como Pai, Filho e Espírito Santo. É o que se chama de Trindade.',
@@ -640,7 +673,7 @@ const fmtShort = d => d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-di
 const fmtDia = d => d.toLocaleDateString('pt-BR', { day:'numeric', month:'long' });
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean = s => String(s ?? '').replace(/\*\*(.+?)\*\*/g, '$1').replace(/^#+\s*/gm, '').replace(/^\s*[-*]\s+/gm, '· ');
-const SYM = '<svg class="sym" viewBox="0 0 64 64" aria-hidden="true"><path d="M17 56V30a15 15 0 0 1 30 0v26z" fill="#A0817E"/><path d="M32 19.5c3.6 4.7 5.9 8.2 5.9 12a5.9 5.9 0 0 1-11.8 0c0-3.8 2.3-7.3 5.9-12z" fill="#F5D5D2"/><path d="M22.3 46.5c4-1.8 7.2-1.5 9.7.8 2.5-2.3 5.7-2.6 9.7-.8" fill="none" stroke="#F0EBD5" stroke-width="1.6" stroke-linecap="round"/></svg>';
+const SYM = '<svg class="sym" viewBox="0 0 64 64" aria-hidden="true"><path d="M17 56V30a15 15 0 0 1 30 0v26z" style="fill:var(--rosa)"/><path d="M32 19.5c3.6 4.7 5.9 8.2 5.9 12a5.9 5.9 0 0 1-11.8 0c0-3.8 2.3-7.3 5.9-12z" style="fill:var(--lume)"/><path d="M32 27.8c1.6 2.1 2.6 3.7 2.6 5.3a2.6 2.6 0 0 1-5.2 0c0-1.6 1-3.2 2.6-5.3z" fill="#FFF8E4"/><path d="M22.3 46.5c4-1.8 7.2-1.5 9.7.8 2.5-2.3 5.7-2.6 9.7-.8" fill="none" style="stroke:var(--on-accent)" stroke-width="1.6" stroke-linecap="round"/></svg>';
 const ico = (id, cls='') => `<svg class="i ${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
 const fmtN = n => n.toLocaleString('pt-BR');
 const chOf = k => { const [c, n] = k.split('.'); return { book:BK[c], cap:+n, key:k }; };
@@ -676,8 +709,12 @@ const S = {
   tab:'hoje', ativo:'natal', planos:{}, lidosNatal:{}, notas:{}, caps:{}, conversas:{}, vocab:{}, aulas:{}, passos:{},
   sel:null, selPlan:null, open:null, aula:null, ctab:'planos', chatCtx:'leitura', form:null, confirmDel:false, step3:'palavras',
   engine: IN_CLAUDE ? 'claude' : 'gemini', gkey:'', gmodel:'gemini-3-flash-preview', hora:'07:30',
-  db:null, sample:null, busy:{}, draft:{}, pending:false, ctl:null
+  db:null, sample:null, busy:{}, draft:{}, pending:false, ctl:null,
+  ui:{ nome:'', foto:'', fotoOrig:'', ajuste:null, paleta:'dusty', tema:'auto' }, edit:null
 };
+const nome = () => (S.ui.nome || (S.user && S.user.displayName ? S.user.displayName.split(' ')[0] : '')).trim();
+const fotoURL = () => S.ui.foto || (S.user && S.user.photoURL) || '';
+const avatar = (cls = '') => fotoURL() ? `<img class="ava-img ${cls}" src="${esc(fotoURL())}" alt="" referrerpolicy="no-referrer">` : `<span class="ava-ini ${cls}">${nome() ? esc(nome().charAt(0).toUpperCase()) : ico('heart')}</span>`;
 const planById = id => id === 'natal' ? NATAL : (S.planos[id] || NATAL);
 const plan = () => planById(S.ativo);
 const lidosOf = p => { if (p.id === 'natal') return S.lidosNatal; if (!p.lidos) p.lidos = {}; return p.lidos; };
@@ -717,11 +754,17 @@ function loadLocal(){
   S.notas = LS.get('notas', {}); S.caps = LS.get('caps', {}); S.conversas = LS.get('conversas', {}); S.vocab = LS.get('vocab', {});
   const cfg = LS.get('ia', {}); S.gkey = cfg.gkey || ''; S.gmodel = !cfg.gmodel || cfg.gmodel === 'gemini-2.5-flash' ? 'gemini-3-flash-preview' : cfg.gmodel; S.hora = LS.get('hora', '07:30');
   if (cfg.engine) S.engine = cfg.engine;
+  const ui = LS.get('ui', null);
+  if (ui) S.ui = Object.assign({}, S.ui, ui);
+  else if (LS.get('perfil', null) || LS.get('lidos', null)) S.ui.nome = 'Laís';
+  applyUI();
 }
 const failSave = () => toast('não deu para salvar agora');
+let uiT;
+function saveUI(){ LS.set('ui', S.ui); applyUI(); clearTimeout(uiT); uiT = setTimeout(() => { if (S.db) S.db.doc(ROOT() + '/extras/ui').set(S.ui).catch(failSave); }, 400); }
 let perfilT;
 function savePerfil(){
-  const body = { nome:NOME, lidos:S.lidosNatal, ativo:S.ativo, aulas:S.aulas, passos:S.passos };
+  const body = { nome:nome(), lidos:S.lidosNatal, ativo:S.ativo, aulas:S.aulas, passos:S.passos };
   if (!S.db) return LS.set('perfil', body);
   clearTimeout(perfilT); perfilT = setTimeout(() => { S.db.doc(ROOT()).set(body).catch(failSave); }, 250);
 }
@@ -768,6 +811,7 @@ function subscribe(db){
   subs.push(db.collection(CAPS()).onSnapshot(q => { const n = {}; q.docs.forEach(d => n[d.id] = d.data()); S.caps = n; soft(); }, () => {}));
   subs.push(db.doc(P + '/extras/vocab').onSnapshot(s => { S.vocab = s.exists ? Object.assign({}, s.data().itens || {}) : {}; soft(); }, () => {}));
   subs.push(db.collection(P + '/conversas').onSnapshot(q => { if (!S.busy.chat) q.docs.forEach(d => { S.conversas[d.id] = (d.data().turns || []).slice(); }); if (S.chatOpen) soft(); }, () => {}));
+  subs.push(db.doc(P + '/extras/ui').onSnapshot(s => { if (s.exists) { S.ui = Object.assign({}, S.ui, s.data()); LS.set('ui', S.ui); applyUI(); } soft(); }, () => {}));
   if (!IN_CLAUDE) subs.push(db.doc(P + '/extras/ia').onSnapshot(s => { if (s.exists) { const d = s.data(); if (d.gkey) S.gkey = d.gkey; if (d.gmodel) S.gmodel = d.gmodel; if (d.engine) S.engine = d.engine; LS.set('ia', { gkey:S.gkey, gmodel:S.gmodel, engine:S.engine }); } soft(); }, () => {}));
   return () => subs.forEach(u => { try { u(); } catch {} });
 }
@@ -794,10 +838,11 @@ async function startFirebase(){
 }
 async function subirLocal(fs){   /* primeiro login: leva o que já estava neste aparelho para a conta */
   const P = ROOT_PATH, b = fs.batch();
-  b.set(fs.doc(P), { nome:(S.user && S.user.displayName) || NOME, lidos:S.lidosNatal, ativo:S.ativo, aulas:S.aulas, passos:S.passos });
+  b.set(fs.doc(P), { nome:nome() || (S.user && S.user.displayName) || '', lidos:S.lidosNatal, ativo:S.ativo, aulas:S.aulas, passos:S.passos });
   Object.values(S.planos).forEach(pl => b.set(fs.doc(P + '/planos/' + pl.id), planoBody(pl)));
   Object.entries(S.notas).forEach(([k, v]) => b.set(fs.doc(P + '/diario/' + k), v));
   if (Object.keys(S.vocab).length) b.set(fs.doc(P + '/extras/vocab'), { itens:S.vocab });
+  b.set(fs.doc(P + '/extras/ui'), S.ui);
   if (S.gkey) b.set(fs.doc(P + '/extras/ia'), { gkey:S.gkey, gmodel:S.gmodel, engine:S.engine });
   await b.commit();
 }
@@ -819,7 +864,7 @@ async function boot(){
 }
 
 /* ---------- inteligência artificial: Gemini (API) e Claude ---------- */
-const GUIA = 'Você é um guia gentil para a Laís, que está começando a ler a Bíblia, não tem costume de ler e quer entender de verdade, do básico ao profundo, e criar amor pela Palavra. Escreva em português do Brasil, com frases curtas e palavras simples; quando usar uma palavra difícil, explique. Respeite a fé dela; quando tradições cristãs entendem algo de formas diferentes, diga isso com leveza. Não use emojis nem markdown.';
+const guia = () => `Você é um guia gentil para ${nome() || 'uma pessoa'}, que está começando a ler a Bíblia, não tem costume de ler e quer entender de verdade, do básico ao profundo, e criar amor pela Palavra. Escreva em português do Brasil, com frases curtas e palavras simples; quando usar uma palavra difícil, explique. Respeite a fé de quem lê; quando tradições cristãs entendem algo de formas diferentes, diga isso com leveza. Não use emojis nem markdown.`;
 const geminiReady = () => !IN_CLAUDE && !!S.gkey;
 const claudeReady = () => !!S.sample;
 const engineReady = e => e === 'gemini' ? geminiReady() : claudeReady();
@@ -861,8 +906,8 @@ function parseJSON(t){
 }
 async function aiJSON(prompt, quick){
   const e = aiEngine(); if (!e) throw new AIError('no_ai');
-  if (e === 'gemini') return parseJSON(await geminiCall([{ role:'user', content:GUIA }, { role:'user', content:prompt }], { json:true }));
-  try { return await S.sample.json(GUIA + '\n\n' + prompt, Object.assign({ cache:{ gcTime:86400000 } }, quick ? { modelTier:'quick' } : {})); }
+  if (e === 'gemini') return parseJSON(await geminiCall([{ role:'user', content:guia() }, { role:'user', content:prompt }], { json:true }));
+  try { return await S.sample.json(guia() + '\n\n' + prompt, Object.assign({ cache:{ gcTime:86400000 } }, quick ? { modelTier:'quick' } : {})); }
   catch (x) { throw new AIError(x && x.code || 'upstream', '', x && x.text); }
 }
 async function aiChat(turns, { onText, signal }){
@@ -914,7 +959,7 @@ async function dificeis(d){
 async function palavraLivre(d, w){
   w = w.trim(); if (!w || S.busy['dif' + d.key]) return; S.busy['dif' + d.key] = true; render();
   try {
-    const r = await aiJSON(`Na leitura de ${refName(d)}, a Laís travou nesta palavra ou expressão: "${w}". Explique o que quer dizer nesse trecho. Responda só com um objeto JSON: {"palavra":"a palavra como ela escreveu","sentido":"explicação simples em até 3 frases"}`, true);
+    const r = await aiJSON(`Na leitura de ${refName(d)}, ${nome() || 'a pessoa'} travou nesta palavra ou expressão: "${w}". Explique o que quer dizer nesse trecho. Responda só com um objeto JSON: {"palavra":"a palavra como ela escreveu","sentido":"explicação simples em até 3 frases"}`, true);
     if (r && r.sentido) { const list = (capOf(d.key).dificeis || []).filter(x => x.palavra.toLowerCase() !== String(r.palavra || w).toLowerCase());
       list.unshift({ palavra:String(r.palavra || w), sentido:String(r.sentido) }); await saveCap(d.key, { dificeis:list }); }
   } catch (e) { oops(e); }
@@ -947,7 +992,7 @@ async function perguntar(texto, ctx){
   S.busy.chat = true; S.chatOpen = true; render(); scrollEnd();
   let about = chatAbout();
   if (S.chatCtx !== 'leitura') { const a = AULAS.find(x => x.id === S.chatCtx); if (a) about += '. Resumo da aula: ' + a.p.join(' '); }
-  const regras = GUIA + `\nEla quer conversar sobre ${about}. Ela também está no plano de leitura "${plan().nome}". Responda como numa conversa: curto (até 2 parágrafos), acolhedor e claro. Se ela pedir o texto bíblico inteiro, sugira abrir no YouVersion em vez de copiar.`;
+  const regras = guia() + `\nA pessoa quer conversar sobre ${about}. Ela também está no plano de leitura "${plan().nome}". Responda como numa conversa: curto (até 2 parágrafos), acolhedor e claro. Se ela pedir o texto bíblico inteiro, sugira abrir no YouVersion em vez de copiar.`;
   const ctl = S.ctl = new AbortController();
   try {
     const r = await aiChat([{ role:'user', content:regras }, ...turns.slice(-16)], { signal:ctl.signal,
@@ -976,6 +1021,72 @@ const MODELOS = [
   ['gemini-3.1-pro-preview', 'Gemini 3.1 Pro', 'mais profundo, usa os créditos do seu Google AI Pro'],
   ['gemini-2.5-flash', 'Gemini 2.5 Flash', 'versão anterior']
 ];
+/* ---------- paletas (perfil) ---------- */
+const PALETAS = [
+  { id:'dusty', nome:'Dusty & baunilha', sub:'creme, dusty e rosinha',
+    l:{ bg:'#F0EBD5', surface:'#FBF8EE', ink:'#5E4A48', accent:'#A0817E', accentInk:'#8E6E6B', soft:'#F5D5D2', steel:'#B5A79B', line:'#E4DDC6', halo:'#FFFDF6' },
+    d:{ bg:'#26201F', surface:'#322A28', hero:'#3A302E', ink:'#F0EBD5', accent:'#C4A5A1', accentInk:'#D2B3AF' } },
+  { id:'rosa', nome:'Rosa antigo', sub:'blush, old rose e taupe',
+    l:{ bg:'#F8EDED', surface:'#FFFAFA', ink:'#604D53', accent:'#C66F7F', accentInk:'#B05E6D', num:'#DB7F8E', soft:'#FFDBDA', steel:'#9DA3A4', line:'#EEDFE0', halo:'#FFFFFF' },
+    d:{ bg:'#241C1F', surface:'#30262A', hero:'#3D2C32', ink:'#F7E9EA', accent:'#E896A3', accentInk:'#F0B3BC' } },
+  { id:'salvia', nome:'Sálvia', sub:'verde suave e creme',
+    l:{ bg:'#EDEFE4', surface:'#FAFBF5', ink:'#3F4A40', accent:'#788F6E', accentInk:'#5E7556', soft:'#DCE6D2', steel:'#A3ADA0', line:'#DDE2D3', halo:'#FFFFFA' },
+    d:{ bg:'#1D221E', surface:'#283029', hero:'#303A31', ink:'#EDEFE4', accent:'#A9BE9F', accentInk:'#C3D4BA' } },
+  { id:'ceu', nome:'Céu', sub:'azul calmo e névoa',
+    l:{ bg:'#E8ECF3', surface:'#F8F9FC', ink:'#3E4656', accent:'#6F82A6', accentInk:'#56688A', soft:'#D6DEEF', steel:'#A0A8B8', line:'#DBE0EB', halo:'#FFFFFF' },
+    d:{ bg:'#1B1F28', surface:'#262B36', hero:'#2E3546', ink:'#E8ECF3', accent:'#A3B3D3', accentInk:'#BFCBE4' } },
+  { id:'lavanda', nome:'Lavanda', sub:'lilás e branco',
+    l:{ bg:'#EFEAF4', surface:'#FBF9FD', ink:'#4C4458', accent:'#8E7DAA', accentInk:'#74668F', soft:'#E4DAF1', steel:'#ABA4B6', line:'#E3DCEB', halo:'#FFFFFF' },
+    d:{ bg:'#211D27', surface:'#2C2734', hero:'#362F42', ink:'#EFEAF4', accent:'#B9AAD3', accentInk:'#CEC3E3' } },
+  { id:'plane', nome:'Planê', sub:'creme, ardósia e rosé',
+    l:{ bg:'#F5F1EE', surface:'#FFFFFF', ink:'#3E4B57', accent:'#3E4B57', accentInk:'#A88A80', num:'#A88A80', soft:'#F4E8E5', steel:'#8B939A', line:'#EBE1DC', halo:'#FFFFFF' },
+    d:{ bg:'#1C2126', surface:'#252B31', hero:'#2C343C', ink:'#EEF0F2', accent:'#D6B3AB', accentInk:'#D6B3AB' } }
+];
+const rgb = h => [1, 3, 5].map(i => parseInt(h.substr(i, 2), 16)).join(',');
+function applyUI(){
+  const P = PALETAS.find(x => x.id === S.ui.paleta) || PALETAS[0], l = P.l, d = P.d, root = document.documentElement;
+  const dark = `--bg:${d.bg};--surface:${d.surface};--hero:${d.hero};--ink:${d.ink};--rose:${d.accent};--rose-ink:${d.accentInk};--rose-num:${d.accentInk}`;
+  let st = document.getElementById('pal'); if (!st) { st = document.createElement('style'); st.id = 'pal'; document.body.appendChild(st); }
+  st.textContent = `:root{--bg:${l.bg};--surface:${l.surface};--taupe:${l.ink};--rosa:${l.accent};--rose-ink:${l.accentInk};--rose-num:${l.num || l.accent};--blush:${l.soft};--steel:${l.steel};--slate:${l.line};--halo:${l.halo};--on-accent:${l.surface};`
+    + `--ink-rgb:${rgb(l.ink)};--accent-rgb:${rgb(l.accent)};--soft-rgb:${rgb(l.soft)};--surface-rgb:${rgb(l.surface)};--deep-rgb:${rgb(d.bg)}}`
+    + `@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){${dark}}}:root[data-theme="dark"]{${dark}}`;
+  if (S.ui.tema === 'claro') root.dataset.theme = 'light'; else if (S.ui.tema === 'escuro') root.dataset.theme = 'dark'; else delete root.dataset.theme;
+  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = escuro() ? d.bg : l.bg;
+}
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { applyUI(); render(); });
+
+/* ---------- foto do perfil: escolher, ajustar (arrastar e zoom) e salvar em 320px ---------- */
+const loadImg = src => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; });
+async function escolherFoto(file){
+  try {
+    const url = URL.createObjectURL(file), img = await loadImg(url), k = Math.min(1, 1000 / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+    const src = c.toDataURL('image/jpeg', .85); S.edit = { src, w:c.width, h:c.height, z:1, x:0, y:0 }; render();
+  } catch { toast('não deu pra abrir essa foto'); }
+}
+async function ajustarFoto(){
+  try { const img = await loadImg(S.ui.fotoOrig), a = S.ui.ajuste || {}; S.edit = { src:S.ui.fotoOrig, w:img.naturalWidth, h:img.naturalHeight, z:a.z || 1, x:a.x || 0, y:a.y || 0 }; render(); }
+  catch { toast('não deu pra abrir a foto'); }
+}
+function placeCrop(){
+  const e = S.edit, box = document.getElementById('crop'), img = document.getElementById('crop-img'); if (!e || !box || !img) return;
+  const V = e.V = box.clientWidth, base = V / Math.min(e.w, e.h), W = e.w * base * e.z, H = e.h * base * e.z;
+  e.x = Math.max(-(W - V) / 2, Math.min((W - V) / 2, e.x)); e.y = Math.max(-(H - V) / 2, Math.min((H - V) / 2, e.y));
+  img.style.width = W + 'px'; img.style.height = H + 'px'; img.style.transform = `translate(calc(-50% + ${e.x}px), calc(-50% + ${e.y}px))`;
+}
+async function salvarFoto(){
+  const e = S.edit; if (!e) return;
+  const img = await loadImg(e.src), N = 320, k = N / e.V, base = e.V / Math.min(e.w, e.h), dw = e.w * base * e.z * k, dh = e.h * base * e.z * k;
+  const c = document.createElement('canvas'); c.width = c.height = N;
+  c.getContext('2d').drawImage(img, N / 2 + e.x * k - dw / 2, N / 2 + e.y * k - dh / 2, dw, dh);
+  S.ui.foto = c.toDataURL('image/jpeg', .86); S.ui.fotoOrig = e.src; S.ui.ajuste = { z:e.z, x:e.x, y:e.y }; S.edit = null; saveUI(); render(); toast('foto salva');
+}
+let drag = null;
+document.addEventListener('pointerdown', ev => { const b = ev.target.closest('#crop'); if (!b || !S.edit) return; drag = { x:ev.clientX, y:ev.clientY, ox:S.edit.x, oy:S.edit.y }; b.setPointerCapture(ev.pointerId); });
+document.addEventListener('pointermove', ev => { if (!drag || !S.edit) return; S.edit.x = drag.ox + ev.clientX - drag.x; S.edit.y = drag.oy + ev.clientY - drag.y; placeCrop(); });
+document.addEventListener('pointerup', () => { drag = null; });
+
 /* ---------- agenda e lembretes (arquivo .ics: Calendário do iPhone/iPad e Google Agenda) ---------- */
 const icsTxt = t => String(t).replace(/\\/g, '\\\\').replace(/[,;]/g, m => '\\' + m).replace(/\n/g, '\\n');
 const icsDT = (date, hora) => { const [h, m] = (hora || '07:30').split(':'); const z = n => String(n).padStart(2, '0'); return `${date.getFullYear()}${z(date.getMonth() + 1)}${z(date.getDate())}T${z(+h)}${z(+m)}00`; };
@@ -1017,11 +1128,13 @@ const greeting = () => { const h = new Date().getHours(); return h < 5 ? 'boa no
 const thinking = t => `<div class="thinking"><span class="dots"><i></i><i></i><i></i></span>${t}</div>`;
 const aiOff = () => `<p class="hint">${IN_CLAUDE ? 'A IA aparece aqui assim que o Claude for liberado.' : 'Pra gerar isso, coloque sua chave do Gemini em <button class="linkbtn" data-go-ajustes="1" style="display:inline;padding:0">caminhada › ajustes</button>.'}</p>`;
 function header(){
-  const st = streak();
+  const st = streak(), n = nome();
   return `<header class="top">
-    <div><p class="eyebrow">${SYM}${esc(fmtLong(new Date()))}</p><h1 class="title">${greeting()}, <em>${NOME}</em></h1></div>
-    <div class="top-r">${st ? `<span class="streak" title="dias seguidos lendo">${ico('flame')}${st}</span>` : ''}<button class="avatar" data-go-ajustes="1" aria-label="Sua conta">${esc(((S.user && S.user.displayName) || NOME).trim().charAt(0).toUpperCase())}</button></div></header>`;
+    <div><p class="eyebrow">${SYM}${esc(fmtLong(new Date()))}</p><h1 class="title">${greeting()}${n ? `, <em>${esc(n)}</em>` : ''}</h1></div>
+    <div class="top-r">${st ? `<span class="streak" title="dias seguidos lendo">${ico('flame')}${st}</span>` : ''}${temaBtn()}<button class="avatar" data-tab="perfil" aria-label="Seu perfil">${avatar()}</button></div></header>`;
 }
+const escuro = () => S.ui.tema === 'escuro' || (S.ui.tema !== 'claro' && matchMedia('(prefers-color-scheme: dark)').matches);
+const temaBtn = () => `<button class="round" data-act="tema-toggle" aria-label="${escuro() ? 'Modo claro' : 'Modo escuro'}" title="${escuro() ? 'modo claro' : 'modo escuro'}">${ico(escuro() ? 'sun' : 'moon')}</button>`;
 const heroRef = d => parts(d.chs).map(p => `${esc(p.book.n)} <span class="n">${num(p)}</span>`).join(' <span class="dsep">·</span> ');
 
 function heroCard(d){
@@ -1125,6 +1238,7 @@ function trilhaCard(){
 }
 function banner(){
   if (!IN_CLAUDE && FB_CONFIG && S.fb && S.fb.pronto && !S.user) return `<button class="banner" data-act="entrar"><span class="ic">${ico('heart')}</span><span><b>Entre com sua conta Google</b> pra ver seu progresso em todos os aparelhos.</span>${ico('right')}</button>`;
+  if (!nome()) return `<button class="banner" data-tab="perfil"><span class="ic">${ico('heart')}</span><span><b>Como você quer ser chamado?</b> Monte seu perfil: nome, foto e cores.</span>${ico('right')}</button>`;
   const p = plan(), pr = progresso(p), t = todayIdx(p);
   if (t >= p.days.length) return `<button class="banner" data-tab="caminhada"><span class="ic">${ico('heart')}</span><span><b>Você terminou "${esc(p.nome)}".</b> Escolha o próximo plano ou um estudo pra continuar.</span>${ico('right')}</button>`;
   if (pr.atras.length) { const f = pr.atras[0];
@@ -1217,6 +1331,33 @@ function duo(root){
   });
 }
 
+function viewPerfil(){
+  const P = PALETAS.find(x => x.id === S.ui.paleta) || PALETAS[0], e = S.edit;
+  const top = e ? `<div class="card-h"><span class="label">ajustar foto</span></div>
+      <div class="crop-wrap"><div class="crop" id="crop"><img id="crop-img" src="${e.src}" alt="" draggable="false"></div></div>
+      <label class="field"><span>zoom</span><input type="range" id="crop-z" min="1" max="3" step="0.01" value="${e.z}"></label>
+      <p class="hint" style="text-align:center">Arraste a foto com o dedo pra deixar do jeito que quiser.</p>
+      <div class="two"><button class="btn primary" data-act="foto-salvar">${ico('check')}salvar foto</button><button class="btn ghost" data-act="foto-cancelar">cancelar</button></div>`
+    : `<div class="me-row"><div class="ava-big">${avatar()}</div><div style="min-width:0"><p class="me-name">${esc(nome() || 'sem nome ainda')}</p><p class="small" style="margin:2px 0 0">${S.user ? esc(S.user.email || '') : 'perfil deste aparelho'}</p></div></div>
+      <div class="me-btns"><label class="btn ghost sm" for="foto-in">${ico('camera')}${fotoURL() ? 'trocar foto' : 'colocar foto'}</label>
+        ${S.ui.fotoOrig ? `<button class="btn ghost sm" data-act="foto-ajustar">${ico('move')}ajustar</button>` : ''}
+        ${S.ui.foto ? `<button class="btn ghost sm" data-act="foto-remover">${ico('trash')}tirar</button>` : ''}</div>
+      <input id="foto-in" type="file" accept="image/*" hidden>`;
+  return `<div class="view">
+  <header class="top"><div><p class="eyebrow">${ico('heart')}perfil</p><h1 class="title">seu <em>perfil</em></h1></div><div class="top-r">${temaBtn()}</div></header>
+  <section class="card rose">${top}</section>
+  <section class="card"><div class="card-h"><span class="label">como quer ser chamado</span></div>
+    <label class="field"><span class="sr">seu nome</span><input class="inp" id="u-nome" type="text" autocomplete="given-name" placeholder="seu nome" value="${esc(S.ui.nome || nome())}"></label>
+    <p class="hint">Aparece na saudação e a IA usa pra conversar com você.</p></section>
+  <section class="card"><div class="card-h"><span class="label">claro ou escuro</span></div>
+    <div class="seg">${[['claro', 'sun', 'claro'], ['escuro', 'moon', 'escuro'], ['auto', 'clock', 'auto']].map(([k, i, t]) => `<button data-tema="${k}" aria-pressed="${S.ui.tema === k}">${ico(i)} ${t}</button>`).join('')}</div>
+    <p class="hint">No automático, segue o modo do aparelho.</p></section>
+  <section class="card"><div class="card-h"><span class="label">sua paleta</span><span class="small">${esc(P.nome)}</span></div>
+    <div class="pals">${PALETAS.map(x => `<button class="pal ${x.id === P.id ? 'on' : ''}" data-paleta="${x.id}" aria-pressed="${x.id === P.id}"><span class="pal-sw">${[x.l.bg, x.l.soft, x.l.accent, x.l.ink].map(c => `<i style="background:${c}"></i>`).join('')}</span><b>${esc(x.nome)}</b><small>${esc(x.sub)}</small></button>`).join('')}</div></section>
+  ${contaCard()}
+  </div>`;
+}
+
 /* caminhada: planos, diário, palavras, ajustes */
 function viewCaminhada(){
   if (S.form) return viewNovo();
@@ -1305,10 +1446,10 @@ function contaCard(){
   return `<section class="card"><div class="card-h"><span class="label">${ico('heart')}sua conta</span><span class="small" style="color:var(--ok)">sincronizando</span></div>
     <div><p style="margin:0;font-size:15px;font-weight:400">${esc(S.user.displayName || 'Conta Google')}</p><p class="small" style="margin:0">${esc(S.user.email || '')}</p></div>
     <p class="hint">Tudo o que você faz fica salvo nesta conta e aparece em qualquer aparelho em que você entrar.</p>
-    <button class="btn ghost" data-act="sair">sair da conta</button></section>`;
+    <button class="btn ghost" data-act="sair">${ico('exit')}sair da conta</button></section>`;
 }
 function cAjustes(){
-  return contaCard() + `<section class="card">
+  return `<section class="card">
     <div class="card-h"><span class="label">${ico('key')}Gemini</span><span class="small">${geminiReady() ? 'conectado' : IN_CLAUDE ? 'no app publicado' : S.gkey ? 'chave salva' : 'sem chave'}</span></div>
     <p class="hint" style="margin-top:-8px">${S.user ? 'A chave fica guardada na sua conta e vale em todos os aparelhos.' : 'A chave fica guardada só neste aparelho.'} Gere em <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> e cole aqui.</p>
     <label class="field"><span>sua chave</span><input class="inp" id="g-key" type="password" autocomplete="off" placeholder="cole a chave aqui" value="${esc(S.gkey)}"></label>
@@ -1361,7 +1502,7 @@ const novoForm = () => ({ nome:'', livros:[], inicio:iso(new Date()), modo:'data
 const localNote = () => S.db ? '' : `<p class="note-local">O progresso fica salvo neste aparelho${!IN_CLAUDE && FB_CONFIG ? '. Entre com o Google pra levar pra todos.' : '.'}</p>`;
 
 /* ---------- render e eventos ---------- */
-const VIEWS = { hoje:viewHoje, aprender:viewAprender, caminhada:viewCaminhada };
+const VIEWS = { hoje:viewHoje, aprender:viewAprender, caminhada:viewCaminhada, perfil:viewPerfil };
 /* deixa tudo pronto na tela sem precisar pedir: explicação ao abrir a leitura, palavras e versões ao abrir o passo 3 */
 const tried = new Set();
 function auto(){
@@ -1377,7 +1518,8 @@ function render(){
   c.innerHTML = S.chatOpen ? viewChat() : ''; S.chatAnim = false;
   document.body.classList.toggle('chat-open', !!S.chatOpen);
   document.getElementById('fab').classList.toggle('busy', !!S.busy.chat);
-  duo(v); duo(c); if (S.chatOpen) scrollEnd();
+  const nm = document.getElementById('navme'); if (nm) nm.innerHTML = `<button class="me-chip" data-tab="perfil">${avatar()}<span class="t">${esc(nome() || 'seu perfil')}</span></button>${temaBtn()}`;
+  duo(v); duo(c); if (S.chatOpen) scrollEnd(); if (S.edit) placeCrop();
   auto();
   document.querySelectorAll('.tab').forEach(t => { if (t.dataset.tab === S.tab) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
 }
@@ -1418,10 +1560,12 @@ const aulaPrompt = a => `Acabei de fazer a aula "${a.t}". Me explica isso um pou
 
 document.addEventListener('click', async e => {
   const rd = e.target.closest('[data-read]'); if (rd) { marcaPasso('ler'); setTimeout(render, 400); return; }
-  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes],[data-chat]');
+  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes],[data-chat],[data-paleta],[data-tema]');
   if (!el) return;
   const ds = el.dataset;
-  if (ds.tab) { if (ds.tab === 'aprender') S.aula = null; if (ds.tab === 'caminhada') S.form = null; return go(ds.tab); }
+  if (ds.tab) { if (ds.tab !== 'perfil') S.edit = null; if (ds.tab === 'aprender') S.aula = null; if (ds.tab === 'caminhada') S.form = null; return go(ds.tab); }
+  if (ds.paleta) { S.ui.paleta = ds.paleta; saveUI(); return render(); }
+  if (ds.tema) { S.ui.tema = ds.tema; saveUI(); return render(); }
   if (ds.chat) { if (ds.chat === 'open') return openChat(); S.chatOpen = false; return render(); }
   if (ds.goAjustes) { S.ctab = 'ajustes'; S.form = null; S.chatOpen = false; return go('caminhada'); }
   if (ds.step) { S.open = S.open === ds.step ? '' : ds.step; return render(); }
@@ -1465,6 +1609,11 @@ document.addEventListener('click', async e => {
     case 'clear-books': S.form.livros = []; render(); break;
     case 'criar': criarPlano(); break;
     case 'ics-plano': agendaPlano(); break;
+    case 'tema-toggle': S.ui.tema = escuro() ? 'claro' : 'escuro'; saveUI(); render(); break;
+    case 'foto-ajustar': ajustarFoto(); break;
+    case 'foto-salvar': salvarFoto(); break;
+    case 'foto-cancelar': S.edit = null; render(); break;
+    case 'foto-remover': S.ui.foto = ''; S.ui.fotoOrig = ''; S.ui.ajuste = null; saveUI(); render(); toast('foto removida'); break;
     case 'ics-diario': lembreteDiario(); break;
     case 'del': S.confirmDel = true; render(); break;
     case 'del-ok': { await delPlano(plan().id); S.confirmDel = false; toast('plano apagado'); render(); break; }
@@ -1478,9 +1627,15 @@ document.addEventListener('click', async e => {
 document.addEventListener('input', e => {
   const id = e.target.id;
   if (id === 'nota') S.draft[cur().key] = e.target.value;
+  if (id === 'u-nome') { S.ui.nome = e.target.value.trim(); saveUI(); }
+  if (id === 'crop-z' && S.edit) { S.edit.z = +e.target.value; placeCrop(); }
   if (id === 'r-hora' && e.target.value) { S.hora = e.target.value; LS.set('hora', S.hora); }
   if (S.form && id && id.startsWith('f-')) { const map = { 'f-nome':'nome', 'f-inicio':'inicio', 'f-fim':'fim', 'f-pordia':'porDia' };
     if (map[id]) S.form[map[id]] = e.target.value; const pv = document.getElementById('f-prev'); if (pv) pv.innerHTML = previewTxt(); }
+});
+document.addEventListener('change', e => {
+  if (e.target.id === 'foto-in' && e.target.files && e.target.files[0]) escolherFoto(e.target.files[0]);
+  if (e.target.id === 'u-nome') render();
 });
 document.addEventListener('submit', e => {
   e.preventDefault();
