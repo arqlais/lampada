@@ -324,6 +324,18 @@ details.fold[open] > summary .chev{transform:rotate(90deg)}
 .msg .who{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:var(--rose-ink);margin-bottom:4px}
 
 
+/* tela de entrada */
+body.w-on .nav,body.w-on .fab{display:none}
+body.w-on .shell{padding-left:max(16px, env(safe-area-inset-left, 0px))}
+.welcome{max-width:460px;margin:0 auto;min-height:calc(100vh - 120px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:24px 8px;animation:in .5s ease both}
+.w-mark svg.symt{width:96px;height:96px;filter:drop-shadow(0 18px 30px rgba(var(--ink-rgb),.22))}
+.w-word{margin:4px 0 0;font-size:22px;font-weight:500;letter-spacing:-.03em}
+.w-word i{font-style:normal;color:var(--rose)}
+.w-title{font-size:30px;margin:6px 0 0}
+.w-sub{margin:0;color:var(--muted);font-size:14px;line-height:1.65;max-width:380px}
+.w-btn{margin-top:14px;max-width:340px}
+.w-note{margin:0;font-size:12px;color:var(--muted)}
+.w-skip{align-self:center;margin-top:6px}
 /* aviso de versão nova */
 .upd{position:fixed;z-index:35;top:calc(74px + env(safe-area-inset-top, 0px));left:0;right:0;margin:0 auto;width:max-content;max-width:calc(100vw - 32px);display:flex;align-items:center;gap:10px;
   background:var(--rosa);color:var(--on-accent);border:0;border-radius:999px;padding:8px 8px 8px 16px;font-size:13px;box-shadow:0 14px 30px -12px rgba(var(--ink-rgb),.5);animation:in .4s ease both;white-space:nowrap}
@@ -891,7 +903,7 @@ async function startFirebase(){
   let unsub = null;
   auth.onAuthStateChanged(async user => {
     if (unsub) { unsub(); unsub = null; }
-    S.user = user || null;
+    S.user = user || null; S.authReady = true; if (user) LS.set('semConta', false);
     if (!user) { S.db = null; ROOT_PATH = 'perfis/' + PERFIL; loadLocal(); return soft(); }
     ROOT_PATH = 'users/' + user.uid;
     try { const snap = await fs.doc(ROOT_PATH).get(); if (!snap.exists) await subirLocal(fs); } catch {}
@@ -916,7 +928,7 @@ async function entrar(){
   try { await S.fb.auth.signInWithPopup(prov); toast('conta conectada'); }
   catch (e) { if (e && (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment')) return S.fb.auth.signInWithRedirect(prov); if (e && e.code !== 'auth/cancelled-popup-request') toast(loginErro(e)); }
 }
-async function sair(){ if (S.fb && S.fb.auth) { await S.fb.auth.signOut(); toast('você saiu da conta'); } }
+async function sair(){ if (S.fb && S.fb.auth) { LS.set('semConta', false); await S.fb.auth.signOut(); toast('você saiu da conta'); } }
 async function boot(){
   loadLocal(); readHash(); render();
   if (!IN_CLAUDE) { if (FB_CONFIG) startFirebase(); return; }
@@ -1314,6 +1326,20 @@ function trilhaCard(){
       <div><p class="small" style="margin:0">nível ${a.nv} · ${esc(nv.nome)}</p><p style="margin:2px 0 0;font-size:17px;font-weight:400;line-height:1.35">${esc(a.t)}</p></div>
       <button class="btn cocoa" data-aula="${a.id}">${feitas ? 'continuar a trilha' : 'começar do zero'}</button></section>`;
 }
+const pedeEntrada = () => !IN_CLAUDE && FB_CONFIG && !S.user && S.authReady && !LS.get('semConta', false);
+function viewEntrada(){
+  const erro = S.fb && S.fb.erro;
+  return `<div class="welcome">
+    <div class="w-mark">${SYMT()}</div>
+    <p class="w-word">lâmpada<i>.</i></p>
+    <h1 class="title w-title">a Bíblia, um dia de cada <em>vez</em></h1>
+    <p class="w-sub">Leitura guiada do básico ao profundo, com explicações simples, diário e conversa. Seu progresso fica salvo em todos os aparelhos.</p>
+    <button class="btn primary big w-btn" data-act="entrar" ${S.fb && S.fb.pronto ? '' : 'disabled'}>${GLOGO}entrar com o Google</button>
+    <p class="w-note">${erro ? 'Não deu pra carregar o login agora. Confira a internet e abra de novo.' : 'Primeira vez? É só entrar: a sua conta é criada na hora, de graça.'}</p>
+    <button class="linkbtn muted w-skip" data-act="sem-conta">usar sem conta, só neste aparelho</button>
+  </div>`;
+}
+const GLOGO = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style="flex:none;background:#fff;border-radius:50%;padding:2px"><path fill="#4285F4" d="M21.6 12.2c0-.7-.1-1.3-.2-1.9H12v3.6h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.2z"/><path fill="#34A853" d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22z"/><path fill="#FBBC05" d="M6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 0 0 0 9.2z"/><path fill="#EA4335" d="M12 6c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.4L6.4 10C7.2 7.7 9.4 6 12 6z"/></svg>';
 function banner(){
   if (!IN_CLAUDE && FB_CONFIG && S.fb && S.fb.pronto && !S.user) return `<button class="banner" data-act="entrar"><span class="ic">${ico('heart')}</span><span><b>Entre com sua conta Google</b> pra ver seu progresso em todos os aparelhos.</span>${ico('right')}</button>`;
   if (!nome()) return `<button class="banner" data-tab="perfil"><span class="ic">${ico('heart')}</span><span><b>Como você quer ser chamado?</b> Monte seu perfil: nome, foto e cores.</span>${ico('right')}</button>`;
@@ -1596,6 +1622,8 @@ function auto(){
 }
 function render(){
   const v = document.getElementById('view'), c = document.getElementById('chat');
+  const entrada = pedeEntrada(); document.body.classList.toggle('w-on', entrada);
+  if (entrada) { v.innerHTML = viewEntrada(); document.getElementById('chat').innerHTML = ''; duo(v); return; }
   v.innerHTML = (S.update ? `<button class="upd" data-act="atualizar">nova versão do lâmpada <b>atualizar</b></button>` : '') + VIEWS[S.tab]().replace('<div class="view">', '<div class="view">' + appbar()) + `<footer class="foot">lâmpada<i>.</i> · feito por <em>Laís</em></footer>`;
   c.innerHTML = S.chatOpen ? viewChat() : ''; S.chatAnim = false;
   document.body.classList.toggle('chat-open', !!S.chatOpen);
@@ -1693,6 +1721,7 @@ document.addEventListener('click', async e => {
     case 'clear-books': S.form.livros = []; render(); break;
     case 'criar': criarPlano(); break;
     case 'ics-plano': agendaPlano(); break;
+    case 'sem-conta': LS.set('semConta', true); render(); break;
     case 'atualizar': location.replace(location.pathname + '?v=' + Date.now() + location.hash); break;
     case 'tema-toggle': S.ui.tema = escuro() ? 'claro' : 'escuro'; saveUI(); render(); break;
     case 'foto-ajustar': ajustarFoto(); break;
