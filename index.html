@@ -236,6 +236,16 @@ select.inp{appearance:none;-webkit-appearance:none}
 .row-add .btn{width:auto;flex:none}
 .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 @media (max-width:520px){.form-grid{grid-template-columns:minmax(0,1fr)}}
+/* celular: botões que o ícone já explica ficam só com o ícone */
+@media (max-width:600px){
+  .io .bt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .btn.io{width:44px;min-width:44px;min-height:44px;padding:0;flex:none;border-radius:50%}
+  .btn.io .i{margin:0}
+  .g.vs > .acts{gap:4px}
+  .linkbtn.io{min-width:36px;min-height:36px;justify-content:center;padding:6px}
+  .linkbtn.io .i{width:18px;height:18px}
+  .foco-acts > .btn.io{width:52px;min-height:52px;flex:none}
+}
 .chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .chip{border:1px solid var(--line);background:var(--surface);border-radius:22px;padding:11px 14px;font-size:12.5px;font-weight:400;text-align:left;line-height:1.35;color:var(--ink);min-height:46px}
 .picked{display:flex;flex-wrap:wrap;gap:8px}
@@ -406,6 +416,7 @@ body.foco-on .shell{padding-left:max(16px, env(safe-area-inset-left, 0px))}
 .foco-acts > *{flex:1}
 .semana .stat b{font-size:24px}
 .nav .tab-busca{display:none}
+.bib-sobre{font-size:14px;line-height:1.7;color:var(--muted);margin:0}
 .junto{display:flex;align-items:center;gap:8px;margin:0;font-size:13px;color:var(--muted)}
 .junto svg{width:15px;height:15px;color:var(--rose-ink);flex:none}
 .junto b{font-weight:500;color:var(--rose-ink)}
@@ -832,6 +843,66 @@ function buildDias(codes, nDays){
   return out;
 }
 
+/* ---------- Bíblia inteira por nível: ordem pensada pra cada fase, em trilhas que andam juntas no mesmo dia ---------- */
+const NIVEL = {
+  iniciante:{ nome:'iniciante', sub:'explicações simples e a trilha do básico',
+    guia:'está começando a ler a Bíblia, não tem costume de ler e quer entender de verdade, do básico ao profundo, e criar amor pela Palavra. Escreva com frases curtas e palavras simples; quando usar uma palavra difícil, explique.',
+    exp:'3 ou 4 frases simples contando o que acontece', ctx:'2 frases com um detalhe histórico ou cultural que ajuda a entender',
+    dif:'as 5 palavras ou expressões que mais costumam confundir quem lê esse trecho pela primeira vez (pense em como aparecem na NVI e na Almeida)' },
+  intermediario:{ nome:'intermediário', sub:'mais contexto e ligações entre os livros',
+    guia:'já lê a Bíblia há um tempo e conhece as histórias principais. Vá além do básico: contexto histórico, ligações com outros livros e temas que atravessam a Bíblia. Linguagem clara, sem simplificar demais nem explicar o óbvio.',
+    exp:'4 frases contando o que acontece e como o trecho se liga ao resto da Bíblia', ctx:'2 ou 3 frases com contexto histórico, cultural ou do autor que muda a leitura',
+    dif:'as 5 palavras ou expressões mais importantes para entender esse trecho a fundo (termos teológicos, costumes, nomes de lugares ou grupos)' },
+  avancado:{ nome:'avançado', sub:'hebraico e grego, estrutura e interpretações',
+    guia:'lê a Bíblia com frequência e quer estudar a fundo. Pode trazer termos do hebraico e do grego (transliterados, com o sentido), estrutura literária, contexto histórico preciso, referências cruzadas e as principais linhas de interpretação. Linguagem clara e direta, sem explicar o óbvio.',
+    exp:'4 ou 5 frases com o movimento do texto, sua estrutura e o ponto central', ctx:'3 frases com contexto histórico, literário ou do texto original (hebraico ou grego)',
+    dif:'5 termos-chave do texto original (hebraico ou grego), com a palavra transliterada e o sentido, que mudam a compreensão do trecho' }
+};
+const nivel = () => NIVEL[S.ui.nivel] ? S.ui.nivel : 'iniciante';
+const NV = () => NIVEL[nivel()];
+const ORDEM = {
+  iniciante:{ nome:'Bíblia inteira para quem está começando',
+    sobre:'Começa conhecendo Jesus (Marcos, Lucas, João e Atos), depois o começo de tudo (Gênesis e Êxodo). Daí vai alternando a história de Israel com cartas curtas, deixa os livros mais difíceis (leis, genealogias e profetas longos) pra quando você já tiver chão. Salmos e Provérbios vêm espalhados pelo caminho, um pedacinho de tempos em tempos.',
+    trilhas:[['MRK','LUK','JHN','ACT','GEN','EXO','PHP','COL','EPH','JAS','JOS','JDG','RUT','1SA','2SA','1PE','2PE','1JN','2JN','3JN','JUD','MAT','1KI','2KI','JON','AMO','HOS','MIC','ISA','ROM','GAL','1TH','2TH','1TI','2TI','TIT','PHM','EZR','NEH','EST','HAG','ZEC','MAL','1CO','2CO','HEB','JER','LAM','HAB','ZEP','NAM','OBA','JOL','JOB','ECC','SNG','LEV','NUM','DEU','1CH','2CH','EZK','DAN','REV'], ['PSA','PRO']] },
+  intermediario:{ nome:'Bíblia inteira na ordem dos acontecimentos',
+    sobre:'A história na ordem em que aconteceu: Jó perto de Gênesis, os profetas encaixados no tempo dos reis e do exílio, os evangelhos e as cartas junto com Atos, na época em que foram escritas. Os Salmos vêm em paralelo, espalhados pelo plano.',
+    trilhas:[['GEN','JOB','EXO','LEV','NUM','DEU','JOS','JDG','RUT','1SA','2SA','1CH','PRO','ECC','SNG','1KI','2KI','2CH','JOL','JON','AMO','HOS','ISA','MIC','NAM','ZEP','HAB','JER','LAM','OBA','EZK','DAN','EZR','HAG','ZEC','EST','NEH','MAL','MRK','MAT','LUK','JHN','ACT','JAS','GAL','1TH','2TH','1CO','2CO','ROM','EPH','PHP','COL','PHM','1TI','TIT','2TI','1PE','2PE','HEB','JUD','1JN','2JN','3JN','REV'], ['PSA']] },
+  avancado:{ nome:'Bíblia inteira em três trilhas',
+    sobre:'Três trilhas por dia, como nos planos clássicos de estudo: o Antigo Testamento em ordem, os livros de sabedoria (Jó, Salmos, Provérbios, Eclesiastes e Cantares) e o Novo Testamento. Dá pra ver como os temas conversam entre si.',
+    trilhas:[AT.filter(c => !['JOB','PSA','PRO','ECC','SNG'].includes(c)), ['JOB','PSA','PRO','ECC','SNG'], NT] }
+};
+const TEMPOS = [['6m','6 meses',182], ['1a','1 ano',365], ['2a','2 anos',730]];
+const tempoDe = id => TEMPOS.find(t => t[0] === id) || TEMPOS[1];
+function buildTrilhas(trilhas, D){
+  const T = trilhas.map(bookChapters), out = [];
+  for (let i = 0; i < D; i++) out.push(T.map(C => C.slice(Math.floor(i * C.length / D), Math.floor((i + 1) * C.length / D))).flat().join('+'));
+  return out;
+}
+function bibliaForm(){ if (!S.bib) S.bib = { nivel:nivel(), tempo:nivel() === 'iniciante' ? '2a' : '1a', inicio:iso(new Date()) }; return S.bib; }
+function bibliaCard(){
+  const f = bibliaForm(), o = ORDEM[f.nivel], [, tNome, D] = tempoDe(f.tempo), per = 1189 / D;
+  return `<section class="card glass biblia">
+    <div class="card-h"><span class="label">${ico('book')}Bíblia inteira</span></div>
+    <p class="hint" style="margin-top:-8px">Um plano pra ler a Bíblia toda, montado na ordem que faz mais sentido pra cada fase.</p>
+    <div class="field"><span>pra quem</span><div class="seg">${Object.entries(NIVEL).map(([k, n]) => `<button data-bib-nivel="${k}" aria-pressed="${f.nivel === k}">${esc(n.nome)}</button>`).join('')}</div></div>
+    <p class="prose bib-sobre">${esc(o.sobre)}</p>
+    <div class="form-grid">
+      <div class="field"><span>em quanto tempo</span><div class="seg">${TEMPOS.filter(([k]) => !(f.nivel === 'avancado' && k === '2a')).map(([k, t]) => `<button data-bib-tempo="${k}" aria-pressed="${f.tempo === k}">${t}</button>`).join('')}</div></div>
+      <label class="field"><span>começar em</span><input class="inp" id="bib-inicio" type="date" value="${esc(f.inicio)}"></label>
+    </div>
+    <div class="preview"><b>1.189 capítulos em ${tNome}</b> · cerca de ${per < 10 ? per.toFixed(1).replace('.', ',') : Math.round(per)} capítulos por dia${f.nivel === 'iniciante' && f.tempo === '6m' ? '. É bastante pra quem está começando; 2 anos deixa mais leve.' : '.'}</div>
+    <button class="btn primary" data-act="bib-criar">${ico('check')}criar plano da Bíblia inteira</button>
+  </section>`;
+}
+function criarBiblia(){
+  const f = bibliaForm(), o = ORDEM[f.nivel], [, tNome, D] = tempoDe(f.tempo);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(f.inicio)) return toast('confira a data de começo');
+  const id = 'b' + Date.now().toString(36);
+  const dias = buildTrilhas(o.trilhas, D); if (dias.some(x => !x)) return toast('escolha um prazo menor');
+  const def = { id, nome:'Bíblia inteira', sub:`${o.nome} · ${tNome}`, inicio:f.inicio, dias, lidos:{}, criado:new Date().toISOString(), tipo:'biblia' };
+  S.planos[id] = expand(def); savePlano(def); setAtivo(id); S.bib = null; toast('plano da Bíblia inteira criado'); go('hoje');
+}
+
 /* ---------- estado ---------- */
 const IN_CLAUDE = !!(window.claude && typeof window.claude.use === 'function');
 /* conta real: Firebase (preencha com a configuração do seu projeto) */
@@ -1055,7 +1126,7 @@ function juntoCard(){
   return `<section class="card">${h}
     <p class="hint" style="margin-top:-8px">Mande o seu código pra quem vai ler com você, e coloque o código da outra pessoa aqui. Vocês só veem o nome, o plano e se já leram hoje. As reflexões continuam só suas.</p>
     ${S.juntoErro ? `<p class="hint warn">Falta liberar o "ler junto" nas regras do Firebase (veja o GUIA, passo 1.4).</p>` : ''}
-    <div class="codigo"><span class="small">seu código</span><b>${esc(S.ui.code || '······')}</b><button class="btn ghost sm" data-act="junto-enviar" ${S.ui.code ? '' : 'disabled'}>${ico('send')}enviar</button></div>
+    <div class="codigo"><span class="small">seu código</span><b>${esc(S.ui.code || '······')}</b><button class="btn ghost sm io" data-act="junto-enviar" aria-label="Enviar meu código" ${S.ui.code ? '' : 'disabled'}>${ico('send')}<span class="bt">enviar</span></button></div>
     <form class="ask" data-form="junto"><label for="junto-in" class="sr">Código de quem vai ler com você</label>
       <input id="junto-in" type="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="8" placeholder="código da outra pessoa">
       <button class="send" type="submit" aria-label="Adicionar" ${S.busy.junto ? 'disabled' : ''}>${ico('plus')}</button></form>
@@ -1113,7 +1184,7 @@ async function boot(){
 }
 
 /* ---------- inteligência artificial: Gemini (API) e Claude ---------- */
-const guia = () => `Você é um guia gentil para ${nome() || 'uma pessoa'}, que está começando a ler a Bíblia, não tem costume de ler e quer entender de verdade, do básico ao profundo, e criar amor pela Palavra. Escreva em português do Brasil, com frases curtas e palavras simples; quando usar uma palavra difícil, explique. Respeite a fé de quem lê; quando tradições cristãs entendem algo de formas diferentes, diga isso com leveza. Não use emojis nem markdown.`;
+const guia = () => `Você é um guia gentil para ${nome() || 'uma pessoa'}, que ${NV().guia} Escreva em português do Brasil. Respeite a fé de quem lê; quando tradições cristãs entendem algo de formas diferentes, diga isso com leveza. Não use emojis nem markdown.`;
 const geminiReady = () => !IN_CLAUDE && !!S.gkey;
 const claudeReady = () => !!S.sample;
 const engineReady = e => e === 'gemini' ? geminiReady() : claudeReady();
@@ -1182,7 +1253,7 @@ const oops = e => { if (e && e.code !== 'cancelled') toast(errCopy(e && e.code))
 async function explicar(d){
   if (S.busy['exp' + d.key]) return; S.busy['exp' + d.key] = true; render();
   try {
-    const r = await aiJSON(`Leitura de hoje: ${refName(d)}.\nResponda só com um objeto JSON neste formato:\n{"titulo":"até 7 palavras, em minúsculas, dizendo do que trata a leitura","resumo":"3 ou 4 frases simples contando o que acontece, com suas próprias palavras, sem citar o texto bíblico","contexto":"2 frases com um detalhe histórico ou cultural que ajuda a entender","levar":"uma pergunta curta e acolhedora para pensar durante o dia"}`);
+    const r = await aiJSON(`Leitura de hoje: ${refName(d)}.\nResponda só com um objeto JSON neste formato:\n{"titulo":"até 7 palavras, em minúsculas, dizendo do que trata a leitura","resumo":"${NV().exp}, com suas próprias palavras, sem citar o texto bíblico","contexto":"${NV().ctx}","levar":"uma pergunta curta e acolhedora para pensar durante o dia"}`);
     if (r && r.resumo) await saveCap(d.key, { titulo:String(r.titulo || ''), resumo:String(r.resumo), contexto:String(r.contexto || ''), levar:String(r.levar || '') });
   } catch (e) { oops(e); }
   S.busy['exp' + d.key] = false; render();
@@ -1199,7 +1270,7 @@ async function comparar(d){
 async function dificeis(d){
   if (S.busy['dif' + d.key]) return; S.busy['dif' + d.key] = true; render();
   try {
-    const r = await aiJSON(`Leitura: ${refName(d)}. Liste as 5 palavras ou expressões que mais costumam confundir quem lê esse trecho pela primeira vez (pense em como aparecem na NVI e na Almeida). Responda só com um array JSON:\n[{"palavra":"palavra ou expressão","sentido":"o que quer dizer, em uma ou duas frases simples"}]`);
+    const r = await aiJSON(`Leitura: ${refName(d)}. Liste ${NV().dif}. Responda só com um array JSON:\n[{"palavra":"palavra ou expressão","sentido":"o que quer dizer, em uma ou duas frases simples"}]`);
     const list = Array.isArray(r) ? r.filter(x => x && x.palavra && x.sentido).slice(0, 6).map(x => ({ palavra:String(x.palavra), sentido:String(x.sentido) })) : [];
     if (list.length) await saveCap(d.key, { dificeis:list });
   } catch (e) { oops(e); }
@@ -1220,7 +1291,7 @@ async function prepararSemana(){
   if (!alvo.length) return toast('as explicações da semana já estão prontas');
   if (S.busy.semana) return; S.busy.semana = true; render();
   try {
-    const r = await aiJSON(`Prepare explicações para estas leituras, nesta ordem: ${alvo.map(refName).join('; ')}.\nResponda só com um array JSON, um objeto por leitura, na mesma ordem:\n[{"titulo":"até 7 palavras, em minúsculas","resumo":"3 ou 4 frases simples contando o que acontece, sem citar o texto bíblico","contexto":"2 frases com um detalhe histórico ou cultural","levar":"uma pergunta curta e acolhedora para o dia"}]`);
+    const r = await aiJSON(`Prepare explicações para estas leituras, nesta ordem: ${alvo.map(refName).join('; ')}.\nResponda só com um array JSON, um objeto por leitura, na mesma ordem:\n[{"titulo":"até 7 palavras, em minúsculas","resumo":"${NV().exp}, sem citar o texto bíblico","contexto":"${NV().ctx}","levar":"uma pergunta curta e acolhedora para o dia"}]`);
     let k = 0;
     if (Array.isArray(r)) for (let i = 0; i < alvo.length; i++) { const x = r[i]; if (x && x.resumo) { k++; await saveCap(alvo[i].key, { titulo:String(x.titulo || ''), resumo:String(x.resumo), contexto:String(x.contexto || ''), levar:String(x.levar || '') }); } }
     toast(k ? `${k} ${k === 1 ? 'explicação pronta' : 'explicações prontas'}` : 'não deu certo agora');
@@ -1422,8 +1493,8 @@ function falar(id, texto){
   u.onend = u.onerror = () => { if (S.falando === id) { S.falando = null; pintaFala(); } };
   S.falando = id; pintaFala(); sy.speak(u);
 }
-const falaBtn = (id, cls = 'linkbtn') => podeFalar() ? `<button class="${cls} fala" data-falar="${esc(id)}">${ico(S.falando === id ? 'stop' : 'sound')}<span>${S.falando === id ? 'parar' : 'ouvir'}</span></button>` : '';
-function pintaFala(){ document.querySelectorAll('[data-falar]').forEach(b => { const on = S.falando === b.dataset.falar; b.innerHTML = ico(on ? 'stop' : 'sound') + `<span>${on ? 'parar' : 'ouvir'}</span>`; }); }
+const falaBtn = (id, cls = 'linkbtn') => podeFalar() ? `<button class="${cls} fala io" data-falar="${esc(id)}" aria-label="${S.falando === id ? 'Parar' : 'Ouvir'}">${ico(S.falando === id ? 'stop' : 'sound')}<span class="bt">${S.falando === id ? 'parar' : 'ouvir'}</span></button>` : '';
+function pintaFala(){ document.querySelectorAll('[data-falar]').forEach(b => { const on = S.falando === b.dataset.falar; b.innerHTML = ico(on ? 'stop' : 'sound') + `<span class="bt">${on ? 'parar' : 'ouvir'}</span>`; b.setAttribute('aria-label', on ? 'Parar' : 'Ouvir'); }); }
 function textoFala(id){
   if (id === 'exp') { const d = cur(), c = capOf(d.key); return [refName(d) + '.', c.titulo || '', c.resumo || '', c.contexto || '', c.levar ? 'Pra levar no dia: ' + c.levar : ''].join(' '); }
   if (id.startsWith('aula:')) { const a = AULAS.find(x => x.id === id.slice(5)); return a ? [a.t + '.', ...a.p, 'Pra pensar: ' + a.q].join(' ') : ''; }
@@ -1589,7 +1660,7 @@ function step3(d){
 }
 function trilhaCard(){
   const a = proxAula(), feitas = AULAS.filter(x => S.aulas[x.id]).length, nv = a && NIVEIS.find(n => n.n === a.nv);
-  if (!a) return '';
+  if (!a || nivel() === 'avancado') return '';
   return `<section class="card">
       <div class="card-h"><span class="label">${ico('steps')}sua trilha</span><span class="small">${feitas} de ${AULAS.length}</span></div>
       <div><p class="small" style="margin:0">nível ${a.nv} · ${esc(nv.nome)}</p><p style="margin:2px 0 0;font-size:17px;font-weight:400;line-height:1.35">${esc(a.t)}</p></div>
@@ -1790,9 +1861,9 @@ function viewPerfil(){
       <p class="hint" style="text-align:center">Arraste a foto com o dedo pra deixar do jeito que quiser.</p>
       <div class="two"><button class="btn primary" data-act="foto-salvar">${ico('check')}salvar foto</button><button class="btn ghost" data-act="foto-cancelar">cancelar</button></div>`
     : `<div class="me-row"><div class="ava-big">${avatar()}</div><div style="min-width:0"><p class="me-name">${esc(nome() || 'sem nome ainda')}</p><p class="small" style="margin:2px 0 0">${S.user ? esc(S.user.email || '') : 'perfil deste aparelho'}</p></div></div>
-      <div class="me-btns"><label class="btn ghost sm" for="foto-in">${ico('camera')}${fotoURL() ? 'trocar foto' : 'colocar foto'}</label>
-        ${S.ui.fotoOrig ? `<button class="btn ghost sm" data-act="foto-ajustar">${ico('move')}ajustar</button>` : ''}
-        ${fotoURL() ? `<button class="btn ghost sm" data-act="foto-remover">${ico('trash')}tirar foto</button>` : ''}</div>
+      <div class="me-btns"><label class="btn ghost sm io" for="foto-in" aria-label="${fotoURL() ? 'Trocar foto' : 'Colocar foto'}">${ico('camera')}<span class="bt">${fotoURL() ? 'trocar foto' : 'colocar foto'}</span></label>
+        ${S.ui.fotoOrig ? `<button class="btn ghost sm io" data-act="foto-ajustar" aria-label="Ajustar foto">${ico('move')}<span class="bt">ajustar</span></button>` : ''}
+        ${fotoURL() ? `<button class="btn ghost sm io" data-act="foto-remover" aria-label="Tirar foto">${ico('trash')}<span class="bt">tirar foto</span></button>` : ''}</div>
       <input id="foto-in" type="file" accept="image/*" hidden>`;
   return `<div class="view">
   <header class="top"><div><p class="eyebrow">${ico('heart')}perfil e ajustes</p><h1 class="title">seu <em>perfil</em></h1></div></header>
@@ -1801,6 +1872,9 @@ function viewPerfil(){
   <section class="card"><div class="card-h"><span class="label">como quer ser chamado</span></div>
     <label class="field"><span class="sr">seu nome</span><input class="inp" id="u-nome" type="text" autocomplete="given-name" placeholder="seu nome" value="${esc(S.ui.nome || nome())}"></label>
     <p class="hint">Aparece na saudação e a IA usa pra conversar com você. Tudo no app salva sozinho.</p></section>
+  <section class="card"><div class="card-h"><span class="label">como você lê a Bíblia</span></div>
+    <div class="seg">${Object.entries(NIVEL).map(([k, n]) => `<button data-nivel="${k}" aria-pressed="${nivel() === k}">${esc(n.nome)}</button>`).join('')}</div>
+    <p class="hint">${esc(NV().sub[0].toUpperCase() + NV().sub.slice(1))}. Muda o jeito das explicações, das palavras e das conversas com a IA.</p></section>
   <p class="grp">aparência</p>
   <section class="card"><div class="card-h"><span class="label">claro ou escuro</span></div>
     <div class="seg">${[['claro', 'sun', 'claro'], ['escuro', 'moon', 'escuro'], ['auto', 'clock', 'auto']].map(([k, i, t]) => `<button data-tema="${k}" aria-pressed="${S.ui.tema === k}">${ico(i)} ${t}</button>`).join('')}</div>
@@ -1859,6 +1933,7 @@ function cPlanos(){
   </section>
   ${agendaCard()}
   ${juntoCard()}
+  ${Object.values(S.planos).some(x => x.tipo === 'biblia') ? '' : bibliaCard()}
   <section class="card">
     <div class="card-h"><span class="label muted">seus planos</span><span class="small">toque pra trocar</span></div>
     <div class="plans">${allPlans().map(x => { const q = progresso(x);
@@ -1897,7 +1972,7 @@ function cVersos(){
   return `<button class="btn ghost" data-busca="abrir">${ico('search')}guardar outro versículo</button>
   <section class="card"><div class="card-h"><span class="label">seus versículos</span><span class="small">${list.length}</span></div><div class="gloss">${list.map(v => `<div class="g vs">
     <span class="r">${esc(v.ref)}</span>${v.texto ? `<span class="t">${esc(v.texto)}</span>` : ''}${v.nota ? `<span class="s">${esc(v.nota)}</span>` : ''}
-    <div class="acts"><a class="linkbtn" href="${yvKey(v.key.replace(/-\d+$/, ''))}" target="_blank" rel="noopener">${ico('book')}abrir</a><button class="linkbtn" data-verso-chat="${esc(v.key)}">${ico('chat')}conversar</button><button class="linkbtn muted" data-verso-del="${esc(v.key)}">${ico('trash')}tirar</button></div></div>`).join('')}</div></section>`;
+    <div class="acts"><a class="linkbtn io" aria-label="Abrir na Bíblia" href="${yvKey(v.key.replace(/-\d+$/, ''))}" target="_blank" rel="noopener">${ico('book')}<span class="bt">abrir</span></a><button class="linkbtn io" aria-label="Conversar sobre o versículo" data-verso-chat="${esc(v.key)}">${ico('chat')}<span class="bt">conversar</span></button><button class="linkbtn muted io" aria-label="Tirar dos versículos" data-verso-del="${esc(v.key)}">${ico('trash')}<span class="bt">tirar</span></button></div></div>`).join('')}</div></section>`;
 }
 function cPalavras(){
   const list = Object.values(S.vocab).sort((a, b) => String(b.quando).localeCompare(String(a.quando)));
@@ -1938,14 +2013,14 @@ function cAjustes(){
 function viewNovo(){
   const f = S.form, opts = (list, label) => `<optgroup label="${label}">${list.map(b => `<option value="${b.c}">${esc(b.n)}</option>`).join('')}</optgroup>`;
   return `<div class="view">
-  <button class="linkbtn" data-act="cancel-novo" style="padding:0">${ico('x')}cancelar</button>
+  <button class="linkbtn io" data-act="cancel-novo" aria-label="Cancelar" style="padding:0">${ico('x')}<span class="bt">cancelar</span></button>
   <header class="top"><div><p class="eyebrow">${ico('cal')}planos</p><h1 class="title">novo <em>plano</em></h1></div></header>
   <section class="card glass">
     <label class="field"><span>nome do plano</span><input class="inp" id="f-nome" type="text" placeholder="ex.: até a Páscoa" value="${esc(f.nome)}"></label>
     <div class="field"><span>o que ler</span>
       <div class="chips">${PRESETS.map(x => `<button class="chip" style="text-align:center" data-preset="${x.id}">${esc(x.nome)}</button>`).join('')}</div>
       <div class="row-add"><label for="f-livro" class="sr">Livro</label><select class="inp" id="f-livro">${opts(BIBLIA.filter(b => !b.nt), 'Antigo Testamento')}${opts(BIBLIA.filter(b => b.nt), 'Novo Testamento')}</select>
-        <button class="btn soft" data-act="add-book">${ico('plus')}somar</button></div>
+        <button class="btn soft io" data-act="add-book" aria-label="Somar livro">${ico('plus')}<span class="bt">somar</span></button></div>
       ${f.livros.length ? `<div class="picked">${f.livros.length > 12 ? `<button class="bchip" data-act="clear-books">${f.livros.length} livros ${ico('x')}</button>` : f.livros.map(c => `<button class="bchip" data-rm-book="${c}" aria-label="Tirar ${esc(BK[c].n)}">${esc(BK[c].n)} ${ico('x')}</button>`).join('')}</div>` : `<p class="hint">Escolha um atalho ou some livros na ordem em que quer ler.</p>`}
     </div>
     <div class="form-grid">
@@ -2048,7 +2123,7 @@ const aulaPrompt = a => `Acabei de fazer a aula "${a.t}". Me explica isso um pou
 
 document.addEventListener('click', async e => {
   const rd = e.target.closest('[data-read]'); if (rd) { marcaPasso('ler'); setTimeout(render, 400); return; }
-  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes],[data-chat],[data-cv],[data-cv-open],[data-cv-ctx],[data-cv-del],[data-cv-askdel],[data-fut],[data-falar],[data-busca],[data-busca-ir],[data-verso-chat],[data-verso-del],[data-junto-del],[data-paleta],[data-tema],[data-simbolo]');
+  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes],[data-chat],[data-cv],[data-cv-open],[data-cv-ctx],[data-cv-del],[data-cv-askdel],[data-fut],[data-falar],[data-busca],[data-busca-ir],[data-verso-chat],[data-verso-del],[data-junto-del],[data-nivel],[data-bib-nivel],[data-bib-tempo],[data-paleta],[data-tema],[data-simbolo]');
   if (!el) return;
   const ds = el.dataset;
   if (ds.tab) { if (ds.tab !== 'perfil') S.edit = null; if (ds.tab === 'aprender') S.aula = null; if (ds.tab === 'caminhada') S.form = null; return go(ds.tab); }
@@ -2073,6 +2148,9 @@ document.addEventListener('click', async e => {
   if (ds.buscaIr) { S.busca = ds.buscaIr; S.guardando = false; return render(); }
   if (ds.versoChat) { const v = S.versos[ds.versoChat]; S.buscaOpen = false; novaConversa('ref:' + ds.versoChat); openChat(); return; }
   if (ds.juntoDel) { S.ui.amigos = (S.ui.amigos || []).filter(a => a.uid !== ds.juntoDel); saveUI(); juntoOuvir(); toast('parou de ler junto'); return render(); }
+  if (ds.nivel) { S.ui.nivel = ds.nivel; S.bib = null; saveUI(); return render(); }
+  if (ds.bibNivel) { const f = bibliaForm(); f.nivel = ds.bibNivel; if (f.nivel === 'iniciante' && f.tempo === '6m') f.tempo = '2a'; if (f.nivel === 'avancado' && f.tempo === '2a') f.tempo = '1a'; return render(); }
+  if (ds.bibTempo) { bibliaForm().tempo = ds.bibTempo; return render(); }
   if (ds.versoDel) { delete S.versos[ds.versoDel]; saveVersos(); toast('versículo tirado'); return render(); }
   if (ds.fut) { const q = plan().days[+ds.fut]; return toast(`essa leitura abre ${q ? 'no dia ' + fmtShort(q.date) : 'no dia dela'}`); }
   if (ds.sel) { S.sel = +ds.sel; S.selPlan = plan().id; S.open = null; return S.tab !== 'hoje' ? go('hoje') : render(); }
@@ -2111,6 +2189,7 @@ document.addEventListener('click', async e => {
     case 'ics-plano': agendaPlano(); break;
     case 'junto-enviar': { const txt = `Vamos ler a Bíblia juntos no lâmpada? Entre em ${location.origin + location.pathname} e coloque o meu código em caminhada › planos › ler junto: ${S.ui.code}`;
       if (navigator.share) navigator.share({ text:txt }).catch(() => {}); else if (navigator.clipboard) navigator.clipboard.writeText(txt).then(() => toast('convite copiado'), () => toast('seu código: ' + S.ui.code)); else toast('seu código: ' + S.ui.code); break; }
+    case 'bib-criar': criarBiblia(); break;
     case 'foco': S.foco = true; S.fx.view = true; render(); window.scrollTo({ top:0 }); break;
     case 'foco-sair': S.foco = false; S.fx.view = true; if (window.speechSynthesis) speechSynthesis.cancel(); S.falando = null; render(); break;
     case 'semana-pergunta': perguntaSemana(); break;
@@ -2145,6 +2224,7 @@ document.addEventListener('input', e => {
   if (id === 'nota') { S.draft[cur().key] = e.target.value; autoNota(); }
   if (id === 'busca-in') { S.busca = e.target.value; clearTimeout(S.buscaT); S.buscaT = setTimeout(() => { if (lerRef(S.busca)) { S.guardando = false; const pos = e.target.selectionStart; render(); const i = document.getElementById('busca-in'); if (i) { i.focus(); i.setSelectionRange(pos, pos); } } }, 450); }
   if (id === 'u-nome') { S.ui.nome = e.target.value.trim(); saveUI(); }
+  if (id === 'bib-inicio') bibliaForm().inicio = e.target.value;
   if (id === 'crop-z' && S.edit) { S.edit.z = +e.target.value; placeCrop(); }
   if (id === 'r-hora' && e.target.value) { S.hora = S.ui.hora = e.target.value; LS.set('hora', S.hora); saveUI(); }
   if (S.form && id && id.startsWith('f-')) { const map = { 'f-nome':'nome', 'f-inicio':'inicio', 'f-fim':'fim', 'f-pordia':'porDia' };
