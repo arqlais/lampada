@@ -109,6 +109,8 @@ Para abrir o arquivo:
 
 - Toque na **sua foto** (canto de cima) para abrir **seu perfil**: nome, foto (trocar, **ajustar** arrastando e com zoom, ou tirar), **claro / escuro / automático** e a **paleta** (Dusty & baunilha, que é a padrão, Azul, Lilás, Verde sálvia, Rosa antigo ou Laranja). O botão de lua/sol no topo troca claro e escuro na hora.
 - **Outras pessoas (ex.: seu namorado):** mande o endereço **arqlais.github.io/lampada**. Cada um entra com a **própria conta Google** (depois que o login do passo 1 estiver ligado) e tem progresso, diário, palavras, chave do Gemini, foto e paleta só seus. As regras do passo 1.4 garantem que ninguém vê os dados do outro.
+- **Como você lê a Bíblia** (em **seu perfil › você**): **iniciante**, **intermediário** ou **avançado**. Muda o jeito das explicações, das palavras e das conversas com a IA (no avançado entram hebraico, grego e interpretações, e some a trilha do básico do "hoje"). Cada conta escolhe o seu.
+- **Bíblia inteira:** em **caminhada › planos**, escolha pra quem (iniciante, intermediário ou avançado), em quanto tempo e quando começar. O iniciante começa por Jesus e deixa os livros difíceis pro fim; o intermediário segue a ordem dos acontecimentos; o avançado lê três trilhas por dia (Antigo Testamento, sabedoria e Novo Testamento).
 - **Ler junto:** em **caminhada › planos › ler junto** aparece o **seu código**. Toque em **enviar** e mande pra pessoa; ela coloca o seu código no campo "código da outra pessoa" (e você o dela). Daí aparece embaixo da leitura de hoje "Lucas já leu hoje". Ninguém vê suas reflexões, conversas ou palavras. Pra parar, toque no **x** ao lado do nome.
 - Sem login, o perfil fica salvo só naquele aparelho.
 - **Sair da conta:** em **seu perfil**, no fim da página.
