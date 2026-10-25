@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Lâmpada">
@@ -50,7 +50,7 @@
   --cocoa:var(--blush); --on-cocoa:var(--taupe); --tile:rgba(var(--accent-rgb),.1); --ctx:rgba(var(--accent-rgb),.12);
   --tab-on:rgba(var(--soft-rgb),.14); --tab-on-ink:var(--blush); --ok:#A9C3B6; --shadow:none; color-scheme:dark }
 *{box-sizing:border-box}
-html{background:var(--bg)}
+html{background:var(--bg);touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 /* halo de luz suave vindo de cima + brilho rosa no canto (angelical, acolhedor) */
 body::before,body::after{content:"";position:fixed;z-index:-1;border-radius:50%;pointer-events:none;filter:blur(90px);background:var(--blush)}
 body::before{width:max(130vw,900px);height:60vh;top:-34vh;left:50%;transform:translateX(-50%);opacity:1;background:var(--halo)}
@@ -83,6 +83,9 @@ svg.i.lg{width:22px;height:22px}
 .title em,.label em,.sh-title em{font-family:var(--f-serif);font-style:italic;font-weight:400;letter-spacing:0;color:var(--rose-num)}
 .title em{font-size:1.12em;padding-left:.08em}
 .label em,.sh-title em{font-size:1.16em}
+/* The Seasons em tamanho pequeno fica fina demais: um traço leve deixa ela encorpada (itálico "negrito") */
+.label em,.foot em,.hint .serif,.w .q,.g .t,.vs .t{-webkit-text-stroke:.03em currentColor}
+.card.rose > .card-h .label em,.take .label em{font-size:1.36em;-webkit-text-stroke:.042em currentColor;line-height:1}
 .duo em{margin-left:.22em}
 .top-r{display:flex;align-items:center;gap:8px;flex:none;align-self:flex-start}
 .avatar{width:42px;height:42px;border-radius:50%;border:none;background:none;padding:0;overflow:hidden;display:flex;flex:none}
@@ -222,15 +225,15 @@ svg.symt{width:36px;height:36px;flex:none;filter:drop-shadow(0 6px 14px rgba(var
 /* campos: pílula com botão redondo (referência "Find a memory…") */
 .ask{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:0 6px 0 20px;min-height:56px}
 .ask:focus-within{border-color:var(--rose)}
-.ask input{flex:1;min-width:0;border:none;outline:none;background:transparent;font-weight:300;font-size:14px;height:48px}
+.ask input{flex:1;min-width:0;border:none;outline:none;background:transparent;font-weight:300;font-size:16px;height:48px}
 .ask input::placeholder,.inp::placeholder,textarea::placeholder{color:var(--muted)}
 .send{width:44px;height:44px;border-radius:50%;border:none;background:var(--cocoa);color:var(--on-cocoa);display:flex;align-items:center;justify-content:center;flex:none}
 .send[disabled]{opacity:.45}
-.note-area{width:100%;min-height:130px;resize:vertical;border:1px solid var(--line);border-radius:24px;background:var(--surface);padding:14px 18px;font-weight:300;font-size:14px;line-height:1.7;outline:none}
+.note-area{width:100%;min-height:130px;resize:vertical;border:1px solid var(--line);border-radius:24px;background:var(--surface);padding:14px 18px;font-weight:300;font-size:16px;line-height:1.7;outline:none}
 .note-area:focus{border-color:var(--rose)}
 .field{display:flex;flex-direction:column;gap:6px;min-width:0}
 .field > span{font-size:12px;font-weight:500;color:var(--muted)}
-.inp{height:50px;border-radius:var(--r-ctl);border:1px solid var(--line);background:var(--surface);padding:0 20px;font-weight:300;font-size:14px;outline:none;width:100%;min-width:0;color:var(--ink)}
+.inp{height:50px;border-radius:var(--r-ctl);border:1px solid var(--line);background:var(--surface);padding:0 20px;font-weight:300;font-size:16px;outline:none;width:100%;min-width:0;color:var(--ink)}
 select.inp{appearance:none;-webkit-appearance:none}
 .inp:focus{border-color:var(--rose)}
 .row-add{display:flex;gap:8px}
@@ -340,7 +343,7 @@ details.fold[open] > summary .chev{transform:rotate(90deg)}
 
 /* tela de entrada */
 body.w-on .nav,body.w-on .fab{display:none}
-body.w-on .shell{padding-left:max(16px, env(safe-area-inset-left, 0px))}
+body.w-on .shell{padding-left:0;padding-right:0}
 .welcome{max-width:460px;margin:0 auto;min-height:calc(100vh - 120px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:24px 8px}
 .w-mark svg.symt{width:96px;height:96px;filter:drop-shadow(0 18px 30px rgba(var(--ink-rgb),.22))}
 .w-word{margin:4px 0 0;font-size:22px;font-weight:500;letter-spacing:-.03em}
@@ -407,7 +410,7 @@ input[type=range]{width:100%;accent-color:var(--rosa)}
 .msg .who .fala{margin-left:auto;padding:0 0 0 8px}
 .msg .who{width:100%}
 body.foco-on .nav,body.foco-on .fab,body.foco-on .appbar{display:none}
-body.foco-on .shell{padding-left:max(16px, env(safe-area-inset-left, 0px))}
+body.foco-on .shell{padding-left:0;padding-right:0}
 .view.foco{max-width:640px;gap:20px;padding-top:8px}
 .foco-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .foco-ref{justify-content:center;text-align:center;font-size:52px;margin-top:18px}
@@ -469,7 +472,7 @@ body.chat-open{overflow:hidden}
 .sh-x{position:relative}
 .sh-x .cnt{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:9px;background:var(--rosa);color:var(--on-accent);font-size:10px;font-style:normal;font-weight:500;display:flex;align-items:center;justify-content:center;padding:0 5px}
 .cvs .li.on .num{background:var(--blush);border-color:transparent}
-.ask textarea{flex:1;min-width:0;border:none;outline:none;background:transparent;font:inherit;font-weight:300;font-size:14px;resize:none;padding:15px 0;line-height:1.45;max-height:140px;color:var(--ink)}
+.ask textarea{flex:1;min-width:0;border:none;outline:none;background:transparent;font:inherit;font-weight:300;font-size:16px;resize:none;padding:15px 0;line-height:1.45;max-height:140px;color:var(--ink)}
 .ask textarea::placeholder{color:var(--muted)}
 .sh-note{font-size:11.5px;color:var(--muted);text-align:center;margin:8px 0 0}
 @media (min-width:640px) and (max-width:1099px){
@@ -494,6 +497,7 @@ body.chat-open{overflow:hidden}
 
 @media (min-width:1100px){
   .shell{padding:40px 24px 64px 268px}
+  body.w-on .shell,body.foco-on .shell{padding-left:24px;padding-right:24px}
   .nav{right:auto;left:calc(24px + env(safe-area-inset-left, 0px));top:24px;bottom:24px;margin:0;width:220px;height:auto;max-width:none;
     display:flex;flex-direction:column;align-items:stretch;gap:4px;padding:26px 14px;border:0;border-radius:32px;background:var(--surface);box-shadow:0 20px 50px -30px rgba(var(--ink-rgb),.45)}
   .nav .brand{display:flex;align-items:center;gap:12px;color:var(--ink);font-size:18px;font-weight:500;letter-spacing:-.03em;padding:0 16px 28px}
@@ -2124,6 +2128,7 @@ function criarPlano(){
 }
 const aulaPrompt = a => `Acabei de fazer a aula "${a.t}". Me explica isso um pouco mais a fundo, com um exemplo, e me sugere um próximo passo de leitura.`;
 
+['gesturestart','gesturechange'].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive:false }));   /* sem zoom de pinça no iPhone e iPad */
 document.addEventListener('click', async e => {
   const rd = e.target.closest('[data-read]'); if (rd) { marcaPasso('ler'); setTimeout(render, 400); return; }
   const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes],[data-chat],[data-cv],[data-cv-open],[data-cv-ctx],[data-cv-del],[data-cv-askdel],[data-fut],[data-falar],[data-busca],[data-busca-ir],[data-verso-chat],[data-verso-del],[data-junto-del],[data-nivel],[data-bib-nivel],[data-bib-tempo],[data-paleta],[data-tema],[data-simbolo]');
