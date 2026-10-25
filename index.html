@@ -83,6 +83,7 @@ svg.i.lg{width:22px;height:22px}
 .title em,.label em,.sh-title em{font-family:var(--f-serif);font-style:italic;font-weight:400;letter-spacing:0;color:var(--rose-num)}
 .title em{font-size:1.12em;padding-left:.08em}
 .label em,.sh-title em{font-size:1.16em}
+.duo em{margin-left:.22em}
 .top-r{display:flex;align-items:center;gap:8px;flex:none;align-self:flex-start}
 .avatar{width:42px;height:42px;border-radius:50%;border:none;background:none;padding:0;overflow:hidden;display:flex;flex:none}
 .round{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:flex;align-items:center;justify-content:center;padding:0;flex:none}
@@ -422,7 +423,7 @@ body.foco-on .shell{padding-left:max(16px, env(safe-area-inset-left, 0px))}
 .junto b{font-weight:500;color:var(--rose-ink)}
 .codigo{display:flex;align-items:center;gap:12px;background:var(--rose-soft, var(--surface));border-radius:var(--r-ctl);padding:10px 10px 10px 18px}
 .codigo .small{white-space:nowrap}
-.codigo b{font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:24px;letter-spacing:.12em;color:var(--rose-ink);flex:1}
+.codigo b{font-weight:500;font-size:20px;letter-spacing:.14em;color:var(--rose-ink);flex:1;font-variant-numeric:tabular-nums}
 .amigo .ava-s{width:36px;height:36px;border-radius:50%;flex:none;display:grid;place-items:center;overflow:hidden;background:var(--rose-soft, var(--line));color:var(--rose-ink);font-size:15px}
 .amigo .ava-s img{width:100%;height:100%;object-fit:cover}
 .amigo .ok{color:var(--rose-ink);display:grid}
@@ -1849,7 +1850,9 @@ function duo(root){
     if (el.querySelector('em')) return;
     const tn = [...el.childNodes].filter(n => n.nodeType === 3 && n.textContent.trim()).pop(); if (!tn) return;
     const m = tn.textContent.match(/^([\s\S]*?)(\S+)(\s*)$/); if (!m) return;
-    const em = document.createElement('em'); em.textContent = m[2]; tn.textContent = m[1]; tn.after(em); if (m[3]) em.after(document.createTextNode(m[3]));
+    const em = document.createElement('em'); em.textContent = m[2]; tn.textContent = m[1];
+    if (getComputedStyle(el).display.includes('flex')) { const w = document.createElement('span'); w.className = 'duo'; tn.before(w); w.append(tn, em); }   /* no rótulo com ícone, o espaço entre as palavras fica normal (sem o vão do flex) */
+    else { tn.after(em); if (m[3]) em.after(document.createTextNode(m[3])); }
   });
 }
 
