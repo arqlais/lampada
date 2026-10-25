@@ -421,6 +421,10 @@ body.foco-on .shell{padding-left:0;padding-right:0}
 .foco-acts{display:flex;gap:10px}
 .foco-acts > *{flex:1}
 .semana .stat b{font-size:24px}
+.minbtn .i{transform:rotate(-90deg);transition:transform .2s}
+.semana.min .minbtn .i{transform:rotate(90deg)}
+.semana.min{gap:0}
+.semana.min > .card-h{margin:0}
 .nav .tab-busca{display:none}
 .bib-sobre{font-size:14px;line-height:1.7;color:var(--muted);margin:0}
 .junto{display:flex;align-items:center;gap:8px;margin:0;font-size:13px;color:var(--muted)}
@@ -1520,15 +1524,15 @@ function dadosSemana(){
 }
 function semanaCard(fechavel){
   const w = dadosSemana(), st = streak(), sp = (S.ui.semana && S.ui.semana.key === w.key) ? S.ui.semana : null;
-  if (fechavel && S.ui.semanaFechada === w.key) return '';
   const n = (v, um, varios) => `<div><b>${v}</b><span>${v === 1 ? um : varios}</span></div>`;
-  return `<section class="card rose semana">
-    <div class="card-h"><span class="label">sua semana</span><span class="pill">${fmtShort(w.ini)} a ${fmtShort(w.fim)}</span></div>
-    <div class="stat">${n(w.leituras.length, 'leitura', 'leituras')}${n(st, 'dia seguido', 'dias seguidos')}${n(w.notas, 'reflexão', 'reflexões')}${n(w.palavras + w.versos, 'palavra ou versículo', 'palavras e versículos')}</div>
+  const min = !!S.ui.semanaMin;
+  return `<section class="card rose semana ${min ? 'min' : ''}">
+    <div class="card-h"><span class="label">sua semana</span><span class="hero-r"><span class="pill">${fmtShort(w.ini)} a ${fmtShort(w.fim)}</span><button class="round sm minbtn" data-act="semana-min" aria-expanded="${!min}" aria-label="${min ? 'Abrir resumo da semana' : 'Recolher resumo da semana'}" title="${min ? 'abrir' : 'recolher'}">${ico('right')}</button></span></div>
+    ${min ? '' : `    <div class="stat">${n(w.leituras.length, 'leitura', 'leituras')}${n(st, 'dia seguido', 'dias seguidos')}${n(w.notas, 'reflexão', 'reflexões')}${n(w.palavras + w.versos, 'palavra ou versículo', 'palavras e versículos')}</div>
     ${w.leituras.length ? `<p class="small" style="margin:0">Você leu: ${esc(w.leituras.slice(0, 8).join(', '))}${w.leituras.length > 8 ? '…' : ''}</p>` : `<p class="small" style="margin:0">Uma semana nova começa. Um capítulo por dia já é muito.</p>`}
     ${sp ? `<div class="take"><span class="label" style="font-size:10.5px">pra semana</span><span class="serif">${esc(sp.pergunta)}</span></div>`
       : aiEngine() ? (S.busy.semanaP ? thinking('pensando numa pergunta pra sua semana') : `<button class="btn ghost" data-act="semana-pergunta">${ico('spark')}uma pergunta pra minha semana</button>`) : ''}
-    ${fechavel ? `<button class="linkbtn muted" data-act="semana-fechar" style="align-self:center">fechar resumo</button>` : ''}
+    `}
   </section>`;
 }
 async function perguntaSemana(){
@@ -2203,7 +2207,7 @@ document.addEventListener('click', async e => {
     case 'foco': S.foco = true; S.fx.view = true; render(); window.scrollTo({ top:0 }); break;
     case 'foco-sair': S.foco = false; S.fx.view = true; if (window.speechSynthesis) speechSynthesis.cancel(); S.falando = null; render(); break;
     case 'semana-pergunta': perguntaSemana(); break;
-    case 'semana-fechar': S.ui.semanaFechada = dadosSemana().key; saveUI(); render(); break;
+    case 'semana-min': S.ui.semanaMin = !S.ui.semanaMin; saveUI(); render(); break;
     case 'busca-chat': case 'busca-explicar': { const r = lerRef(S.busca); if (!r) break; S.buscaOpen = false; novaConversa('ref:' + refKey(r)); if (ds.act === 'busca-explicar') { perguntar(`Me explica ${refTxt(r)} de um jeito simples: o que acontece, o contexto e o que isso pode dizer pra minha vida.`); } else openChat(); break; }
     case 'busca-guardar': { const r = lerRef(S.busca); if (r && S.versos[refKey(r)]) { toast('já está nos seus versículos'); break; } S.guardando = true; render(); break; }
     case 'busca-salvar': { const r = lerRef(S.busca); if (!r) break; const k = refKey(r);
