@@ -388,6 +388,9 @@ label.btn{cursor:pointer}
 .crop{position:relative;width:min(240px,68vw);aspect-ratio:1;border-radius:50%;overflow:hidden;background:var(--surface);touch-action:none;cursor:grab;box-shadow:0 0 0 4px var(--surface),0 0 0 5px var(--line)}
 .crop img{position:absolute;left:50%;top:50%;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
 input[type=range]{width:100%;accent-color:var(--rosa)}
+/* iPhone: campos de data e hora ignoram a largura e passam da borda do cartão */
+input.inp[type=date],input.inp[type=time]{-webkit-appearance:none;appearance:none;display:block;width:100%;max-width:100%;min-width:0;line-height:48px;text-align:left}
+input.inp[type=date]::-webkit-date-and-time-value,input.inp[type=time]::-webkit-date-and-time-value{text-align:left;margin:0}
 .seg button svg.i{width:15px;height:15px;vertical-align:-3px;margin-right:2px}
 .pals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media (min-width:640px){.pals{grid-template-columns:repeat(3,minmax(0,1fr))}}
