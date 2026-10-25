@@ -388,6 +388,41 @@ input[type=range]{width:100%;accent-color:var(--rosa)}
 [data-sync].bad{color:var(--rose-ink)}
 .grp{scroll-margin-top:20px;margin:18px 6px -2px;font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 .nav-me{display:none}
+.hero-r{display:flex;align-items:center;gap:8px}
+.round.sm{width:32px;height:32px;background:var(--tile);border:0}
+.round.sm svg{width:16px;height:16px}
+.fala{display:inline-flex;align-items:center;gap:5px;font-size:12px}
+.fala svg{width:15px;height:15px}
+.msg .who .fala{margin-left:auto;padding:0 0 0 8px}
+.msg .who{width:100%}
+body.foco-on .nav,body.foco-on .fab,body.foco-on .appbar{display:none}
+body.foco-on .shell{padding-left:max(16px, env(safe-area-inset-left, 0px))}
+.view.foco{max-width:640px;gap:20px;padding-top:8px}
+.foco-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.foco-ref{justify-content:center;text-align:center;font-size:52px;margin-top:18px}
+.foco-txt{font-size:16.5px;line-height:1.85}
+.foco-ler{margin-top:6px}
+.foco-acts{display:flex;gap:10px}
+.foco-acts > *{flex:1}
+.semana .stat b{font-size:24px}
+.nav .tab-busca{display:none}
+.junto{display:flex;align-items:center;gap:8px;margin:0;font-size:13px;color:var(--muted)}
+.junto svg{width:15px;height:15px;color:var(--rose-ink);flex:none}
+.junto b{font-weight:500;color:var(--rose-ink)}
+.codigo{display:flex;align-items:center;gap:12px;background:var(--rose-soft, var(--surface));border-radius:var(--r-ctl);padding:10px 10px 10px 18px}
+.codigo .small{white-space:nowrap}
+.codigo b{font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:24px;letter-spacing:.12em;color:var(--rose-ink);flex:1}
+.amigo .ava-s{width:36px;height:36px;border-radius:50%;flex:none;display:grid;place-items:center;overflow:hidden;background:var(--rose-soft, var(--line));color:var(--rose-ink);font-size:15px}
+.amigo .ava-s img{width:100%;height:100%;object-fit:cover}
+.amigo .ok{color:var(--rose-ink);display:grid}
+.amigo .ok svg{width:18px;height:18px}
+.hint.warn{color:var(--rose-ink)}
+.caps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:6px}
+.caps-grid .chip{min-height:40px;padding:0;text-align:center;border-radius:14px}
+.vs{display:flex;flex-direction:column;gap:6px}
+.vs .t{font-family:var(--f-serif);font-style:italic;font-size:20px;line-height:1.35}
+.vs .r{font-size:12px;font-weight:500;color:var(--rose-ink)}
+.g.vs > .acts{display:flex;flex-direction:row;flex-wrap:wrap;gap:6px 16px;flex:none}
 .syms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media (min-width:640px){.syms{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .symb{border:1px solid var(--line);background:var(--surface);border-radius:22px;padding:12px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--ink);min-width:0}
@@ -454,6 +489,7 @@ body.chat-open{overflow:hidden}
   .appbar{display:none}
   .tab{width:100%;height:48px;margin:0;border-radius:18px;flex-direction:row;justify-content:flex-start;gap:12px;padding:0 16px;font-size:14px}
   .tab svg{width:22px;height:22px;margin:0 8px}
+  .nav .tab-busca{display:flex}
   .nav-me{display:flex;align-items:center;gap:8px;margin-top:auto;padding:14px 2px 0;border-top:1px solid var(--line)}
   .me-chip{flex:1;display:flex;align-items:center;gap:12px;border:0;background:none;color:var(--ink);padding:6px 6px 6px 14px;border-radius:18px;min-width:0;font-size:13.5px;text-align:left}
   .me-chip:hover{background:var(--soft)}
@@ -499,6 +535,10 @@ body.chat-open{overflow:hidden}
   <symbol id="i-move" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M12 3l-2.5 2.5M12 3l2.5 2.5M12 21l-2.5-2.5M12 21l2.5-2.5M3 12l2.5-2.5M3 12l2.5 2.5M21 12l-2.5-2.5M21 12l-2.5 2.5"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V4.5h4V7M7 7l1 13h8l1-13"/></symbol>
   <symbol id="i-exit" viewBox="0 0 24 24"><path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5l5 5"/></symbol>
+  <symbol id="i-sound" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2.5"/></symbol>
+  <symbol id="i-focus" viewBox="0 0 24 24"><path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/></symbol>
   <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
 </defs></svg>
 
@@ -508,6 +548,7 @@ body.chat-open{overflow:hidden}
   <button class="tab" data-tab="hoje"><svg class="i lg"><use href="#i-book"/></svg><span>hoje</span></button>
   <button class="tab" data-tab="aprender"><svg class="i lg"><use href="#i-steps"/></svg><span>aprender</span></button>
   <button class="tab" data-tab="caminhada"><svg class="i lg"><use href="#i-path"/></svg><span>caminhada</span></button>
+  <button class="tab tab-busca" data-busca="abrir"><svg class="i lg"><use href="#i-search"/></svg><span>buscar</span></button>
   <div class="nav-me" id="navme"></div>
 </nav>
 <button class="fab" id="fab" data-chat="open" aria-label="Conversar com a IA"><svg class="i"><use href="#i-chat"/></svg></button>
@@ -755,6 +796,25 @@ function parts(chs){ const ps = []; chs.map(chOf).forEach(x => { const l = ps[ps
 const num = p => p.from === p.to ? String(p.from) : p.from + '–' + p.to;
 const refName = d => parts(d.chs).map(p => p.book.n + ' ' + num(p)).join(' · ');
 function hkey(s){ if (s.length <= 180) return s; let h = 0; for (const ch of s) h = (h * 31 + ch.charCodeAt(0)) | 0; return 'k' + (h >>> 0).toString(36) + '-' + s.length; }
+const semAcento = t => String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+const APELIDOS = { salmo:'PSA', sal:'PSA', sl:'PSA', cantares:'SNG', canticos:'SNG', cantico:'SNG', apocalipse:'REV', ap:'REV', atos:'ACT', joao:'JHN', jo:'JHN', job:'JOB', mc:'MRK', mt:'MAT', lc:'LUK', rm:'ROM', gn:'GEN', ex:'EXO', pv:'PRO', prov:'PRO', is:'ISA', jr:'JER', hb:'HEB', tg:'JAS' };
+function acharLivro(tok){
+  const raw = String(tok).trim().toLowerCase().replace(/\.$/, ''); if (raw === 'jó' || raw === 'jo\u0301') return [BK.JOB];
+  const t = semAcento(raw.replace(/^(i{1,3})\s+/, (m, r) => r.length + ' ')); if (!t) return [];
+  if (APELIDOS[t]) return [BK[APELIDOS[t]]];
+  const ex = BIBLIA.filter(b => semAcento(b.ab) === t || semAcento(b.n) === t); if (ex.length) return ex;
+  return t.length < 2 ? [] : BIBLIA.filter(b => semAcento(b.n).startsWith(t));
+}
+function lerRef(q){
+  q = String(q || '').trim(); if (!q) return null;
+  const m = q.match(/^\s*((?:[1-3]|i{1,3})?\s*[^\d\s:.,]+(?:\s+[^\d\s:.,]+)*?)\.?\s*(\d+)?(?:\s*[:.,]\s*(\d+)(?:\s*[-–]\s*(\d+))?|\s+(\d+)(?:\s*[-–]\s*(\d+))?)?\s*$/i);
+  if (!m) return null;
+  const livros = acharLivro(m[1]); if (!livros.length) return null;
+  const b = livros[0], cap = m[2] ? Math.max(1, Math.min(+m[2], b.caps)) : null, v1 = m[3] || m[5] ? +(m[3] || m[5]) : null, v2 = m[4] || m[6] ? +(m[4] || m[6]) : null;
+  return { book:b, cap, v1, v2, outros:livros.slice(1, 6) };
+}
+const refTxt = r => r.book.n + (r.cap ? ' ' + r.cap + (r.v1 ? ':' + r.v1 + (r.v2 ? '–' + r.v2 : '') : '') : '');
+const refKey = r => r.book.c + '.' + (r.cap || 1) + (r.v1 ? '.' + r.v1 + (r.v2 ? '-' + r.v2 : '') : '');
 const yvKey = (k, v) => v === 'alm' ? `https://www.bible.com/bible/212/${k}.ARC` : `https://www.bible.com/bible/129/${k}.NVI`;
 const yv = (d, v) => yvKey(d.chs[0], v);
 
@@ -779,7 +839,7 @@ const FB_CONFIG = window.LAMPADA_FIREBASE || null;
 let ROOT_PATH = 'perfis/' + PERFIL;
 const ROOT = () => ROOT_PATH, CAPS = () => IN_CLAUDE ? 'capitulos' : ROOT_PATH + '/capitulos';
 const S = {
-  tab:'hoje', ativo:'natal', planos:{}, lidosNatal:{}, notas:{}, caps:{}, conversas:{}, vocab:{}, aulas:{}, passos:{},
+  tab:'hoje', ativo:'natal', planos:{}, lidosNatal:{}, notas:{}, caps:{}, conversas:{}, vocab:{}, versos:{}, aulas:{}, passos:{}, amigos:{},
   sel:null, selPlan:null, open:null, aula:null, ctab:'planos', chatCtx:'leitura', chatId:null, chatView:'conversa', form:null, confirmDel:false, step3:'palavras',
   engine: IN_CLAUDE ? 'claude' : 'gemini', gkey:'', gmodel:'gemini-3-flash-preview', hora:'07:30',
   db:null, sample:null, busy:{}, draft:{}, pending:false, ctl:null,
@@ -832,6 +892,7 @@ function conv(id, v){
 }
 const resumo = t => { t = String(t).replace(/\s+/g, ' ').trim(); return t.length > 52 ? t.slice(0, 50).replace(/\s\S*$/, '') + '…' : t; };
 function aboutDe(ctx){
+  if (/^ref:/.test(ctx)) { const [c, cap, v] = ctx.slice(4).split('.'); return BK[c] ? BK[c].n + ' ' + cap + (v ? ':' + v.replace('-', '–') : '') : 'uma passagem'; }
   if (/^aula:/.test(ctx)) { const a = AULAS.find(x => x.id === ctx.slice(5)); return a ? 'a aula "' + a.t + '"' : 'uma aula'; }
   const key = ctx.replace(/^leitura:/, ''); for (const p of allPlans()) { const d = p.days.find(x => x.key === key); if (d) return refName(d); }
   return 'a leitura';
@@ -841,7 +902,7 @@ function loadLocal(){
   const pf = LS.get('perfil', null) || {};
   S.lidosNatal = pf.lidos || LS.get('lidos', {}); S.ativo = pf.ativo || 'natal'; S.aulas = pf.aulas || {}; S.passos = pf.passos || {};
   const pl = LS.get('planos', {}); S.planos = {}; Object.values(pl).forEach(d => { S.planos[d.id] = expand(d); });
-  S.notas = LS.get('notas', {}); S.caps = LS.get('caps', {}); S.conversas = normConversas(LS.get('conversas', {})); S.vocab = LS.get('vocab', {});
+  S.notas = LS.get('notas', {}); S.caps = LS.get('caps', {}); S.conversas = normConversas(LS.get('conversas', {})); S.vocab = LS.get('vocab', {}); S.versos = LS.get('versos', {});
   const cfg = LS.get('ia', {}); S.gkey = cfg.gkey || ''; S.gmodel = !cfg.gmodel || /pro/.test(cfg.gmodel) ? 'gemini-3-flash-preview' : cfg.gmodel; S.hora = LS.get('hora', '07:30');
   if (cfg.engine) S.engine = cfg.engine;
   const ui = LS.get('ui', null);
@@ -912,6 +973,7 @@ async function saveConversa(key){
   const c = S.conversas[key]; if (!c) return; c.turns = c.turns.slice(-80); LS.set('conversas', S.conversas);
   return nuvem(() => S.db.doc(ROOT() + '/conversas/' + key).set(limpo(c)));
 }
+async function saveVersos(){ LS.set('versos', S.versos); return nuvem(() => S.db.doc(ROOT() + '/extras/versos').set(limpo({ itens:S.versos }))); }
 async function saveVocab(){ LS.set('vocab', S.vocab); return nuvem(() => S.db.doc(ROOT() + '/extras/vocab').set(limpo({ itens:S.vocab }))); }
 const saveIA = () => { const v = { gkey:S.gkey, gmodel:S.gmodel, engine:S.engine }; LS.set('ia', v); if (!IN_CLAUDE) nuvem(() => S.db.doc(ROOT() + '/extras/ia').set(limpo(v))); };
 let notaT;
@@ -926,18 +988,79 @@ document.addEventListener('focusout', () => setTimeout(() => { if (S.pending && 
 function subscribe(db){
   const P = ROOT();
   const subs = [];
-  subs.push(db.doc(P).onSnapshot(s => { if (s.exists) { const d = s.data(); S.lidosNatal = Object.assign({}, d.lidos || {}); S.aulas = Object.assign({}, d.aulas || {});
+  subs.push(db.doc(P).onSnapshot(s => { S.carregado = true; if (s.exists) { const d = s.data(); S.lidosNatal = Object.assign({}, d.lidos || {}); S.aulas = Object.assign({}, d.aulas || {});
     S.passos = JSON.parse(JSON.stringify(d.passos || {})); if (d.ativo) S.ativo = d.ativo; } soft(); }, e => failSave(e)));
   subs.push(db.collection(P + '/planos').onSnapshot(q => { const n = {}; q.docs.forEach(d => { const v = d.data(); n[d.id] = expand(Object.assign({}, v, { id:d.id, lidos:Object.assign({}, v.lidos || {}) })); }); S.planos = n; soft(); }, () => {}));
   subs.push(db.collection(P + '/diario').onSnapshot(q => { const n = {}; q.docs.forEach(d => n[d.id] = d.data()); S.notas = n; soft(); }, () => {}));
   subs.push(db.collection(CAPS()).onSnapshot(q => { const n = {}; q.docs.forEach(d => n[d.id] = d.data()); S.caps = n; soft(); }, () => {}));
+  subs.push(db.doc(P + '/extras/versos').onSnapshot(s => { if (s.exists) { S.versos = Object.assign({}, s.data().itens || {}); LS.set('versos', S.versos); } else if (Object.keys(S.versos).length) saveVersos(); soft(); }, () => {}));
   subs.push(db.doc(P + '/extras/vocab').onSnapshot(s => { S.vocab = s.exists ? Object.assign({}, s.data().itens || {}) : {}; soft(); }, () => {}));
   subs.push(db.collection(P + '/conversas').onSnapshot(q => { if (!S.busy.chat) { const n = {}, apagadas = LS.get('cvApagadas', []); q.docs.forEach(d => { n[d.id] = conv(d.id, d.data()); });
       Object.values(S.conversas).forEach(c => { if (!n[c.id] && c.turns.length && !apagadas.includes(c.id)) { n[c.id] = c; nuvem(() => db.doc(P + '/conversas/' + c.id).set(limpo(c))); } });
       S.conversas = n; LS.set('conversas', n); } if (S.chatOpen) soft(); }, () => {}));
-  subs.push(db.doc(P + '/extras/ui').onSnapshot(s => { if (s.exists) { S.ui = Object.assign({}, S.ui, s.data()); LS.set('ui', S.ui); applyUI(); } soft(); }, () => {}));
+  subs.push(db.doc(P + '/extras/ui').onSnapshot(s => { if (s.exists) { S.ui = Object.assign({}, S.ui, s.data()); LS.set('ui', S.ui); applyUI(); } juntoOuvir(); soft(); }, () => {}));
   if (!IN_CLAUDE) subs.push(db.doc(P + '/extras/ia').onSnapshot(s => { if (s.exists) { const d = s.data(); if (d.gkey) S.gkey = d.gkey; if (d.gmodel) S.gmodel = d.gmodel; if (d.engine) S.engine = d.engine; LS.set('ia', { gkey:S.gkey, gmodel:S.gmodel, engine:S.engine }); } soft(); }, () => {}));
   return () => subs.forEach(u => { try { u(); } catch {} });
+}
+/* ---------- ler junto: cada conta publica só o resumo (nome, plano, se leu hoje) em pub/{uid} ---------- */
+const JUNTO = { subs:{}, ultimo:'', t:null };
+const novoCodigo = () => { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (let i = 0; i < 6; i++) s += A[Math.floor(Math.random() * A.length)]; return s; };
+function ultimaLeitura(){ let u = ''; [S.lidosNatal, ...Object.values(S.planos).map(p => p.lidos || {})].forEach(m => Object.values(m).forEach(v => { if (v > u) u = v; })); return u; }
+function pubBody(){
+  const p = plan(), t = todayIdx(p), d = p.days[Math.max(0, Math.min(p.days.length - 1, t))], foto = fotoURL();
+  return limpo({ code:S.ui.code, nome:nome() || 'sem nome', foto:/^https:/.test(foto) ? foto : '', plano:p.nome, ref:d ? refName(d) : '', lido:!!(d && lidosOf(p)[d.key]),
+    ultima:ultimaLeitura(), streak:streak() });
+}
+function juntoSync(){
+  if (!S.user || !S.db || !S.carregado || IN_CLAUDE) return;
+  if (!S.ui.code) { S.ui.code = novoCodigo(); saveUI(); }
+  const b = pubBody(), sig = JSON.stringify(b); if (sig === JUNTO.ultimo) return;
+  clearTimeout(JUNTO.t); JUNTO.t = setTimeout(() => S.db.doc('pub/' + S.user.uid).set(Object.assign({ atualizado:new Date().toISOString() }, b))
+    .then(() => { JUNTO.ultimo = sig; if (S.juntoErro) { S.juntoErro = false; soft(); } })
+    .catch(() => { if (!S.juntoErro) { S.juntoErro = true; soft(); } }), 1200);
+}
+function juntoOuvir(){
+  if (!S.db) return;
+  const quer = (S.ui.amigos || []).map(a => a.uid);
+  Object.keys(JUNTO.subs).forEach(u => { if (!quer.includes(u)) { JUNTO.subs[u](); delete JUNTO.subs[u]; delete S.amigos[u]; } });
+  quer.forEach(u => { if (!JUNTO.subs[u]) JUNTO.subs[u] = S.db.doc('pub/' + u).onSnapshot(s => { S.amigos[u] = s.exists ? s.data() : { sumiu:true }; soft(); }, () => {}); });
+}
+function juntoParar(){ Object.values(JUNTO.subs).forEach(u => { try { u(); } catch {} }); JUNTO.subs = {}; S.amigos = {}; JUNTO.ultimo = ''; }
+async function juntoAdd(v){
+  const code = v.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (code.length !== 6) return toast('o código tem 6 letras e números');
+  if (code === S.ui.code) return toast('esse é o seu código');
+  if (!S.db) return toast('entre na conta primeiro');
+  S.busy.junto = true; render();
+  try {
+    const q = await S.db.collection('pub').where('code', '==', code).limit(1).get();
+    if (q.empty) toast('não achei ninguém com esse código');
+    else { const d = q.docs[0], am = (S.ui.amigos || []).filter(a => a.uid !== d.id); am.push({ uid:d.id, nome:d.data().nome || '' }); S.ui.amigos = am; saveUI(); juntoOuvir(); toast('agora vocês leem juntos'); }
+  } catch { S.juntoErro = true; toast('o banco ainda não liberou o ler junto'); }
+  S.busy.junto = false; render();
+}
+const leuHoje = a => a.ultima === iso(day0(new Date()));
+function juntoLinha(){
+  const am = (S.ui.amigos || []).map(a => Object.assign({ nome:a.nome }, S.amigos[a.uid] || {})).filter(a => !a.sumiu && a.atualizado);
+  if (!am.length) return '';
+  return `<p class="junto">${ico('heart')}<span>${am.map(a => `${esc((a.nome || '').split(' ')[0])} ${leuHoje(a) ? '<b>já leu hoje</b>' : 'ainda não leu hoje'}`).join(' · ')}</span></p>`;
+}
+function juntoCard(){
+  if (IN_CLAUDE || !FB_CONFIG) return '';
+  const h = `<div class="card-h"><span class="label">${ico('heart')}ler junto</span></div>`;
+  if (!S.user) return `<section class="card">${h}<p class="hint" style="margin-top:-8px">Entre na sua conta pra ler junto com alguém e ver quando a outra pessoa já leu.</p></section>`;
+  const lista = (S.ui.amigos || []).map(a => { const x = S.amigos[a.uid] || {}, n = x.nome || a.nome || 'alguém';
+    const sub = x.sumiu ? 'não está mais lendo junto' : !x.atualizado ? 'carregando…' : `${leuHoje(x) ? 'já leu hoje' : 'ainda não leu hoje'}${x.ref ? ' · ' + x.ref : ''}${x.streak ? ' · ' + x.streak + (x.streak === 1 ? ' dia seguido' : ' dias seguidos') : ''}`;
+    return `<div class="li amigo"><span class="ava-s">${x.foto ? `<img src="${esc(x.foto)}" alt="" referrerpolicy="no-referrer">` : esc(n.charAt(0).toUpperCase())}</span><span class="lt">${esc(n)}<small>${esc(sub)}</small></span>${x.atualizado && leuHoje(x) ? `<span class="ok">${ico('check')}</span>` : ''}<button class="linkbtn muted" data-junto-del="${esc(a.uid)}" aria-label="Parar de ler junto com ${esc(n)}">${ico('x')}</button></div>`; }).join('');
+  return `<section class="card">${h}
+    <p class="hint" style="margin-top:-8px">Mande o seu código pra quem vai ler com você, e coloque o código da outra pessoa aqui. Vocês só veem o nome, o plano e se já leram hoje. As reflexões continuam só suas.</p>
+    ${S.juntoErro ? `<p class="hint warn">Falta liberar o "ler junto" nas regras do Firebase (veja o GUIA, passo 1.4).</p>` : ''}
+    <div class="codigo"><span class="small">seu código</span><b>${esc(S.ui.code || '······')}</b><button class="btn ghost sm" data-act="junto-enviar" ${S.ui.code ? '' : 'disabled'}>${ico('send')}enviar</button></div>
+    <form class="ask" data-form="junto"><label for="junto-in" class="sr">Código de quem vai ler com você</label>
+      <input id="junto-in" type="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="8" placeholder="código da outra pessoa">
+      <button class="send" type="submit" aria-label="Adicionar" ${S.busy.junto ? 'disabled' : ''}>${ico('plus')}</button></form>
+    ${lista ? `<div class="list">${lista}</div>` : ''}
+  </section>`;
 }
 const loadScript = src => new Promise((ok, no) => { const el = document.createElement('script'); el.src = src; el.onload = ok; el.onerror = no; document.head.appendChild(el); });
 async function startFirebase(){
@@ -951,7 +1074,7 @@ async function startFirebase(){
   auth.getRedirectResult().catch(e => toast(loginErro(e)));
   let unsub = null;
   auth.onAuthStateChanged(async user => {
-    if (unsub) { unsub(); unsub = null; }
+    if (unsub) { unsub(); unsub = null; } juntoParar(); S.carregado = false;
     S.user = user || null; S.authReady = true; if (user) LS.set('semConta', false);
     if (!user) { S.db = null; ROOT_PATH = 'perfis/' + PERFIL; loadLocal(); return soft(); }
     ROOT_PATH = 'users/' + user.uid;
@@ -966,6 +1089,7 @@ async function subirLocal(fs){   /* primeiro login: leva o que já estava neste 
   Object.values(S.planos).forEach(pl => b.set(fs.doc(P + '/planos/' + pl.id), planoBody(pl)));
   Object.entries(S.notas).forEach(([k, v]) => b.set(fs.doc(P + '/diario/' + k), v));
   if (Object.keys(S.vocab).length) b.set(fs.doc(P + '/extras/vocab'), { itens:S.vocab });
+  if (Object.keys(S.versos).length) b.set(fs.doc(P + '/extras/versos'), limpo({ itens:S.versos }));
   b.set(fs.doc(P + '/extras/ui'), S.ui);
   Object.values(S.conversas).filter(c => c.turns && c.turns.length).slice(0, 200).forEach(c => b.set(fs.doc(P + '/conversas/' + c.id), limpo(c)));
   if (S.gkey) b.set(fs.doc(P + '/extras/ia'), { gkey:S.gkey, gmodel:S.gmodel, engine:S.engine });
@@ -1287,6 +1411,71 @@ function agendaCard(){
   </section>`;
 }
 
+/* ---------- ouvir: lê em voz alta com a voz do próprio aparelho ---------- */
+const podeFalar = () => 'speechSynthesis' in window;
+function falar(id, texto){
+  const sy = window.speechSynthesis; if (!sy) return toast('este aparelho não tem leitura em voz alta');
+  const era = S.falando; sy.cancel(); S.falando = null; pintaFala();
+  if (era === id) return;
+  const u = new SpeechSynthesisUtterance(texto); u.lang = 'pt-BR'; u.rate = .95;
+  const v = sy.getVoices().find(x => /pt[-_]BR/i.test(x.lang)) || sy.getVoices().find(x => /^pt/i.test(x.lang)); if (v) u.voice = v;
+  u.onend = u.onerror = () => { if (S.falando === id) { S.falando = null; pintaFala(); } };
+  S.falando = id; pintaFala(); sy.speak(u);
+}
+const falaBtn = (id, cls = 'linkbtn') => podeFalar() ? `<button class="${cls} fala" data-falar="${esc(id)}">${ico(S.falando === id ? 'stop' : 'sound')}<span>${S.falando === id ? 'parar' : 'ouvir'}</span></button>` : '';
+function pintaFala(){ document.querySelectorAll('[data-falar]').forEach(b => { const on = S.falando === b.dataset.falar; b.innerHTML = ico(on ? 'stop' : 'sound') + `<span>${on ? 'parar' : 'ouvir'}</span>`; }); }
+function textoFala(id){
+  if (id === 'exp') { const d = cur(), c = capOf(d.key); return [refName(d) + '.', c.titulo || '', c.resumo || '', c.contexto || '', c.levar ? 'Pra levar no dia: ' + c.levar : ''].join(' '); }
+  if (id.startsWith('aula:')) { const a = AULAS.find(x => x.id === id.slice(5)); return a ? [a.t + '.', ...a.p, 'Pra pensar: ' + a.q].join(' ') : ''; }
+  if (id.startsWith('msg:')) { const [, cid, i] = id.split(':'); const c = S.conversas[cid]; return c && c.turns[+i] ? c.turns[+i].content : ''; }
+  return '';
+}
+
+/* ---------- resumo da semana ---------- */
+const semanaIni = (d = new Date()) => { const x = day0(d); return addDays(x, -((x.getDay() + 6) % 7)); };
+function dadosSemana(){
+  const ini = semanaIni(), fim = addDays(ini, 6), dentro = q => { if (!q) return false; const d = day0(typeof q === 'string' && q.length === 10 ? parseISO(q) : new Date(q)); return d >= ini && d <= fim; };
+  const leituras = []; allPlans().forEach(p => { const L = lidosOf(p); p.days.forEach(d => { if (L[d.key] && dentro(L[d.key])) leituras.push(refName(d)); }); });
+  return { ini, fim, key:iso(ini), leituras, notas:Object.values(S.notas).filter(n => n && n.texto && dentro(n.quando)).length,
+    palavras:Object.values(S.vocab).filter(w => dentro(w.quando)).length, versos:Object.values(S.versos).filter(v => dentro(v.quando)).length,
+    conversas:Object.values(S.conversas).filter(c => c.turns.length && dentro(c.atualizado)).length };
+}
+function semanaCard(fechavel){
+  const w = dadosSemana(), st = streak(), sp = (S.ui.semana && S.ui.semana.key === w.key) ? S.ui.semana : null;
+  if (fechavel && S.ui.semanaFechada === w.key) return '';
+  const n = (v, um, varios) => `<div><b>${v}</b><span>${v === 1 ? um : varios}</span></div>`;
+  return `<section class="card rose semana">
+    <div class="card-h"><span class="label">sua semana</span><span class="pill">${fmtShort(w.ini)} a ${fmtShort(w.fim)}</span></div>
+    <div class="stat">${n(w.leituras.length, 'leitura', 'leituras')}${n(st, 'dia seguido', 'dias seguidos')}${n(w.notas, 'reflexão', 'reflexões')}${n(w.palavras + w.versos, 'palavra ou versículo', 'palavras e versículos')}</div>
+    ${w.leituras.length ? `<p class="small" style="margin:0">Você leu: ${esc(w.leituras.slice(0, 8).join(', '))}${w.leituras.length > 8 ? '…' : ''}</p>` : `<p class="small" style="margin:0">Uma semana nova começa. Um capítulo por dia já é muito.</p>`}
+    ${sp ? `<div class="take"><span class="label" style="font-size:10.5px">pra semana</span><span class="serif">${esc(sp.pergunta)}</span></div>`
+      : aiEngine() ? (S.busy.semanaP ? thinking('pensando numa pergunta pra sua semana') : `<button class="btn ghost" data-act="semana-pergunta">${ico('spark')}uma pergunta pra minha semana</button>`) : ''}
+    ${fechavel ? `<button class="linkbtn muted" data-act="semana-fechar" style="align-self:center">fechar resumo</button>` : ''}
+  </section>`;
+}
+async function perguntaSemana(){
+  const w = dadosSemana(); if (S.busy.semanaP) return; S.busy.semanaP = true; render();
+  try {
+    const r = await aiJSON(`Nesta semana a pessoa leu: ${w.leituras.join(', ') || 'nada ainda'}. Escreveu ${w.notas} reflexões no diário. Crie uma pergunta curta, acolhedora e profunda pra ela levar na próxima semana, ligada ao que leu. Responda só com JSON: {"pergunta":"..."}`, true);
+    if (r && r.pergunta) { S.ui.semana = { key:w.key, pergunta:String(r.pergunta) }; saveUI(); }
+  } catch (e) { oops(e); }
+  S.busy.semanaP = false; render();
+}
+
+/* ---------- modo foco: só a leitura do dia ---------- */
+function viewFoco(){
+  const d = cur(), p = plan(), c = capOf(d.key), L = lidosOf(p), lido = !!L[d.key];
+  return `<div class="view foco">
+    <div class="foco-top"><p class="eyebrow">${esc(fmtLong(d.date))} · ${esc(p.nome)}</p><button class="round" data-act="foco-sair" aria-label="Sair do modo foco" title="sair do foco">${ico('x')}</button></div>
+    <h1 class="ref foco-ref">${heroRef(d)}</h1>
+    ${c.titulo ? `<p class="sub" style="text-align:center">${esc(c.titulo)}</p>` : ''}
+    <div class="two foco-ler"><a class="btn primary" data-read="nvi" href="${yv(d)}" target="_blank" rel="noopener">${ico('book')}ler na NVI</a><a class="btn ghost" data-read="alm" href="${yv(d, 'alm')}" target="_blank" rel="noopener">${ico('book')}ler na Almeida</a></div>
+    ${c.resumo ? `<p class="prose foco-txt">${esc(c.resumo)}</p>` : ''}
+    ${c.levar ? `<div class="take"><span class="label" style="font-size:10.5px">pra levar no dia</span><span class="serif">${esc(c.levar)}</span></div>` : ''}
+    <div class="foco-acts">${c.resumo ? falaBtn('exp', 'btn ghost') : ''}<button class="btn ${lido ? 'done' : 'primary'}" data-act="toggle">${ico('check')}${lido ? 'leitura concluída' : 'concluir a leitura'}</button></div>
+  </div>`;
+}
+
 /* ---------- pedaços de tela ---------- */
 const greeting = () => { const h = new Date().getHours(); return h < 5 ? 'boa noite' : h < 12 ? 'bom dia' : h < 18 ? 'boa tarde' : 'boa noite'; };
 const thinking = t => `<div class="thinking"><span class="dots"><i></i><i></i><i></i></span>${t}</div>`;
@@ -1298,7 +1487,7 @@ function header(){
 function appbar(){
   const st = streak();
   return `<div class="appbar"><button class="brandm" data-tab="hoje" aria-label="lâmpada, início">${SYMT()}<span>lâmpada<i>.</i></span></button>
-    <div class="top-r">${st ? `<span class="streak" title="dias seguidos lendo">${ico('flame')}${st}</span>` : ''}${temaBtn()}<button class="avatar" data-tab="perfil" aria-label="Seu perfil">${avatar()}</button></div></div>`;
+    <div class="top-r">${st ? `<span class="streak" title="dias seguidos lendo">${ico('flame')}${st}</span>` : ''}<button class="round" data-busca="abrir" aria-label="Buscar na Bíblia" title="buscar na Bíblia">${ico('search')}</button>${temaBtn()}<button class="avatar" data-tab="perfil" aria-label="Seu perfil">${avatar()}</button></div></div>`;
 }
 const escuro = () => S.ui.tema === 'escuro' || (S.ui.tema !== 'claro' && matchMedia('(prefers-color-scheme: dark)').matches);
 const temaBtn = () => `<button class="round" data-act="tema-toggle" aria-label="${escuro() ? 'Modo claro' : 'Modo escuro'}" title="${escuro() ? 'modo claro' : 'modo escuro'}">${ico(escuro() ? 'sun' : 'moon')}</button>`;
@@ -1323,13 +1512,14 @@ function heroCard(d){
   }
   const titulo = capOf(d.key).titulo;
   return `<section class="card rose">
-    <div class="card-h"><span class="label">${esc(label)}</span><span class="pill">${depois ? 'dia ' + (d.i + 1) : `dia ${d.i + 1} de ${pr.total}`}</span></div>
+    <div class="card-h"><span class="label">${esc(label)}</span><span class="hero-r"><span class="pill">${depois ? 'dia ' + (d.i + 1) : `dia ${d.i + 1} de ${pr.total}`}</span><button class="round sm" data-act="foco" aria-label="Modo foco" title="modo foco">${ico('focus')}</button></span></div>
     <div><h2 class="ref">${heroRef(d)}</h2>${titulo ? `<p class="sub">${esc(titulo)}</p>` : when ? `<p class="sub">${esc(when)}</p>` : ''}</div>
     <div class="stack" style="gap:8px">
       <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${pr.total}" aria-valuenow="${pr.n}" aria-label="leituras feitas"><i style="width:${Math.max(2, pr.pct)}%"></i></div>
       <div class="meta-row"><span>${pr.n} de ${pr.total} leituras</span><span>${right}</span></div>
     </div>
     <div class="week">${week}</div>
+    ${juntoLinha()}
   </section>`;
 }
 
@@ -1341,7 +1531,7 @@ function explainCard(d){
     ${c.levar ? `<div class="take"><span class="label" style="font-size:10.5px">pra levar no dia</span><span class="serif">${esc(c.levar)}</span></div>` : ''}`;
   else if (S.busy['exp' + d.key] || (aiEngine() && !tried.has('exp' + d.key))) body = thinking('preparando uma explicação simples');
   else body = aiEngine() ? `<button class="btn soft" data-act="explain">${ico('spark')}tentar de novo</button>` : aiOff();
-  return `<section class="card glass"><div class="card-h"><span class="label">${ico('spark')}em poucas palavras</span></div>${body}</section>`;
+  return `<section class="card glass"><div class="card-h"><span class="label">${ico('spark')}em poucas palavras</span>${c.resumo ? falaBtn('exp') : ''}</div>${body}</section>`;
 }
 /* os passos de cada leitura */
 function stepsCard(d){
@@ -1462,7 +1652,7 @@ function banner(){
 /* ---------- telas ---------- */
 function viewHoje(){
   const d = cur();
-  return `<div class="view">${header()}${banner()}${heroCard(d)}${explainCard(d)}${stepsCard(d)}${trilhaCard()}${localNote()}</div>`;
+  return `<div class="view">${header()}${banner()}${new Date().getDay() === 0 ? semanaCard(true) : ''}${heroCard(d)}${explainCard(d)}${stepsCard(d)}${trilhaCard()}${localNote()}</div>`;
 }
 
 function viewAprender(){
@@ -1494,6 +1684,7 @@ function viewAula(a){
   <section class="card glass">
     ${a.p.map(t => `<p class="prose">${esc(t)}</p>`).join('')}
     <div class="take"><span class="label" style="font-size:10.5px">pra pensar</span><span class="serif">${esc(a.q)}</span></div>
+    ${falaBtn('aula:' + a.id, 'btn ghost')}
     ${ch ? `<a class="btn ghost" href="${yvKey(a.ler)}" target="_blank" rel="noopener">${ico('book')}ler ${esc(ch.book.n)} ${ch.cap} no YouVersion</a>` : ''}
     <button class="btn soft" data-act="aula-ai" data-id="${a.id}">${ico('spark')}me explica mais a fundo</button>
   </section>
@@ -1524,7 +1715,7 @@ function viewChat(){
   const sugest = ehAula ? ['me dá um exemplo', 'explica de um jeito ainda mais simples', 'onde isso aparece na Bíblia?', 'o que eu leio depois disso?']
     : ['me explica com outras palavras', 'qual é o contexto dessa época?', 'quem são as pessoas dessa leitura?', 'como isso fala com a minha vida hoje?'];
   const ctxs = [{ id:'leitura:' + cur().key, t:refName(cur()) }].concat(AULAS.filter(x => S.aulas[x.id] || (proxAula() && proxAula().id === x.id)).slice(-3).map(x => ({ id:'aula:' + x.id, t:'aula: ' + x.t })));
-  let msgs = turns.map(t => t.role === 'user' ? `<div class="msg me">${esc(t.content)}</div>` : `<div class="msg ai"><span class="who">${ico('spark')}${t.by === 'app' ? 'Lâmpada' : aiName(t.by || 'claude')}</span>${esc(t.content)}</div>`).join('');
+  let msgs = turns.map((t, i) => t.role === 'user' ? `<div class="msg me">${esc(t.content)}</div>` : `<div class="msg ai"><span class="who">${ico('spark')}${t.by === 'app' ? 'Lâmpada' : aiName(t.by || 'claude')}${t.by !== 'app' && c ? falaBtn('msg:' + c.id + ':' + i) : ''}</span>${esc(t.content)}</div>`).join('');
   if (S.busy.chat) msgs += `<div class="msg ai"><span class="who">${ico('spark')}${aiName(e)}</span><span id="live">${thinking('pensando')}</span></div><button class="linkbtn muted" data-act="stop">parar resposta</button>`;
   return `<div class="scrim" data-chat="close"></div>
   <section class="sheet ${S.chatAnim ? 'anim' : ''}" role="dialog" aria-modal="true" aria-label="Conversa">${topo}
@@ -1542,6 +1733,36 @@ function viewChat(){
       ${turns.length && !ext ? `<p class="sh-note">Salva sozinha. Continue quando quiser em ${ico('chat')} conversas.</p>` : ''}</div>
   </section>`;
 }
+function viewBusca(){
+  const r = lerRef(S.busca), ja = r && r.v1 && S.versos[refKey(r)];
+  const sugest = ['Salmo 23', 'João 3:16', 'Romanos 8', '1 Coríntios 13', 'Mateus 5', 'Provérbios 3:5-6', 'Isaías 41:10', 'Filipenses 4:6-7'];
+  let res = '';
+  if (S.busca && !r) res = `<p class="hint">Não achei esse livro. Tente assim: "Salmo 23", "João 3:16" ou "1 Coríntios 13".</p>`;
+  else if (r) {
+    const k = refKey(r).replace(/-\d+$/, '');
+    res = `<section class="card rose busca-res">
+      <div class="card-h"><span class="label">${r.book.nt ? 'Novo Testamento' : 'Antigo Testamento'}</span><span class="pill">${r.book.caps} capítulos</span></div>
+      <h2 class="ref">${esc(r.book.n)} ${r.cap ? `<span class="n">${r.cap}${r.v1 ? ':' + r.v1 + (r.v2 ? '–' + r.v2 : '') : ''}</span>` : ''}</h2>
+      ${!r.cap ? `<p class="hint">Escolha o capítulo:</p><div class="caps-grid">${Array.from({ length:r.book.caps }, (_, i) => `<button class="chip" data-busca-ir="${esc(r.book.n + ' ' + (i + 1))}">${i + 1}</button>`).join('')}</div>` : `
+      <div class="two"><a class="btn primary" href="${yvKey(k)}" target="_blank" rel="noopener">${ico('book')}ler na NVI</a><a class="btn ghost" href="${yvKey(k, 'alm')}" target="_blank" rel="noopener">${ico('book')}ler na Almeida</a></div>
+      <div class="two"><button class="btn ghost" data-act="busca-chat">${ico('chat')}conversar sobre</button>${r.v1 ? `<button class="btn ghost" data-act="busca-guardar">${ico('star')}${ja ? 'já guardado' : 'guardar versículo'}</button>` : `<button class="btn ghost" data-act="busca-explicar">${ico('spark')}me explica</button>`}</div>`}
+      ${r.outros.length ? `<p class="small">Você quis dizer ${r.outros.map(b => `<button class="linkbtn" style="display:inline;padding:0" data-busca-ir="${esc(b.n + (r.cap ? ' ' + r.cap : ''))}">${esc(b.n)}</button>`).join(', ')}?</p>` : ''}
+    </section>
+    ${S.guardando ? `<section class="card"><div class="card-h"><span class="label">guardar ${esc(refTxt(r))}</span></div>
+      <label class="field"><span>o versículo (opcional, cole do YouVersion)</span><textarea class="note-area" id="vs-texto" style="min-height:90px" placeholder="cole aqui o texto do versículo"></textarea></label>
+      <label class="field"><span>por que ele é importante pra você (opcional)</span><input class="inp" id="vs-nota" type="text" placeholder="uma frase sua"></label>
+      <button class="btn primary" data-act="busca-salvar">${ico('check')}guardar</button></section>` : ''}`;
+  }
+  return `<div class="scrim" data-busca="fechar"></div>
+  <section class="sheet ${S.buscaAnim ? 'anim' : ''}" role="dialog" aria-modal="true" aria-label="Buscar na Bíblia">
+    <div class="sh-h"><h2 class="sh-title">buscar na <em>Bíblia</em></h2><button class="sh-x" data-busca="fechar" aria-label="Fechar">${ico('x')}</button></div>
+    <form class="ask" data-form="busca"><label for="busca-in" class="sr">Livro, capítulo ou versículo</label>
+      <input id="busca-in" type="search" autocomplete="off" autocorrect="off" placeholder="ex.: Salmo 23, João 3:16" value="${esc(S.busca || '')}">
+      <button class="send" aria-label="Buscar">${ico('right')}</button></form>
+    <div class="sh-body" style="padding-top:14px">${res || `<p class="small">Experimente:</p><div class="picked">${sugest.map(x => `<button class="bchip" data-busca-ir="${esc(x)}">${esc(x)}</button>`).join('')}</div>`}</div>
+  </section>`;
+}
+function openBusca(q){ S.buscaOpen = true; S.buscaAnim = true; S.guardando = false; if (q != null) S.busca = q; render(); setTimeout(() => { const i = document.getElementById('busca-in'); if (i && !q) i.focus(); }, 60); }
 function openChat(){
   const c = conversa() || S.conversas[LS.get('chatId', '')];
   if (c && c.turns.length && Date.now() - new Date(c.atualizado) < 12 * 36e5) { S.chatId = c.id; S.chatView = 'conversa'; }
@@ -1599,9 +1820,9 @@ function viewPerfil(){
 /* caminhada: planos, diário, palavras, ajustes */
 function viewCaminhada(){
   if (S.form) return viewNovo();
-  if (!['planos','diario','palavras'].includes(S.ctab)) S.ctab = 'planos';
-  const tabs = [['planos','planos'],['diario','diário'],['palavras','palavras']];
-  const body = { planos:cPlanos, diario:cDiario, palavras:cPalavras }[S.ctab]();
+  if (!['planos','diario','palavras','versos'].includes(S.ctab)) S.ctab = 'planos';
+  const tabs = [['planos','planos'],['diario','diário'],['palavras','palavras'],['versos','versículos']];
+  const body = { planos:cPlanos, diario:cDiario, palavras:cPalavras, versos:cVersos }[S.ctab]();
   return `<div class="view">
   <header class="top"><div><p class="eyebrow">${ico('path')}caminhada</p><h1 class="title">sua <em>caminhada</em></h1></div></header>
   <div class="seg" role="group" aria-label="Seções">${tabs.map(([k, t]) => `<button data-ctab="${k}" aria-pressed="${S.ctab === k}">${t}</button>`).join('')}</div>
@@ -1623,7 +1844,7 @@ function cPlanos(){
   const set = capsLidos(), n = set.size, nAT = [...set].filter(k => !chOf(k).book.nt).length;
   const cell = b => { let r = 0; for (let i = 1; i <= b.caps; i++) if (set.has(b.c + '.' + i)) r++; const pct = Math.round(r / b.caps * 100);
     return `<div class="bk ${pct === 100 ? 'full' : ''}" title="${esc(b.n)}: ${r} de ${b.caps}"><span>${esc(b.ab)}</span><i><b style="width:${pct}%"></b></i></div>`; };
-  return `
+  return `${semanaCard(false)}
   <section class="card rose">
     <div class="card-h"><span class="label">plano ativo</span><span class="pill">${fmtShort(p.start)} a ${fmtShort(last.date)}</span></div>
     <div><p style="margin:0;font-size:22px;font-weight:400;line-height:1.25">${esc(p.nome)}</p>${p.sub ? `<p class="sub" style="margin-top:2px">${esc(p.sub)}</p>` : ''}</div>
@@ -1637,6 +1858,7 @@ function cPlanos(){
     ${aiEngine() ? (S.busy.semana ? thinking('preparando as explicações da semana') : `<button class="btn ghost" data-act="semana">${ico('spark')}deixar as explicações da semana prontas</button>`) : ''}
   </section>
   ${agendaCard()}
+  ${juntoCard()}
   <section class="card">
     <div class="card-h"><span class="label muted">seus planos</span><span class="small">toque pra trocar</span></div>
     <div class="plans">${allPlans().map(x => { const q = progresso(x);
@@ -1668,6 +1890,14 @@ function cDiario(){
   if (!list.length) return `<div class="empty">${ico('pen')}<span>Suas reflexões aparecem aqui. Escreva a primeira no passo "refletir" da leitura de hoje.</span><button class="btn soft" data-tab="hoje" style="max-width:260px">ir pra leitura de hoje</button></div>`;
   return `<div class="stack">${list.map(([k, x]) => { const f = find(k);
     return `<button class="entry" ${f ? `data-open-note="${esc(f.p.id)}|${f.q.i}"` : ''}><span class="em"><b>${esc(f ? refName(f.q) : (x.nome || k))}</b><span>${esc(new Date(x.quando).toLocaleDateString('pt-BR', { day:'numeric', month:'short' }))}</span></span><p>${esc(x.texto)}</p></button>`; }).join('')}</div>`;
+}
+function cVersos(){
+  const list = Object.values(S.versos).sort((a, b) => String(b.quando).localeCompare(String(a.quando)));
+  if (!list.length) return `<div class="empty">${ico('star')}<span>Guarde versículos que tocaram você: toque em ${ico('search')} buscar, escreva por exemplo "Salmo 23:1" e depois em "guardar versículo".</span><button class="btn soft" data-busca="abrir" style="max-width:260px">${ico('search')}buscar um versículo</button></div>`;
+  return `<button class="btn ghost" data-busca="abrir">${ico('search')}guardar outro versículo</button>
+  <section class="card"><div class="card-h"><span class="label">seus versículos</span><span class="small">${list.length}</span></div><div class="gloss">${list.map(v => `<div class="g vs">
+    <span class="r">${esc(v.ref)}</span>${v.texto ? `<span class="t">${esc(v.texto)}</span>` : ''}${v.nota ? `<span class="s">${esc(v.nota)}</span>` : ''}
+    <div class="acts"><a class="linkbtn" href="${yvKey(v.key.replace(/-\d+$/, ''))}" target="_blank" rel="noopener">${ico('book')}abrir</a><button class="linkbtn" data-verso-chat="${esc(v.key)}">${ico('chat')}conversar</button><button class="linkbtn muted" data-verso-del="${esc(v.key)}">${ico('trash')}tirar</button></div></div>`).join('')}</div></section>`;
 }
 function cPalavras(){
   const list = Object.values(S.vocab).sort((a, b) => String(b.quando).localeCompare(String(a.quando)));
@@ -1756,16 +1986,18 @@ function auto(){
 function render(){
   const fx = S.fx || {}; S.fx = {}; ['view','step','done','upd'].forEach(k => document.body.classList.toggle('a-' + k, !!fx[k]));
   const v = document.getElementById('view'), c = document.getElementById('chat');
-  const entrada = pedeEntrada(); document.body.classList.toggle('w-on', entrada);
+  const entrada = !!pedeEntrada(); document.body.classList.toggle('w-on', entrada);
   if (entrada) { v.innerHTML = viewEntrada(); document.getElementById('chat').innerHTML = ''; duo(v); return; }
+  document.body.classList.toggle('foco-on', !!S.foco);
+  if (S.foco && S.tab === 'hoje') { v.innerHTML = viewFoco(); c.innerHTML = ''; duo(v); auto(); return; }
   v.innerHTML = (S.update ? `<button class="upd" data-act="atualizar">nova versão do lâmpada <b>atualizar</b></button>` : '') + VIEWS[S.tab]().replace('<div class="view">', '<div class="view">' + appbar()) + `<footer class="foot">lâmpada<i>.</i> · feito por <em>Laís</em></footer>`;
-  c.innerHTML = S.chatOpen ? viewChat() : ''; S.chatAnim = false;
-  document.body.classList.toggle('chat-open', !!S.chatOpen);
+  c.innerHTML = S.chatOpen ? viewChat() : S.buscaOpen ? viewBusca() : ''; S.chatAnim = false; S.buscaAnim = false;
+  document.body.classList.toggle('chat-open', !!(S.chatOpen || S.buscaOpen));
   document.getElementById('fab').classList.toggle('busy', !!S.busy.chat);
   const br = document.getElementById('brand'); if (br && !br.firstChild) br.innerHTML = `${SYMT()}<span>lâmpada<i>.</i></span>`;
   const nm = document.getElementById('navme'); if (nm) nm.innerHTML = `<button class="me-chip" data-tab="perfil">${avatar()}<span class="t">${esc(nome() || 'perfil e ajustes')}</span></button>${temaBtn()}`;
   duo(v); duo(c); if (S.chatOpen) scrollEnd(); if (S.edit) placeCrop();
-  auto();
+  auto(); juntoSync();
   document.querySelectorAll('.tab').forEach(t => { if (t.dataset.tab === S.tab) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
 }
 /* muda cores sem redesenhar a página: só marca as escolhas e deixa a transição suave */
@@ -1777,7 +2009,7 @@ function visual(){
   document.querySelectorAll('[data-act="tema-toggle"]').forEach(b => { b.innerHTML = ico(escuro() ? 'sun' : 'moon'); b.setAttribute('aria-label', escuro() ? 'Modo claro' : 'Modo escuro'); });
   const pn = document.getElementById('pal-nome'); if (pn) pn.textContent = (PALETAS.find(x => x.id === S.ui.paleta) || PALETAS[0]).nome;
 }
-function go(tab){ S.fx.view = true; S.tab = tab; S.confirmDel = false; try { history.replaceState(null, '', '#' + tab); } catch {} render(); window.scrollTo({ top:0 }); }
+function go(tab){ S.fx.view = true; S.foco = false; S.tab = tab; S.confirmDel = false; try { history.replaceState(null, '', '#' + tab); } catch {} render(); window.scrollTo({ top:0 }); }
 function readHash(){ const h = (location.hash || '').slice(1); if (VIEWS[h]) S.tab = h; if (h === 'conversa') S.chatOpen = true; }
 function setAtivo(id){ S.ativo = id; S.sel = null; S.open = null; S.confirmDel = false; savePerfil(); }
 let tt;
@@ -1816,7 +2048,7 @@ const aulaPrompt = a => `Acabei de fazer a aula "${a.t}". Me explica isso um pou
 
 document.addEventListener('click', async e => {
   const rd = e.target.closest('[data-read]'); if (rd) { marcaPasso('ler'); setTimeout(render, 400); return; }
-  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes],[data-chat],[data-cv],[data-cv-open],[data-cv-ctx],[data-cv-del],[data-cv-askdel],[data-fut],[data-paleta],[data-tema],[data-simbolo]');
+  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes],[data-chat],[data-cv],[data-cv-open],[data-cv-ctx],[data-cv-del],[data-cv-askdel],[data-fut],[data-falar],[data-busca],[data-busca-ir],[data-verso-chat],[data-verso-del],[data-junto-del],[data-paleta],[data-tema],[data-simbolo]');
   if (!el) return;
   const ds = el.dataset;
   if (ds.tab) { if (ds.tab !== 'perfil') S.edit = null; if (ds.tab === 'aprender') S.aula = null; if (ds.tab === 'caminhada') S.form = null; return go(ds.tab); }
@@ -1836,6 +2068,12 @@ document.addEventListener('click', async e => {
   if (ds.aula) { S.aula = ds.aula; return go('aprender'); }
   if (ds.ctab) { S.ctab = ds.ctab; return render(); }
   if (ds.engine) { S.engine = ds.engine; saveIA(); return render(); }
+  if (ds.falar) return falar(ds.falar, textoFala(ds.falar));
+  if (ds.busca) { if (ds.busca === 'abrir') { S.chatOpen = false; return openBusca(); } S.buscaOpen = false; return render(); }
+  if (ds.buscaIr) { S.busca = ds.buscaIr; S.guardando = false; return render(); }
+  if (ds.versoChat) { const v = S.versos[ds.versoChat]; S.buscaOpen = false; novaConversa('ref:' + ds.versoChat); openChat(); return; }
+  if (ds.juntoDel) { S.ui.amigos = (S.ui.amigos || []).filter(a => a.uid !== ds.juntoDel); saveUI(); juntoOuvir(); toast('parou de ler junto'); return render(); }
+  if (ds.versoDel) { delete S.versos[ds.versoDel]; saveVersos(); toast('versículo tirado'); return render(); }
   if (ds.fut) { const q = plan().days[+ds.fut]; return toast(`essa leitura abre ${q ? 'no dia ' + fmtShort(q.date) : 'no dia dela'}`); }
   if (ds.sel) { S.sel = +ds.sel; S.selPlan = plan().id; S.open = null; return S.tab !== 'hoje' ? go('hoje') : render(); }
   if (ds.open) { S.sel = +ds.open; S.selPlan = plan().id; S.open = null; return go('hoje'); }
@@ -1871,6 +2109,17 @@ document.addEventListener('click', async e => {
     case 'clear-books': S.form.livros = []; render(); break;
     case 'criar': criarPlano(); break;
     case 'ics-plano': agendaPlano(); break;
+    case 'junto-enviar': { const txt = `Vamos ler a Bíblia juntos no lâmpada? Entre em ${location.origin + location.pathname} e coloque o meu código em caminhada › planos › ler junto: ${S.ui.code}`;
+      if (navigator.share) navigator.share({ text:txt }).catch(() => {}); else if (navigator.clipboard) navigator.clipboard.writeText(txt).then(() => toast('convite copiado'), () => toast('seu código: ' + S.ui.code)); else toast('seu código: ' + S.ui.code); break; }
+    case 'foco': S.foco = true; S.fx.view = true; render(); window.scrollTo({ top:0 }); break;
+    case 'foco-sair': S.foco = false; S.fx.view = true; if (window.speechSynthesis) speechSynthesis.cancel(); S.falando = null; render(); break;
+    case 'semana-pergunta': perguntaSemana(); break;
+    case 'semana-fechar': S.ui.semanaFechada = dadosSemana().key; saveUI(); render(); break;
+    case 'busca-chat': case 'busca-explicar': { const r = lerRef(S.busca); if (!r) break; S.buscaOpen = false; novaConversa('ref:' + refKey(r)); if (ds.act === 'busca-explicar') { perguntar(`Me explica ${refTxt(r)} de um jeito simples: o que acontece, o contexto e o que isso pode dizer pra minha vida.`); } else openChat(); break; }
+    case 'busca-guardar': { const r = lerRef(S.busca); if (r && S.versos[refKey(r)]) { toast('já está nos seus versículos'); break; } S.guardando = true; render(); break; }
+    case 'busca-salvar': { const r = lerRef(S.busca); if (!r) break; const k = refKey(r);
+      S.versos[k] = { key:k, ref:refTxt(r), texto:(document.getElementById('vs-texto').value || '').trim(), nota:(document.getElementById('vs-nota').value || '').trim(), quando:new Date().toISOString() };
+      saveVersos(); S.guardando = false; toast('guardado em caminhada › versículos'); render(); break; }
     case 'w-criar': S.wmode = 'criar'; S.werr = ''; render(); break;
     case 'w-entrar': S.wmode = 'entrar'; S.werr = ''; render(); break;
     case 'w-senha': esqueciSenha(); break;
@@ -1894,6 +2143,7 @@ document.addEventListener('click', async e => {
 document.addEventListener('input', e => {
   const id = e.target.id;
   if (id === 'nota') { S.draft[cur().key] = e.target.value; autoNota(); }
+  if (id === 'busca-in') { S.busca = e.target.value; clearTimeout(S.buscaT); S.buscaT = setTimeout(() => { if (lerRef(S.busca)) { S.guardando = false; const pos = e.target.selectionStart; render(); const i = document.getElementById('busca-in'); if (i) { i.focus(); i.setSelectionRange(pos, pos); } } }, 450); }
   if (id === 'u-nome') { S.ui.nome = e.target.value.trim(); saveUI(); }
   if (id === 'crop-z' && S.edit) { S.edit.z = +e.target.value; placeCrop(); }
   if (id === 'r-hora' && e.target.value) { S.hora = S.ui.hora = e.target.value; LS.set('hora', S.hora); saveUI(); }
@@ -1909,15 +2159,17 @@ document.addEventListener('submit', e => {
   e.preventDefault();
   if (e.target.dataset.form === 'email') return loginEmail();
   const input = e.target.querySelector('input,textarea'); if (!input) return;
-  const v = input.value; if (!v.trim()) return; input.value = ''; input.blur();
+  const v = input.value; if (!v.trim()) return; if (e.target.dataset.form !== 'busca') input.value = ''; input.blur();
   const f = e.target.dataset.form;
   if (f === 'email') return;
+  if (f === 'busca') { S.busca = v; S.guardando = false; return render(); }
+  if (f === 'junto') return juntoAdd(v);
   if (f === 'word') return palavraLivre(cur(), v);
   perguntar(v);
 });
 window.addEventListener('hashchange', () => { readHash(); render(); });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && S.chatOpen) { S.chatOpen = false; render(); }
+  if (e.key === 'Escape' && (S.chatOpen || S.buscaOpen || S.foco)) { S.chatOpen = false; S.buscaOpen = false; S.foco = false; render(); }
   if (e.key === 'Enter' && !e.shiftKey && e.target.id === 'ask-chat') { e.preventDefault(); e.target.form.requestSubmit(); }
 });
 document.addEventListener('input', e => { if (e.target.id === 'ask-chat') { e.target.style.height = 'auto'; e.target.style.height = Math.min(e.target.scrollHeight, 140) + 'px'; } });

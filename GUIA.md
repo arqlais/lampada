@@ -26,7 +26,7 @@ O login já está pronto no app, usando o **Firebase** (do Google, gratuito no p
 ### 1.4 Criar o banco (Firestore)
 1. Menu: **Criação** › **Firestore Database** › **Criar banco de dados**.
 2. Local: **southamerica-east1 (São Paulo)**. Modo: **produção**.
-3. Aba **Regras**: apague tudo, cole o texto abaixo e toque em **Publicar**. Assim cada conta só enxerga os próprios dados.
+3. Aba **Regras**: apague tudo, cole o texto abaixo e toque em **Publicar**. Assim cada conta só enxerga os próprios dados. A parte `pub` é do **ler junto**: lá fica só o nome, o código, o plano e se a pessoa já leu hoje.
 
 ```
 rules_version = '2';
@@ -34,6 +34,10 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{uid}/{document=**} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+    match /pub/{uid} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == uid;
     }
   }
 }
@@ -105,6 +109,7 @@ Para abrir o arquivo:
 
 - Toque na **sua foto** (canto de cima) para abrir **seu perfil**: nome, foto (trocar, **ajustar** arrastando e com zoom, ou tirar), **claro / escuro / automático** e a **paleta** (Dusty & baunilha, que é a padrão, Azul, Lilás, Verde sálvia, Rosa antigo ou Laranja). O botão de lua/sol no topo troca claro e escuro na hora.
 - **Outras pessoas (ex.: seu namorado):** mande o endereço **arqlais.github.io/lampada**. Cada um entra com a **própria conta Google** (depois que o login do passo 1 estiver ligado) e tem progresso, diário, palavras, chave do Gemini, foto e paleta só seus. As regras do passo 1.4 garantem que ninguém vê os dados do outro.
+- **Ler junto:** em **caminhada › planos › ler junto** aparece o **seu código**. Toque em **enviar** e mande pra pessoa; ela coloca o seu código no campo "código da outra pessoa" (e você o dela). Daí aparece embaixo da leitura de hoje "Lucas já leu hoje". Ninguém vê suas reflexões, conversas ou palavras. Pra parar, toque no **x** ao lado do nome.
 - Sem login, o perfil fica salvo só naquele aparelho.
 - **Sair da conta:** em **seu perfil**, no fim da página.
 
