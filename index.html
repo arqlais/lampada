@@ -133,6 +133,9 @@ svg.symt{width:36px;height:36px;flex:none;filter:drop-shadow(0 6px 14px rgba(var
 .day .sq{width:100%;max-width:40px;aspect-ratio:1;border-radius:50%;background:var(--tile);border:1.5px solid transparent;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:400;color:var(--ink);font-variant-numeric:tabular-nums;transition:transform .15s}
 .day .sq svg{width:16px;height:16px;stroke-width:1.6}
 .day:hover .sq{transform:translateY(-1px)}
+.day.future{opacity:.42;cursor:default}
+.day.future:hover .sq{transform:none}
+.tile.future{cursor:default}
 .day.read .sq{background:var(--rose);border-color:transparent;color:var(--on-rose)}
 .day.sel .sq{background:var(--surface);border-color:var(--rose);color:var(--rose-ink);font-weight:500}
 .day.read.sel .sq{background:var(--rose);border-color:transparent;color:var(--on-rose);box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--rose)}
@@ -427,7 +430,7 @@ body.chat-open{overflow:hidden}
   .sheet.anim{animation:upc .32s cubic-bezier(.2,.8,.2,1) both}
   @keyframes upc{from{transform:translate(-50%,40px);opacity:0}to{transform:translateX(-50%);opacity:1}}
   .sheet::before{display:none}
-  .fab{right:max(28px, calc((100vw - 720px) / 2 - 76px))}
+  .fab{right:24px;bottom:calc(19px + env(safe-area-inset-bottom, 0px))}
 }
 /* menu: barra branca simples; ativo em blush */
 .nav{position:fixed;z-index:20;left:max(16px, env(safe-area-inset-left, 0px));right:max(16px, env(safe-area-inset-right, 0px));
@@ -445,14 +448,14 @@ body.chat-open{overflow:hidden}
 @media (min-width:1100px){
   .shell{padding:40px 24px 64px 268px}
   .nav{right:auto;left:calc(24px + env(safe-area-inset-left, 0px));top:24px;bottom:24px;margin:0;width:220px;height:auto;max-width:none;
-    display:flex;flex-direction:column;gap:4px;padding:26px 14px;border:0;border-radius:32px;background:var(--surface);box-shadow:0 20px 50px -30px rgba(var(--ink-rgb),.45)}
-  .nav .brand{display:flex;align-items:center;gap:10px;color:var(--ink);font-size:18px;font-weight:500;letter-spacing:-.03em;padding:0 6px 28px}
+    display:flex;flex-direction:column;align-items:stretch;gap:4px;padding:26px 14px;border:0;border-radius:32px;background:var(--surface);box-shadow:0 20px 50px -30px rgba(var(--ink-rgb),.45)}
+  .nav .brand{display:flex;align-items:center;gap:12px;color:var(--ink);font-size:18px;font-weight:500;letter-spacing:-.03em;padding:0 16px 28px}
   .nav .brand svg.symt{width:38px;height:38px}
   .appbar{display:none}
   .tab{width:100%;height:48px;margin:0;border-radius:18px;flex-direction:row;justify-content:flex-start;gap:12px;padding:0 16px;font-size:14px}
-  .tab svg{width:19px;height:19px}
+  .tab svg{width:22px;height:22px;margin:0 8px}
   .nav-me{display:flex;align-items:center;gap:8px;margin-top:auto;padding:14px 2px 0;border-top:1px solid var(--line)}
-  .me-chip{flex:1;display:flex;align-items:center;gap:10px;border:0;background:none;color:var(--ink);padding:6px;border-radius:18px;min-width:0;font-size:13.5px;text-align:left}
+  .me-chip{flex:1;display:flex;align-items:center;gap:12px;border:0;background:none;color:var(--ink);padding:6px 6px 6px 14px;border-radius:18px;min-width:0;font-size:13.5px;text-align:left}
   .me-chip:hover{background:var(--soft)}
   .me-chip .ava-img,.me-chip .ava-ini{width:38px;height:38px;flex:none}
   .me-chip span.t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -789,9 +792,10 @@ const planById = id => id === 'natal' ? NATAL : (S.planos[id] || NATAL);
 const plan = () => planById(S.ativo);
 const lidosOf = p => { if (p.id === 'natal') return S.lidosNatal; if (!p.lidos) p.lidos = {}; return p.lidos; };
 const todayIdx = p => diffDays(p.start, new Date());
+const futuro = (p, i) => { const t = todayIdx(p); return i > t && !(t < 0 && i === 0); };
 function curIdx(){
   const p = plan();
-  if (S.selPlan !== p.id || S.sel == null || S.sel >= p.days.length) { S.selPlan = p.id; S.sel = Math.max(0, Math.min(p.days.length - 1, todayIdx(p))); }
+  if (S.selPlan !== p.id || S.sel == null || S.sel >= p.days.length || futuro(p, S.sel)) { S.selPlan = p.id; S.sel = Math.max(0, Math.min(p.days.length - 1, todayIdx(p))); }
   return S.sel;
 }
 const cur = () => plan().days[curIdx()];
@@ -1313,7 +1317,8 @@ function heroCard(d){
   for (let i = w0; i < w0 + 7; i++) {
     if (i < 0 || i >= p.days.length) { week += '<span></span>'; continue; }
     const q = p.days[i], r = !!L[q.key], c0 = chOf(q.chs[0]);
-    week += `<button class="day ${r ? 'read' : ''} ${i === d.i ? 'sel' : ''} ${i === t ? 'today' : ''}" data-sel="${i}" aria-label="${esc(refName(q))}, ${esc(fmtLong(q.date))}${r ? ', lido' : ''}">
+    const fut = futuro(p, i);
+    week += `<button class="day ${r ? 'read' : ''} ${i === d.i ? 'sel' : ''} ${i === t ? 'today' : ''} ${fut ? 'future' : ''}" ${fut ? `data-fut="${i}" aria-disabled="true"` : `data-sel="${i}"`} aria-label="${esc(refName(q))}, ${esc(fmtLong(q.date))}${r ? ', lido' : fut ? ', ainda não chegou' : ''}">
       <span class="wd">${WD[q.date.getDay()]}</span><span class="sq">${r ? ico('check') : q.date.getDate()}</span><span class="cap">${q.chs.length === 1 ? esc(c0.book.ab + ' ' + c0.cap) : 'dia ' + (i + 1)}</span></button>`;
   }
   const titulo = capOf(d.key).titulo;
@@ -1612,7 +1617,7 @@ function cPlanos(){
     if (p.meta && !metaShown && s.days[0].i >= p.meta.dia) { tiles += `<p class="sep">depois do ${esc(p.meta.nome)}</p>`; metaShown = true; }
     tiles += `<div class="book"><h3>${esc(s.book.n)} <span>${fmtShort(s.days[0].date)} a ${fmtShort(s.days[s.days.length-1].date)}</span></h3>
       <div class="tiles">${s.days.map(d => { const r = !!L[d.key], ps = parts(d.chs);
-        return `<button class="tile ${r ? 'read' : ''} ${d.i === t ? 'today' : ''} ${d.i > t ? 'future' : ''}" data-open="${d.i}" aria-label="${esc(refName(d))}, ${esc(fmtLong(d.date))}${r ? ', lido' : ''}"><b>${num(ps[0])}${ps.length > 1 ? '+' : ''}</b><small>${fmtShort(d.date)}</small></button>`; }).join('')}</div></div>`;
+        return `<button class="tile ${r ? 'read' : ''} ${d.i === t ? 'today' : ''} ${futuro(p, d.i) ? 'future' : ''}" ${futuro(p, d.i) ? `data-fut="${d.i}"` : `data-open="${d.i}"`} aria-label="${esc(refName(d))}, ${esc(fmtLong(d.date))}${r ? ', lido' : ''}"><b>${num(ps[0])}${ps.length > 1 ? '+' : ''}</b><small>${fmtShort(d.date)}</small></button>`; }).join('')}</div></div>`;
     if (p.id === 'natal' && s.book.c === 'ACT') tiles += `<p class="hint">Sugestão do Igor: terminar João no Natal e seguir com Atos dos Apóstolos.</p>`;
   }
   const set = capsLidos(), n = set.size, nAT = [...set].filter(k => !chOf(k).book.nt).length;
@@ -1782,6 +1787,7 @@ function marcaPasso(k, on = true){ const d = cur(); const ps = S.passos[d.key] =
 
 function marcar(){
   const p = plan(), d = cur(), L = lidosOf(p);
+  if (futuro(p, d.i) || (todayIdx(p) < 0 && !L[d.key])) return toast('essa leitura ainda não chegou');
   if (L[d.key]) delete L[d.key]; else L[d.key] = iso(new Date());
   const agora = !!L[d.key]; if (agora) S.fx.done = true;
   if (agora) S.open = '';
@@ -1790,6 +1796,7 @@ function marcar(){
   const last = chOf(d.chs[d.chs.length-1]), pr = progresso(p);
   if (pr.n === pr.total) toast(p.meta ? `tudo lido até o ${p.meta.nome}` : `plano "${p.nome}" concluído`);
   else if (last.cap === last.book.caps) toast(`você terminou ${last.book.n}`);
+  else if (d.i < todayIdx(p) && !pr.atras.length) { S.sel = Math.min(todayIdx(p), p.days.length - 1); S.open = null; S.fx.view = true; render(); window.scrollTo({ top:0, behavior:'smooth' }); toast('tudo em dia! agora é a leitura de hoje'); }
   else toast(d.i === todayIdx(p) ? 'leitura de hoje concluída' : refName(d) + ' concluído');
 }
 function iniciarEstudo(id){
@@ -1809,7 +1816,7 @@ const aulaPrompt = a => `Acabei de fazer a aula "${a.t}". Me explica isso um pou
 
 document.addEventListener('click', async e => {
   const rd = e.target.closest('[data-read]'); if (rd) { marcaPasso('ler'); setTimeout(render, 400); return; }
-  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes],[data-chat],[data-cv],[data-cv-open],[data-cv-ctx],[data-cv-del],[data-cv-askdel],[data-paleta],[data-tema],[data-simbolo]');
+  const el = e.target.closest('[data-tab],[data-sel],[data-open],[data-open-note],[data-act],[data-chip],[data-engine],[data-plan],[data-estudo],[data-preset],[data-rm-book],[data-modo],[data-ctab],[data-star],[data-unstar],[data-aula],[data-step],[data-done],[data-s3],[data-ctx],[data-go-ajustes],[data-chat],[data-cv],[data-cv-open],[data-cv-ctx],[data-cv-del],[data-cv-askdel],[data-fut],[data-paleta],[data-tema],[data-simbolo]');
   if (!el) return;
   const ds = el.dataset;
   if (ds.tab) { if (ds.tab !== 'perfil') S.edit = null; if (ds.tab === 'aprender') S.aula = null; if (ds.tab === 'caminhada') S.form = null; return go(ds.tab); }
@@ -1829,6 +1836,7 @@ document.addEventListener('click', async e => {
   if (ds.aula) { S.aula = ds.aula; return go('aprender'); }
   if (ds.ctab) { S.ctab = ds.ctab; return render(); }
   if (ds.engine) { S.engine = ds.engine; saveIA(); return render(); }
+  if (ds.fut) { const q = plan().days[+ds.fut]; return toast(`essa leitura abre ${q ? 'no dia ' + fmtShort(q.date) : 'no dia dela'}`); }
   if (ds.sel) { S.sel = +ds.sel; S.selPlan = plan().id; S.open = null; return S.tab !== 'hoje' ? go('hoje') : render(); }
   if (ds.open) { S.sel = +ds.open; S.selPlan = plan().id; S.open = null; return go('hoje'); }
   if (ds.openNote) { const [pid, i] = ds.openNote.split('|'); if (pid !== S.ativo) setAtivo(pid); S.sel = +i; S.selPlan = pid; S.open = 'refletir'; return go('hoje'); }
