@@ -95,12 +95,12 @@ No chat (botão redondo no canto), troque para **Claude**: a pergunta abre no **
 
 Em **caminhada › planos › agenda e lembretes**:
 1. Escolha o **horário da leitura**.
-2. **Plano na agenda:** baixa um arquivo com cada leitura que falta, no dia certo e com aviso no horário.
-3. **Lembrete diário:** baixa um aviso que se repete todo dia.
+2. **Colocar o plano na agenda:** baixa um arquivo com cada leitura que falta, no dia certo e com aviso no horário. Termina junto com o plano (não fica infinito).
 
 Para abrir o arquivo:
 - **iPhone e iPad:** toque no arquivo baixado (setinha de downloads do Safari) › **Adicionar tudo**. Ele entra no app Calendário com aviso.
 - **Google Agenda:** no computador, em **calendar.google.com** › engrenagem › **Configurações** › **Importar e exportar** › **Importar** › escolha o arquivo. Se o Google Agenda já estiver no seu iPhone, ele também aparece lá.
+- **Tinha baixado o antigo "lembrete diário"** (que se repetia pra sempre)? No Calendário do iPhone, toque num dos avisos "Lâmpada · hora da leitura" › **Apagar evento** › **Apagar todos os eventos futuros**.
 - Criou um plano novo ou mudou o horário? Apague os eventos antigos do Lâmpada no Calendário e baixe de novo, para não ficar repetido.
 
 ---
