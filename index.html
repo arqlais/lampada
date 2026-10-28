@@ -1461,9 +1461,9 @@ document.addEventListener('pointerup', () => { drag = null; });
 const icsTxt = t => String(t).replace(/\\/g, '\\\\').replace(/[,;]/g, m => '\\' + m).replace(/\n/g, '\\n');
 const icsDT = (date, hora) => { const [h, m] = (hora || '07:30').split(':'); const z = n => String(n).padStart(2, '0'); return `${date.getFullYear()}${z(date.getMonth() + 1)}${z(date.getDate())}T${z(+h)}${z(+m)}00`; };
 const appURL = () => location.href.split('#')[0];
-function icsEvento({ uid, quando, titulo, texto, rrule }){
+function icsEvento({ uid, quando, titulo, texto }){
   return ['BEGIN:VEVENT', 'UID:' + uid, 'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z', 'DTSTART:' + quando, 'DURATION:PT20M',
-    'SUMMARY:' + icsTxt(titulo), 'DESCRIPTION:' + icsTxt(texto), 'URL:' + appURL(), rrule ? 'RRULE:' + rrule : null,
+    'SUMMARY:' + icsTxt(titulo), 'DESCRIPTION:' + icsTxt(texto), 'URL:' + appURL(),
     'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsTxt(titulo), 'TRIGGER:PT0M', 'END:VALARM', 'END:VEVENT'].filter(Boolean).join('\r\n');
 }
 function baixarICS(nome, eventos){
@@ -1479,17 +1479,12 @@ function agendaPlano(){
     titulo:'Lâmpada · ' + refName(d), texto:`Leitura do plano "${p.nome}" (dia ${d.i + 1} de ${p.days.length}). Abra o app: ${appURL()}` })));
   toast(dias.length + ' leituras prontas pra agenda');
 }
-function lembreteDiario(){
-  baixarICS('lampada-lembrete.ics', [icsEvento({ uid:'lampada-diario@arqlais.github.io', quando:icsDT(new Date(), horaL()), rrule:'FREQ=DAILY',
-    titulo:'Lâmpada · hora da leitura', texto:'Seu momento com a Palavra de hoje. Abra o app: ' + appURL() })]);
-  toast('lembrete diário pronto');
-}
 function agendaCard(){
   return `<section class="card">
     <div class="card-h"><span class="label">${ico('cal')}agenda e lembretes</span><span class="small">${esc(plan().nome)}</span></div>
     <label class="field"><span>horário da leitura</span><input class="inp" id="r-hora" type="time" value="${esc(horaL())}"></label>
-    <div class="two"><button class="btn primary" data-act="ics-plano">${ico('cal')}plano na agenda</button><button class="btn ghost" data-act="ics-diario">${ico('clock')}lembrete diário</button></div>
-    <p class="hint"><b>Plano na agenda</b> coloca cada leitura que falta no dia certo, com aviso no horário. <b>Lembrete diário</b> é um aviso todo dia, sem fim. No iPhone e no iPad, abra o arquivo baixado e toque em "Adicionar tudo". No Google Agenda, pelo computador: Configurações › Importar e exportar › Importar.</p>
+    <button class="btn primary" data-act="ics-plano">${ico('cal')}colocar o plano na agenda</button>
+    <p class="hint">Coloca cada leitura que falta no dia certo, com aviso no horário, e termina junto com o plano. No iPhone e no iPad, abra o arquivo baixado e toque em "Adicionar tudo". No Google Agenda, pelo computador: Configurações › Importar e exportar › Importar.</p>
   </section>`;
 }
 
@@ -2223,7 +2218,6 @@ document.addEventListener('click', async e => {
     case 'foto-salvar': salvarFoto(); break;
     case 'foto-cancelar': S.edit = null; render(); break;
     case 'foto-remover': S.ui.foto = ''; S.ui.fotoOrig = ''; S.ui.ajuste = null; S.ui.semFoto = true; saveUI(); render(); toast('foto removida'); break;
-    case 'ics-diario': lembreteDiario(); break;
     case 'del': S.confirmDel = true; render(); break;
     case 'del-ok': { await delPlano(plan().id); S.confirmDel = false; toast('plano apagado'); render(); break; }
     case 'save-note': { clearTimeout(notaT); const v = document.getElementById('nota').value;
