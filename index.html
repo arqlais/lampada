@@ -203,7 +203,7 @@ svg.symt{width:36px;height:36px;flex:none;filter:drop-shadow(0 6px 14px rgba(var
 .side > div:first-child{padding-right:14px;border-right:1px solid var(--line)}
 .side > div:last-child{padding-left:14px}
 .v{font-size:11px;font-weight:500;letter-spacing:.08em}
-.v.nvi{color:var(--rose-ink)} .v.alm{color:var(--steel)}
+.v.ntlh{color:var(--rose-ink)} .v.alm{color:var(--steel)}
 .w{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--line);padding-top:12px;row-gap:6px}
 .w .q{font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:19px;line-height:1.3;min-width:0}
 .w .q:first-of-type{padding-right:14px;border-right:1px solid var(--line)}
@@ -620,7 +620,7 @@ const AULAS = [
     q:'Abra Marcos 2 e tente achar o versículo 5 sozinha.' },
   { id:'traducoes', nv:1, t:'Por que existem traduções diferentes', ler:'', p:[
     'Como a Bíblia foi escrita em outros idiomas, toda Bíblia em português é uma tradução. Os tradutores sempre precisam escolher entre ficar mais perto das palavras originais ou mais perto do jeito que a gente fala.',
-    'A Almeida, de 1681 e revisada várias vezes, fica bem perto das palavras originais e tem um português mais clássico. A NVI, de 2000, busca o sentido de cada frase em português de hoje.',
+    'A Almeida, de 1681 e revisada várias vezes, fica bem perto das palavras originais e tem um português mais clássico. A NTLH, de 2000, traduz a ideia de cada frase no português do dia a dia, do jeito que a gente fala.',
     'Nenhuma delas está errada. Comparar as duas, como no seu lado a lado, é um ótimo jeito de entender melhor.'],
     q:'Qual das duas formas de escrever te soa mais próxima?' },
   { id:'generos', nv:1, t:'Os tipos de livro da Bíblia', ler:'PSA.23', p:[
@@ -837,7 +837,7 @@ function lerRef(q){
 }
 const refTxt = r => r.book.n + (r.cap ? ' ' + r.cap + (r.v1 ? ':' + r.v1 + (r.v2 ? '–' + r.v2 : '') : '') : '');
 const refKey = r => r.book.c + '.' + (r.cap || 1) + (r.v1 ? '.' + r.v1 + (r.v2 ? '-' + r.v2 : '') : '');
-const yvKey = (k, v) => v === 'alm' ? `https://www.bible.com/bible/212/${k}.ARC` : `https://www.bible.com/bible/129/${k}.NVI`;
+const yvKey = (k, v) => v === 'alm' ? `https://www.bible.com/bible/212/${k}.ARC` : `https://www.bible.com/bible/211/${k}.NTLH`;
 const yv = (d, v) => yvKey(d.chs[0], v);
 
 /* ---------- planos ---------- */
@@ -859,7 +859,7 @@ const NIVEL = {
   iniciante:{ nome:'iniciante', sub:'explicações simples e a trilha do básico',
     guia:'está começando a ler a Bíblia, não tem costume de ler e quer entender de verdade, do básico ao profundo, e criar amor pela Palavra. Escreva com frases curtas e palavras simples; quando usar uma palavra difícil, explique.',
     exp:'3 ou 4 frases simples contando o que acontece', ctx:'2 frases com um detalhe histórico ou cultural que ajuda a entender',
-    dif:'as 5 palavras ou expressões que mais costumam confundir quem lê esse trecho pela primeira vez (pense em como aparecem na NVI e na Almeida)' },
+    dif:'as 5 palavras ou expressões que mais costumam confundir quem lê esse trecho pela primeira vez (pense em como aparecem na NTLH, Nova Tradução na Linguagem de Hoje, e na Almeida)' },
   intermediario:{ nome:'intermediário', sub:'mais contexto e ligações entre os livros',
     guia:'já lê a Bíblia há um tempo e conhece as histórias principais. Vá além do básico: contexto histórico, ligações com outros livros e temas que atravessam a Bíblia. Linguagem clara, sem simplificar demais nem explicar o óbvio.',
     exp:'4 frases contando o que acontece e como o trecho se liga ao resto da Bíblia', ctx:'2 ou 3 frases com contexto histórico, cultural ou do autor que muda a leitura',
@@ -1272,9 +1272,9 @@ async function explicar(d){
 async function comparar(d){
   if (S.busy['cmp' + d.key]) return; S.busy['cmp' + d.key] = true; render();
   try {
-    const r = await aiJSON(`Compare como a Nova Versão Internacional (NVI) e a Almeida Revista e Corrigida (ARC) traduzem ${refName(d)}. Escolha 4 versículos em que as palavras mudam de um jeito que ajuda a aprender. Use trechos bem curtos (no máximo 10 palavras cada). Responda só com um array JSON:\n[{"versiculo":"capítulo:versículo","nvi":"trecho curto","almeida":"trecho curto","sentido":"uma frase simples explicando a diferença ou o que a palavra antiga quer dizer"}]`);
-    const list = Array.isArray(r) ? r.filter(x => x && x.nvi && x.almeida).slice(0, 5).map(x => ({ versiculo:String(x.versiculo || ''), nvi:String(x.nvi), almeida:String(x.almeida), sentido:String(x.sentido || '') })) : [];
-    if (list.length) await saveCap(d.key, { palavras:list });
+    const r = await aiJSON(`Compare como a Nova Tradução na Linguagem de Hoje (NTLH) e a Almeida Revista e Corrigida (ARC) traduzem ${refName(d)}. Escolha 4 versículos em que as palavras mudam de um jeito que ajuda a aprender. Use trechos bem curtos (no máximo 10 palavras cada). Responda só com um array JSON:\n[{"versiculo":"capítulo:versículo","ntlh":"trecho curto","almeida":"trecho curto","sentido":"uma frase simples explicando a diferença ou o que a palavra antiga quer dizer"}]`);
+    const list = Array.isArray(r) ? r.filter(x => x && x.ntlh && x.almeida).slice(0, 5).map(x => ({ versiculo:String(x.versiculo || ''), ntlh:String(x.ntlh), almeida:String(x.almeida), sentido:String(x.sentido || '') })) : [];
+    if (list.length) await saveCap(d.key, { versoes:list });
   } catch (e) { oops(e); }
   S.busy['cmp' + d.key] = false; render();
 }
@@ -1283,7 +1283,7 @@ async function dificeis(d){
   try {
     const r = await aiJSON(`Leitura: ${refName(d)}. Liste ${NV().dif}. Responda só com um array JSON:\n[{"palavra":"palavra ou expressão","sentido":"o que quer dizer, em uma ou duas frases simples"}]`);
     const list = Array.isArray(r) ? r.filter(x => x && x.palavra && x.sentido).slice(0, 6).map(x => ({ palavra:String(x.palavra), sentido:String(x.sentido) })) : [];
-    if (list.length) await saveCap(d.key, { dificeis:list });
+    if (list.length) await saveCap(d.key, { dificeis:list, difV:'ntlh' });
   } catch (e) { oops(e); }
   S.busy['dif' + d.key] = false; render();
 }
@@ -1551,7 +1551,7 @@ function viewFoco(){
     <div class="foco-top"><p class="eyebrow">${esc(fmtLong(d.date))} · ${esc(p.nome)}</p><button class="round" data-act="foco-sair" aria-label="Sair do modo foco" title="sair do foco">${ico('x')}</button></div>
     <h1 class="ref foco-ref">${heroRef(d)}</h1>
     ${c.titulo ? `<p class="sub" style="text-align:center">${esc(c.titulo)}</p>` : ''}
-    <div class="two foco-ler"><a class="btn primary" data-read="nvi" href="${yv(d)}" target="_blank" rel="noopener">${ico('book')}ler na NVI</a><a class="btn ghost" data-read="alm" href="${yv(d, 'alm')}" target="_blank" rel="noopener">${ico('book')}ler na Almeida</a></div>
+    <div class="two foco-ler"><a class="btn primary" data-read="ntlh" href="${yv(d)}" target="_blank" rel="noopener">${ico('book')}ler na NTLH</a><a class="btn ghost" data-read="alm" href="${yv(d, 'alm')}" target="_blank" rel="noopener">${ico('book')}ler na Almeida</a></div>
     ${c.resumo ? `<p class="prose foco-txt">${esc(c.resumo)}</p>` : ''}
     ${c.levar ? `<div class="take"><span class="label" style="font-size:10.5px">pra levar no dia</span><span class="serif">${esc(c.levar)}</span></div>` : ''}
     <div class="foco-acts">${c.resumo ? falaBtn('exp', 'btn ghost') : ''}<button class="btn ${lido ? 'done' : 'primary'}" data-act="toggle">${ico('check')}${lido ? 'leitura concluída' : 'concluir a leitura'}</button></div>
@@ -1620,8 +1620,8 @@ function stepsCard(d){
   const p = plan(), L = lidosOf(p), read = !!L[d.key], ps = S.passos[d.key] || {}, c = capOf(d.key);
   const AI = !!aiEngine();
   const steps = [
-    { k:'ler', t:'ler', s:'no YouVersion, na NVI ou na Almeida', body: () => `
-        <div class="two"><a class="btn primary" data-read="nvi" href="${yv(d)}" target="_blank" rel="noopener">${ico('book')}ler na NVI</a><a class="btn ghost" data-read="alm" href="${yv(d,'alm')}" target="_blank" rel="noopener">${ico('book')}ler na Almeida</a></div>
+    { k:'ler', t:'ler', s:'no YouVersion, na NTLH ou na Almeida', body: () => `
+        <div class="two"><a class="btn primary" data-read="ntlh" href="${yv(d)}" target="_blank" rel="noopener">${ico('book')}ler na NTLH</a><a class="btn ghost" data-read="alm" href="${yv(d,'alm')}" target="_blank" rel="noopener">${ico('book')}ler na Almeida</a></div>
         ${d.chs.length > 1 ? `<p class="hint">Hoje são ${d.chs.length} capítulos. No YouVersion é só seguir para o próximo.</p>` : `<p class="hint">Leia com calma. Se travar em alguma palavra, o próximo passo ajuda.</p>`}
         <button class="btn soft" data-done="ler">${ico('check')}terminei de ler</button>` },
     { k:'palavras', t:'palavras e versões', s:'o que confunde e o que muda entre as duas', body: () => step3(d) },
@@ -1649,11 +1649,12 @@ function stepsCard(d){
 function fraseDia(d){ const st = streak(); return st > 1 ? `${st} dias seguidos` : 'um passo de cada vez'; }
 function step3(d){
   const c = capOf(d.key), AI = !!aiEngine(), tab = S.step3;
-  const seg = `<div class="seg"><button data-s3="palavras" aria-pressed="${tab === 'palavras'}">palavras difíceis</button><button data-s3="versoes" aria-pressed="${tab === 'versoes'}">NVI e Almeida</button></div>`;
+  const seg = `<div class="seg"><button data-s3="palavras" aria-pressed="${tab === 'palavras'}">palavras difíceis</button><button data-s3="versoes" aria-pressed="${tab === 'versoes'}">NTLH e Almeida</button></div>`;
   let body = '';
   if (tab === 'palavras') {
     const list = c.dificeis || [];
-    if (list.length) body = `<div class="gloss">${list.map((w, i) => { const on = !!S.vocab[w.palavra.toLowerCase()];
+    if (S.busy['dif' + d.key] && c.difV !== 'ntlh') body = thinking('procurando o sentido das palavras na NTLH');
+    else if (list.length) body = `<div class="gloss">${list.map((w, i) => { const on = !!S.vocab[w.palavra.toLowerCase()];
       return `<div class="g"><div><span class="t">${esc(w.palavra)}</span><span class="s">${esc(w.sentido)}</span></div><button class="star ${on ? 'on' : ''}" data-star="${i}" aria-pressed="${on}" aria-label="${on ? 'Tirar das' : 'Guardar nas'} suas palavras: ${esc(w.palavra)}">${ico('star')}</button></div>`; }).join('')}</div>`;
     else if (S.busy['dif' + d.key] || (AI && !tried.has('dif' + d.key))) body = thinking('procurando o sentido das palavras');
     else body = AI ? `<button class="btn soft" data-act="dificeis">${ico('word')}tentar de novo</button>` : aiOff();
@@ -1662,8 +1663,8 @@ function step3(d){
       <button class="send" aria-label="Explicar palavra" ${AI ? '' : 'disabled'}>${ico('send')}</button></form>
       ${list.length ? `<p class="hint">A estrela guarda a palavra em caminhada › palavras.</p>` : ''}`;
   } else {
-    body = `<div class="side"><div><span class="v nvi">NVI</span><span class="small">português de hoje, mais fácil</span></div><div><span class="v alm">ALMEIDA</span><span class="small">português clássico, tradicional</span></div></div>`;
-    if (c.palavras && c.palavras.length) body += c.palavras.map(w => `<div class="w">${w.versiculo ? `<span class="vs">${esc(w.versiculo)}</span>` : ''}<span class="q">${esc(w.nvi)}</span><span class="q">${esc(w.almeida)}</span>${w.sentido ? `<span class="why">${esc(w.sentido)}</span>` : ''}</div>`).join('');
+    body = `<div class="side"><div><span class="v ntlh">NTLH</span><span class="small">linguagem de hoje, a mais fácil</span></div><div><span class="v alm">ALMEIDA</span><span class="small">português clássico, tradicional</span></div></div>`;
+    if (c.versoes && c.versoes.length) body += c.versoes.map(w => `<div class="w">${w.versiculo ? `<span class="vs">${esc(w.versiculo)}</span>` : ''}<span class="q">${esc(w.ntlh)}</span><span class="q">${esc(w.almeida)}</span>${w.sentido ? `<span class="why">${esc(w.sentido)}</span>` : ''}</div>`).join('');
     else if (S.busy['cmp' + d.key] || (AI && !tried.has('cmp' + d.key))) body += thinking('procurando o que muda entre as duas');
     else body += AI ? `<button class="btn soft" data-act="compare">${ico('spark')}tentar de novo</button>` : aiOff();
   }
@@ -1826,7 +1827,7 @@ function viewBusca(){
       <div class="card-h"><span class="label">${r.book.nt ? 'Novo Testamento' : 'Antigo Testamento'}</span><span class="pill">${r.book.caps} capítulos</span></div>
       <h2 class="ref">${esc(r.book.n)} ${r.cap ? `<span class="n">${r.cap}${r.v1 ? ':' + r.v1 + (r.v2 ? '–' + r.v2 : '') : ''}</span>` : ''}</h2>
       ${!r.cap ? `<p class="hint">Escolha o capítulo:</p><div class="caps-grid">${Array.from({ length:r.book.caps }, (_, i) => `<button class="chip" data-busca-ir="${esc(r.book.n + ' ' + (i + 1))}">${i + 1}</button>`).join('')}</div>` : `
-      <div class="two"><a class="btn primary" href="${yvKey(k)}" target="_blank" rel="noopener">${ico('book')}ler na NVI</a><a class="btn ghost" href="${yvKey(k, 'alm')}" target="_blank" rel="noopener">${ico('book')}ler na Almeida</a></div>
+      <div class="two"><a class="btn primary" href="${yvKey(k)}" target="_blank" rel="noopener">${ico('book')}ler na NTLH</a><a class="btn ghost" href="${yvKey(k, 'alm')}" target="_blank" rel="noopener">${ico('book')}ler na Almeida</a></div>
       <div class="two"><button class="btn ghost" data-act="busca-chat">${ico('chat')}conversar sobre</button>${r.v1 ? `<button class="btn ghost" data-act="busca-guardar">${ico('star')}${ja ? 'já guardado' : 'guardar versículo'}</button>` : `<button class="btn ghost" data-act="busca-explicar">${ico('spark')}me explica</button>`}</div>`}
       ${r.outros.length ? `<p class="small">Você quis dizer ${r.outros.map(b => `<button class="linkbtn" style="display:inline;padding:0" data-busca-ir="${esc(b.n + (r.cap ? ' ' + r.cap : ''))}">${esc(b.n)}</button>`).join(', ')}?</p>` : ''}
     </section>
@@ -2069,7 +2070,7 @@ function auto(){
   const d = cur(), c = capOf(d.key);
   const run = (k, fn) => { if (tried.has(k + d.key)) return; tried.add(k + d.key); setTimeout(() => fn(d), 50); };
   if (!c.resumo) run('exp', explicar);
-  if (S.open === 'palavras') { if (S.step3 === 'palavras' && !c.dificeis) run('dif', dificeis); if (S.step3 === 'versoes' && !c.palavras) run('cmp', comparar); }
+  if (S.open === 'palavras') { if (S.step3 === 'palavras' && c.difV !== 'ntlh') run('dif', dificeis); if (S.step3 === 'versoes' && !c.versoes) run('cmp', comparar); }
 }
 function render(){
   const fx = S.fx || {}; S.fx = {}; ['view','step','done','upd'].forEach(k => document.body.classList.toggle('a-' + k, !!fx[k]));
