@@ -1,6 +1,6 @@
 # Lâmpada
 
-App pessoal de leitura diária da Bíblia: leitura guiada, trilha do básico ao profundo, planos com data, palavras difíceis, NVI e Almeida, diário e conversa com o Gemini.
+App pessoal de leitura diária da Bíblia: leitura guiada, trilha do básico ao profundo, planos com data, palavras difíceis, NTLH e Almeida, diário e conversa com o Gemini.
 
 ## Como colocar no ar (GitHub Pages, gratuito)
 
