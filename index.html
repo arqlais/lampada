@@ -421,6 +421,8 @@ body.foco-on .shell{padding-left:0;padding-right:0}
 .foco-acts{display:flex;gap:10px}
 .foco-acts > *{flex:1}
 .semana .stat b{font-size:24px}
+.passos{margin:12px 0;padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:13.5px;line-height:1.6;color:var(--ink)}
+.passos b{font-weight:500}
 .minbtn .i{transform:rotate(-90deg);transition:transform .2s}
 .semana.min .minbtn .i{transform:rotate(90deg)}
 .semana.min{gap:0}
@@ -1375,7 +1377,6 @@ async function testarGemini(){
   S.busy.teste = false; render();
 }
 
-const horaL = () => S.ui.hora || S.hora || '07:30';
 const MODELOS = [
   ['gemini-3-flash-preview', 'Gemini 3 Flash', 'rápido e com uso grátis'],
   ['gemini-flash-latest', 'Gemini Flash (atual)', 'o Flash mais novo, grátis'],
@@ -1457,35 +1458,18 @@ document.addEventListener('pointerdown', ev => { const b = ev.target.closest('#c
 document.addEventListener('pointermove', ev => { if (!drag || !S.edit) return; S.edit.x = drag.ox + ev.clientX - drag.x; S.edit.y = drag.oy + ev.clientY - drag.y; placeCrop(); });
 document.addEventListener('pointerup', () => { drag = null; });
 
-/* ---------- agenda e lembretes (arquivo .ics: Calendário do iPhone/iPad e Google Agenda) ---------- */
-const icsTxt = t => String(t).replace(/\\/g, '\\\\').replace(/[,;]/g, m => '\\' + m).replace(/\n/g, '\\n');
-const icsDT = (date, hora) => { const [h, m] = (hora || '07:30').split(':'); const z = n => String(n).padStart(2, '0'); return `${date.getFullYear()}${z(date.getMonth() + 1)}${z(date.getDate())}T${z(+h)}${z(+m)}00`; };
-const appURL = () => location.href.split('#')[0];
-function icsEvento({ uid, quando, titulo, texto }){
-  return ['BEGIN:VEVENT', 'UID:' + uid, 'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z', 'DTSTART:' + quando, 'DURATION:PT20M',
-    'SUMMARY:' + icsTxt(titulo), 'DESCRIPTION:' + icsTxt(texto), 'URL:' + appURL(),
-    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsTxt(titulo), 'TRIGGER:PT0M', 'END:VALARM', 'END:VEVENT'].filter(Boolean).join('\r\n');
-}
-function baixarICS(nome, eventos){
-  const txt = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Lampada//PT-BR', 'CALSCALE:GREGORIAN', 'X-WR-CALNAME:Lâmpada', ...eventos, 'END:VCALENDAR'].join('\r\n');
-  const url = URL.createObjectURL(new Blob([txt], { type:'text/calendar;charset=utf-8' }));
-  const a = document.createElement('a'); a.href = url; a.download = nome; document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 8000);
-}
-function agendaPlano(){
-  const p = plan(), L = lidosOf(p), t = Math.max(0, todayIdx(p));
-  const dias = p.days.filter(d => d.i >= t && !L[d.key]); if (!dias.length) return toast('não há leituras pela frente neste plano');
-  baixarICS('lampada-' + p.id + '.ics', dias.map(d => icsEvento({ uid:`lampada-${p.id}-${d.key}@arqlais.github.io`, quando:icsDT(d.date, horaL()),
-    titulo:'Lâmpada · ' + refName(d), texto:`Leitura do plano "${p.nome}" (dia ${d.i + 1} de ${p.days.length}). Abra o app: ${appURL()}` })));
-  toast(dias.length + ' leituras prontas pra agenda');
-}
-function agendaCard(){
-  return `<section class="card">
-    <div class="card-h"><span class="label">${ico('cal')}agenda e lembretes</span><span class="small">${esc(plan().nome)}</span></div>
-    <label class="field"><span>horário da leitura</span><input class="inp" id="r-hora" type="time" value="${esc(horaL())}"></label>
-    <button class="btn primary" data-act="ics-plano">${ico('cal')}colocar o plano na agenda</button>
-    <p class="hint">Coloca cada leitura que falta no dia certo, com aviso no horário, e termina junto com o plano. No iPhone e no iPad, abra o arquivo baixado e toque em "Adicionar tudo". No Google Agenda, pelo computador: Configurações › Importar e exportar › Importar.</p>
-  </section>`;
+/* ---------- lembrete: o app Atalhos do iPhone cria um lembrete por dia, só no dia (sem encher o Calendário) ---------- */
+function lembreteCard(){
+  return `<details class="card fold lembrete"><summary><span class="label muted">${ico('clock')}lembrete no iPhone</span><span class="chev">${ico('right')}</span></summary>
+    <p class="hint" style="margin:14px 0 0">Um lembrete por dia no app Lembretes, que só aparece no próprio dia. Configure uma vez no app <b>Atalhos</b>:</p>
+    <ol class="passos">
+      <li>Abra o <b>Atalhos</b>, toque em <b>Automação</b> e depois no <b>+</b>.</li>
+      <li>Escolha <b>Hora do Dia</b>, coloque o horário da leitura, deixe <b>Diariamente</b> e marque <b>Executar Imediatamente</b>.</li>
+      <li>Toque em <b>Nova Automação em Branco</b> › <b>Adicionar Ação</b> e procure <b>Adicionar Novo Lembrete</b>.</li>
+      <li>No texto, escreva <b>Leitura da Bíblia no lâmpada</b>. Toque em <b>Concluído</b>.</li>
+    </ol>
+    <p class="hint" style="margin:0">Todo dia, no horário, aparece só o lembrete daquele dia. Quando você marca, o de amanhã não aparece antes da hora.</p>
+  </details>`;
 }
 
 /* ---------- ouvir: lê em voz alta com a voz do próprio aparelho ---------- */
@@ -1940,7 +1924,7 @@ function cPlanos(){
     </div>
     ${aiEngine() ? (S.busy.semana ? thinking('preparando as explicações da semana') : `<button class="btn ghost" data-act="semana">${ico('spark')}deixar as explicações da semana prontas</button>`) : ''}
   </section>
-  ${agendaCard()}
+  ${lembreteCard()}
   ${juntoCard()}
   ${Object.values(S.planos).some(x => x.tipo === 'biblia') ? '' : bibliaCard()}
   <section class="card">
@@ -2196,7 +2180,6 @@ document.addEventListener('click', async e => {
     case 'add-book': { const c = document.getElementById('f-livro').value; if (c && !S.form.livros.includes(c)) S.form.livros.push(c); render(); break; }
     case 'clear-books': S.form.livros = []; render(); break;
     case 'criar': criarPlano(); break;
-    case 'ics-plano': agendaPlano(); break;
     case 'junto-enviar': { const txt = `Vamos ler a Bíblia juntos no lâmpada? Entre em ${location.origin + location.pathname} e coloque o meu código em caminhada › planos › ler junto: ${S.ui.code}`;
       if (navigator.share) navigator.share({ text:txt }).catch(() => {}); else if (navigator.clipboard) navigator.clipboard.writeText(txt).then(() => toast('convite copiado'), () => toast('seu código: ' + S.ui.code)); else toast('seu código: ' + S.ui.code); break; }
     case 'bib-criar': criarBiblia(); break;
@@ -2235,7 +2218,6 @@ document.addEventListener('input', e => {
   if (id === 'u-nome') { S.ui.nome = e.target.value.trim(); saveUI(); }
   if (id === 'bib-inicio') bibliaForm().inicio = e.target.value;
   if (id === 'crop-z' && S.edit) { S.edit.z = +e.target.value; placeCrop(); }
-  if (id === 'r-hora' && e.target.value) { S.hora = S.ui.hora = e.target.value; LS.set('hora', S.hora); saveUI(); }
   if (S.form && id && id.startsWith('f-')) { const map = { 'f-nome':'nome', 'f-inicio':'inicio', 'f-fim':'fim', 'f-pordia':'porDia' };
     if (map[id]) S.form[map[id]] = e.target.value; const pv = document.getElementById('f-prev'); if (pv) pv.innerHTML = previewTxt(); }
 });

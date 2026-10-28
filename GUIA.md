@@ -91,19 +91,20 @@ No chat (botão redondo no canto), troque para **Claude**: a pergunta abre no **
 
 ---
 
-## 3. Agenda e lembretes
+## 3. Lembrete da leitura (app Lembretes do iPhone)
 
-Em **caminhada › planos › agenda e lembretes**:
-1. Escolha o **horário da leitura**.
-2. **Colocar o plano na agenda:** baixa um arquivo com cada leitura que falta, no dia certo e com aviso no horário. Termina junto com o plano (não fica infinito).
+O app não coloca nada no Calendário, pra não encher de eventos. O lembrete é feito pelo app **Atalhos**, que cria **um lembrete por dia, só no próprio dia**:
 
-Para abrir o arquivo:
-- **iPhone e iPad:** toque no arquivo baixado (setinha de downloads do Safari) › **Adicionar tudo**. Ele entra no app Calendário com aviso.
-- **Google Agenda:** no computador, em **calendar.google.com** › engrenagem › **Configurações** › **Importar e exportar** › **Importar** › escolha o arquivo. Se o Google Agenda já estiver no seu iPhone, ele também aparece lá.
-- **Tinha baixado o antigo "lembrete diário"** (que se repetia pra sempre)? No Calendário do iPhone, toque num dos avisos "Lâmpada · hora da leitura" › **Apagar evento** › **Apagar todos os eventos futuros**.
-- Criou um plano novo ou mudou o horário? Apague os eventos antigos do Lâmpada no Calendário e baixe de novo, para não ficar repetido.
+1. Abra o **Atalhos** › aba **Automação** › **+**.
+2. **Hora do Dia** › escolha o horário da leitura › **Diariamente** › marque **Executar Imediatamente**.
+3. **Nova Automação em Branco** › **Adicionar Ação** › procure **Adicionar Novo Lembrete**.
+4. No texto, escreva **Leitura da Bíblia no lâmpada** › **Concluído**.
 
----
+Esse passo a passo também está no app, em **caminhada › planos › lembrete no iPhone**.
+
+**Limpar o que ficou de antes:**
+- **Lembrete que se repete** no app Lembretes: abra o lembrete › **(i)** › **Repetir** › **Nunca**, ou apague o lembrete.
+- **Eventos "Lâmpada · …" no Calendário:** toque num deles › **Apagar evento**. Se perguntar, escolha **Apagar todos os eventos futuros**. Se forem eventos separados, um por leitura, apague cada um; num Mac dá pra selecionar vários de uma vez no app Calendário.
 
 ## 4. Perfil, cores e várias pessoas
 
