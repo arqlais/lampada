@@ -31,6 +31,7 @@ Login (Google ou e-mail), Gemini grátis, agenda e lembretes: veja o [GUIA.md](G
 
 - `index.html`: o app inteiro.
 - `config.js`: configuração do Firebase (login).
+- `conteudo-mateus.js`, `conteudo-joao.js`, `conteudo-atos.js`: explicações prontas de cada capítulo do plano (Marcos fica dentro do `index.html`).
 - `fonts/`: The Seasons Italic (itálicos).
 - `GUIA.md`: passo a passo de tudo.
 - `manifest.webmanifest` e ícones: deixam o app instalável.
